@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Modules.Artwork.Application.Abstractions;
 using Modules.Artwork.Infrastructure.Database;
 
@@ -11,4 +12,15 @@ public class ArtworkRepository(
     {
         dbContext.Artworks.Add(artwork);
     }
+
+    public async Task<IReadOnlyCollection<Domain.Artwork>> GetPublishedAsync(
+    CancellationToken cancellationToken = default)
+{
+    return await dbContext.Artworks
+        .AsNoTracking()
+        .Where(artwork => artwork.IsPublished)
+        .OrderBy(artwork => artwork.DisplayOrder)
+        .ThenByDescending(artwork => artwork.CreatedAtUtc)
+        .ToListAsync(cancellationToken);
+}
 }
