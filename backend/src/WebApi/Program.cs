@@ -1,3 +1,4 @@
+using WebApi.ExceptionHandling;
 using Modules.Artwork.Infrastructure;
 using Modules.Artwork.Application;
 using Modules.Artwork.Presentation;
@@ -20,8 +21,12 @@ string mediatrLicenseKey =
 
 builder.Services.AddArtworkApplication(mediatrLicenseKey);
 builder.Services.AddArtworkInfrastructure(connectionString);
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

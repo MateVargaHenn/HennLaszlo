@@ -1,6 +1,8 @@
 
 
 using Microsoft.Extensions.DependencyInjection;
+using FluentValidation;
+using Modules.Artwork.Application.Abstractions.Behaviors;
 
 namespace Modules.Artwork.Application;
 
@@ -10,6 +12,10 @@ public static class DependencyInjection
         this IServiceCollection services,
         string mediatrLicenseKey)
     {
+        services.AddValidatorsFromAssembly(
+                    typeof(DependencyInjection).Assembly,
+                    includeInternalTypes: true);
+
         ArgumentException.ThrowIfNullOrWhiteSpace(mediatrLicenseKey);
         
         services.AddMediatR(configuration =>
@@ -18,6 +24,9 @@ public static class DependencyInjection
 
             configuration.RegisterServicesFromAssembly(
                 typeof(DependencyInjection).Assembly);
+
+                configuration.AddOpenBehavior(
+                    typeof(ValidationBehavior<,>));
         });
 
         return services;

@@ -13,3 +13,16 @@ Accept: application/json
   "widthCm": 80,
   "heightCm": 60
 }
+
+###
+
+POST {{WebApi_HostAddress}}/api/admin/artworks
+Content-Type: application/json
+Accept: application/json
+
+{
+  "titleHu": "",
+  "year": 9999,
+  "widthCm": -10,
+  "heightCm": 0
+}
