@@ -3,6 +3,7 @@ using FluentValidation.Results;
 using MediatR;
 using Modules.Artwork.Application.Abstractions;
 using Modules.FileStorage.Contracts;
+using BuildingBlocks.Application.Exceptions;
 
 namespace Modules.Artwork.Application.Artworks.AttachImage;
 
@@ -23,7 +24,7 @@ internal sealed class AttachArtworkImageCommandHandler(
 
         if (artwork is null)
         {
-            throw new KeyNotFoundException(
+            throw new NotFoundException(
                 "A mű nem található.");
         }
 
@@ -34,7 +35,7 @@ internal sealed class AttachArtworkImageCommandHandler(
 
         if (file is null)
         {
-            throw new KeyNotFoundException(
+            throw new NotFoundException(
                 "A fájl nem található.");
         }
 

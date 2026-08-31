@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Diagnostics;
+using BuildingBlocks.Application.Exceptions;
 
 namespace WebApi.ExceptionHandling;
 
@@ -10,7 +11,7 @@ internal sealed class NotFoundExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        if (exception is not KeyNotFoundException)
+        if (exception is not NotFoundException)
         {
             return false;
         }

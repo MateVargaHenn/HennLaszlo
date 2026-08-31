@@ -5,6 +5,7 @@ using Modules.Artwork.Presentation;
 using Modules.FileStorage.Infrastructure;
 using Modules.FileStorage.Application;
 using Modules.FileStorage.Presentation;
+using BuildingBlocks.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,8 @@ string storageRootPath =
     ?? Path.Combine(
         builder.Environment.ContentRootPath,
         "storage");
+        
+builder.Services.AddApplicationBuildingBlocks();
 
 builder.Services.AddArtworkApplication(mediatrLicenseKey);
 
