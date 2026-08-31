@@ -31,3 +31,19 @@ Accept: application/json
 
 GET {{WebApi_HostAddress}}/api/artworks
 Accept: application/json
+
+###
+
+POST {{WebApi_HostAddress}}/api/admin/files
+Content-Type: multipart/form-data; boundary=FileBoundary
+Accept: application/json
+
+--FileBoundary
+Content-Disposition: form-data; name="file"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< ./TestFiles/test.jpg
+--FileBoundary--
+
+######
+GET {{WebApi_HostAddress}}/api/admin/files/27139e0b-9c50-4457-9fb1-6059ff0ff502

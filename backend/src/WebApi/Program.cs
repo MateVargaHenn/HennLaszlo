@@ -2,6 +2,9 @@ using WebApi.ExceptionHandling;
 using Modules.Artwork.Infrastructure;
 using Modules.Artwork.Application;
 using Modules.Artwork.Presentation;
+using Modules.FileStorage.Infrastructure;
+using Modules.FileStorage.Application;
+using Modules.FileStorage.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +22,23 @@ string mediatrLicenseKey =
     ?? throw new InvalidOperationException(
         "A MediatR licenckulcs nincs beállítva.");
 
+string storageRootPath =
+    builder.Configuration["FileStorage:RootPath"]
+    ?? Path.Combine(
+        builder.Environment.ContentRootPath,
+        "storage");
+
 builder.Services.AddArtworkApplication(mediatrLicenseKey);
+
 builder.Services.AddArtworkInfrastructure(connectionString);
+
+builder.Services.AddFileStorageInfrastructure(
+    connectionString, 
+    storageRootPath);
+
+builder.Services.AddFileStorageApplication(
+    mediatrLicenseKey);
+
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 
@@ -33,9 +51,13 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.MapArtworkEndpoints();
+app.MapFileStorageEndpoints();
+
 app.Run();
 
