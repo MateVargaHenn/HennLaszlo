@@ -8,6 +8,7 @@
     <Project Path="src/Modules/Modules.Artwork.Infrastructure/Modules.Artwork.Infrastructure.csproj" />
     <Project Path="src/Modules/Modules.Artwork.Presentation/Modules.Artwork.Presentation.csproj" />
     <Project Path="src/Modules/Modules.FileStorage.Application/Modules.FileStorage.Application.csproj" />
+    <Project Path="src/Modules/Modules.FileStorage.Contracts/Modules.FileStorage.Contracts.csproj" />
     <Project Path="src/Modules/Modules.FileStorage.Domain/Modules.FileStorage.Domain.csproj" />
     <Project Path="src/Modules/Modules.FileStorage.Infrastructure/Modules.FileStorage.Infrastructure.csproj" />
     <Project Path="src/Modules/Modules.FileStorage.Presentation/Modules.FileStorage.Presentation.csproj" />

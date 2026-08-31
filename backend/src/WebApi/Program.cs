@@ -41,6 +41,7 @@ builder.Services.AddFileStorageApplication(
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
 
 var app = builder.Build();
 
