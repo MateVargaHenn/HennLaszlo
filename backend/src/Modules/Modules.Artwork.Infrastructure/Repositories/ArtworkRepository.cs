@@ -32,4 +32,17 @@ public class ArtworkRepository(
             artwork => artwork.Id == id,
             cancellationToken);
     }
+
+    public Task<Domain.Artwork?> GetPublishedByIdAsync(
+    Guid id,
+    CancellationToken cancellationToken = default)
+    {
+        return dbContext.Artworks
+            .AsNoTracking()
+            .SingleOrDefaultAsync(
+                artwork =>
+                    artwork.Id == id &&
+                    artwork.IsPublished,
+                cancellationToken);
+    }
 }
