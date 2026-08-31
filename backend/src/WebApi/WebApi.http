@@ -62,3 +62,8 @@ Content-Type: application/json
 
 PUT {{WebApi_HostAddress}}/api/admin/artworks/b4ba4b50-63e6-42b7-83e1-1146e72263a6/publish
 Accept: application/json
+
+###
+
+GET {{WebApi_HostAddress}}/api/artworks/b4ba4b50-63e6-42b7-83e1-1146e72263a6/image
+Accept: image/*

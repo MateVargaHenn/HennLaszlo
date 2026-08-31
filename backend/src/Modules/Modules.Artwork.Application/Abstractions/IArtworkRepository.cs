@@ -10,4 +10,8 @@ public interface IArtworkRepository
 	Task<Domain.Artwork?> GetByIdAsync(
     Guid id,
     CancellationToken cancellationToken = default);
+
+    Task<Domain.Artwork?> GetPublishedByIdAsync(
+    Guid id,
+    CancellationToken cancellationToken = default);
 }
