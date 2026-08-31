@@ -1,7 +1,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace Modules.Artwork.Application.Abstractions.Behaviors;
+namespace BuildingBlocks.Application.Behaviors;
 
 public sealed class ValidationBehavior<TRequest, TResponse>(
     IEnumerable<IValidator<TRequest>> validators)

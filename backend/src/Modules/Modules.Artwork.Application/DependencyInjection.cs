@@ -2,7 +2,6 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
-using Modules.Artwork.Application.Abstractions.Behaviors;
 
 namespace Modules.Artwork.Application;
 
@@ -25,8 +24,6 @@ public static class DependencyInjection
             configuration.RegisterServicesFromAssembly(
                 typeof(DependencyInjection).Assembly);
 
-                configuration.AddOpenBehavior(
-                    typeof(ValidationBehavior<,>));
         });
 
         return services;

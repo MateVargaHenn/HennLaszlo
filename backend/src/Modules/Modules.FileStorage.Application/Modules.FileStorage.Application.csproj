@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Modules.FileStorage.Domain\Modules.FileStorage.Domain.csproj" />
     <ProjectReference Include="..\Modules.FileStorage.Contracts\Modules.FileStorage.Contracts.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
