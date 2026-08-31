@@ -26,3 +26,8 @@ Accept: application/json
   "widthCm": -10,
   "heightCm": 0
 }
+
+###
+
+GET {{WebApi_HostAddress}}/api/artworks
+Accept: application/json
