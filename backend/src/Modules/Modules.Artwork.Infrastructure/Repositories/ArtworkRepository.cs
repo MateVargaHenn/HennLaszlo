@@ -15,12 +15,21 @@ public class ArtworkRepository(
 
     public async Task<IReadOnlyCollection<Domain.Artwork>> GetPublishedAsync(
     CancellationToken cancellationToken = default)
-{
-    return await dbContext.Artworks
-        .AsNoTracking()
-        .Where(artwork => artwork.IsPublished)
-        .OrderBy(artwork => artwork.DisplayOrder)
-        .ThenByDescending(artwork => artwork.CreatedAtUtc)
-        .ToListAsync(cancellationToken);
-}
+    {
+        return await dbContext.Artworks
+            .AsNoTracking()
+            .Where(artwork => artwork.IsPublished)
+            .OrderBy(artwork => artwork.DisplayOrder)
+            .ThenByDescending(artwork => artwork.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<Domain.Artwork?> GetByIdAsync(
+    Guid id,
+    CancellationToken cancellationToken = default)
+    {
+        return dbContext.Artworks.SingleOrDefaultAsync(
+            artwork => artwork.Id == id,
+            cancellationToken);
+    }
 }

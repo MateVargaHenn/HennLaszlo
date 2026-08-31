@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using Modules.FileStorage.Contracts;
 
 namespace Modules.FileStorage.Application;
 
@@ -20,7 +21,9 @@ public static class DependencyInjection
             configuration.RegisterServicesFromAssembly(
                 typeof(DependencyInjection).Assembly);
         });
-
+        
+        services.AddScoped<IFileStorageModule, FileStorageModule>();
+        
         return services;
     }
 }
