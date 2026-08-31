@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Modules.FileStorage.Infrastructure.Database;
 using Modules.FileStorage.Application.Abstractions;
 using Modules.FileStorage.Infrastructure.Storage;
+using Modules.FileStorage.Infrastructure.Repositories;
 
 namespace Modules.FileStorage.Infrastructure;
 
@@ -24,9 +25,15 @@ public static class DependencyInjection
                         "file_storage");
                 });
         });
-		
+
 		services.AddSingleton<IFileContentStorage>(
 			new LocalFileContentStorage(storageRootPath));
+
+			services.AddScoped<IStoredFileRepository, StoredFileRepository>();
+
+		services.AddScoped<IFileStorageUnitOfWork>(
+    	serviceProvider =>
+        	serviceProvider.GetRequiredService<FileStorageDbContext>());
 
         return services;
     }

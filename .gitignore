@@ -482,4 +482,7 @@ $RECYCLE.BIN/
 *.swp
 
 # disable storage folder
+/backend/src/WebApi/TestFiles/
 /backend/src/WebApi/storage/
+
+test.jpg

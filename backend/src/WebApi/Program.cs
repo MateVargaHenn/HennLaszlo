@@ -3,6 +3,8 @@ using Modules.Artwork.Infrastructure;
 using Modules.Artwork.Application;
 using Modules.Artwork.Presentation;
 using Modules.FileStorage.Infrastructure;
+using Modules.FileStorage.Application;
+using Modules.FileStorage.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,9 @@ builder.Services.AddFileStorageInfrastructure(
     connectionString, 
     storageRootPath);
 
+builder.Services.AddFileStorageApplication(
+    mediatrLicenseKey);
+
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 
@@ -46,9 +51,13 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.MapArtworkEndpoints();
+app.MapFileStorageEndpoints();
+
 app.Run();
 
