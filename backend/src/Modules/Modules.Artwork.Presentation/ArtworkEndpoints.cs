@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Routing;
 using Modules.Artwork.Presentation.Artworks.Create;
 using Modules.Artwork.Presentation.Artworks.GetAll;
 using Modules.Artwork.Presentation.Artworks.AttachImage;
+using Modules.Artwork.Presentation.Artworks.Publish;
 
 namespace Modules.Artwork.Presentation;
 
@@ -13,6 +14,7 @@ public static class ArtworkEndpoints
         endpoints.MapCreateArtwork();
         endpoints.MapGetArtworks();
         endpoints.MapAttachArtworkImage();
+        endpoints.MapPublishArtwork();
 
         return endpoints;
     }

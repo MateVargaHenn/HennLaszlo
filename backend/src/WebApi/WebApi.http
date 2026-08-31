@@ -57,3 +57,8 @@ Content-Type: application/json
 {
   "fileId": "27139e0b-9c50-4457-9fb1-6059ff0ff502"
 }
+
+###
+
+PUT {{WebApi_HostAddress}}/api/admin/artworks/b4ba4b50-63e6-42b7-83e1-1146e72263a6/publish
+Accept: application/json
