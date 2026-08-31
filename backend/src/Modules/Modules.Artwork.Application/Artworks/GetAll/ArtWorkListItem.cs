@@ -9,6 +9,5 @@ public sealed record ArtworkListItem(
     string? TechniqueEn,
     decimal? WidthCm,
     decimal? HeightCm,
-    Guid? ImageId,
     bool IsFeatured,
     int DisplayOrder);

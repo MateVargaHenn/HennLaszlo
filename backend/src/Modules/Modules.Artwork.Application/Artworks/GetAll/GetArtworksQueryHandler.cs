@@ -26,7 +26,6 @@ internal class GetArtworksQueryHandler(
                 artwork.TechniqueEn,
                 artwork.WidthCm,
                 artwork.HeightCm,
-                artwork.ImageId,
                 artwork.IsFeatured,
                 artwork.DisplayOrder))
             .ToArray();
