@@ -3,6 +3,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "artwork-data-access": ["./dist/artwork-data-access"]
+    },
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -32,6 +35,12 @@
     },
     {
       "path": "./projects/admin-web/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/artwork-data-access/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/artwork-data-access/tsconfig.spec.json"
     }
   ]
 }
