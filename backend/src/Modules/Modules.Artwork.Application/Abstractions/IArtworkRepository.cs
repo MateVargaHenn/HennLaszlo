@@ -14,4 +14,7 @@ public interface IArtworkRepository
     Task<Domain.Artwork?> GetPublishedByIdAsync(
     Guid id,
     CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Domain.Artwork>> GetAllAsync(
+    CancellationToken cancellationToken = default);
 }

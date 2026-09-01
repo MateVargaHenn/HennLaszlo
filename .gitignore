@@ -486,3 +486,6 @@ $RECYCLE.BIN/
 /backend/src/WebApi/storage/
 
 test.jpg
+
+# disable .vscode
+.vscode/
