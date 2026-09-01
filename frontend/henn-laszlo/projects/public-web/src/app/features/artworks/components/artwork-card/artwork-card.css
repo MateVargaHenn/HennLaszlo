@@ -47,3 +47,34 @@
 .artwork-card__dimensions {
   margin: 0.35rem 0 0;
 }
+
+.artwork-card__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.artwork-card__image {
+  transition: transform 300ms ease;
+}
+
+.artwork-card__link:hover .artwork-card__image {
+  transform: scale(1.015);
+}
+
+.artwork-card__link:hover .artwork-card__title {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25rem;
+}
+
+.artwork-card__link:focus-visible {
+  outline: 2px solid #815c4d;
+  outline-offset: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artwork-card__image {
+    transition: none;
+  }
+}

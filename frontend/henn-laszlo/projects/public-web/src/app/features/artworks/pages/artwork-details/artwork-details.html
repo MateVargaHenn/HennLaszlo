@@ -1,0 +1,93 @@
+<main class="artwork-details">
+  <div class="artwork-details__inner">
+    <a
+      class="artwork-details__back"
+      routerLink="/muvek"
+    >
+      <span aria-hidden="true">←</span>
+      Vissza a művekhez
+    </a>
+
+    @if (store.isLoading()) {
+      <p class="artwork-details__state">
+        A mű betöltése…
+      </p>
+    }
+    @else if (store.error()) {
+      <div class="artwork-details__error">
+        <p>A mű most nem tölthető be.</p>
+
+        <button
+          type="button"
+          (click)="store.reload()"
+        >
+          Újrapróbálom
+        </button>
+      </div>
+    }
+    @else if (store.artwork(); as artwork) {
+      <article class="artwork">
+        <figure class="artwork__figure">
+          <img
+            class="artwork__image"
+            [src]="store.getImageUrl(artwork.id)"
+            [alt]="artwork.titleHu"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </figure>
+
+        <div class="artwork__content">
+          <p class="artwork__eyebrow">
+            Henn László András
+          </p>
+
+          <h1 class="artwork__title">
+            {{ artwork.titleHu }}
+          </h1>
+
+          @if (artwork.titleEn) {
+            <p class="artwork__english-title">
+              {{ artwork.titleEn }}
+            </p>
+          }
+
+          <dl class="artwork__metadata">
+            @if (artwork.year !== null) {
+              <div>
+                <dt>Év</dt>
+                <dd>{{ artwork.year }}</dd>
+              </div>
+            }
+
+            @if (artwork.techniqueHu) {
+              <div>
+                <dt>Technika</dt>
+                <dd>{{ artwork.techniqueHu }}</dd>
+              </div>
+            }
+
+            @if (
+              artwork.widthCm !== null &&
+              artwork.heightCm !== null
+            ) {
+              <div>
+                <dt>Méret</dt>
+                <dd>
+                  {{ artwork.widthCm }} ×
+                  {{ artwork.heightCm }} cm
+                </dd>
+              </div>
+            }
+          </dl>
+
+          @if (artwork.descriptionHu) {
+            <div class="artwork__description">
+              {{ artwork.descriptionHu }}
+            </div>
+          }
+        </div>
+      </article>
+    }
+  </div>
+</main>

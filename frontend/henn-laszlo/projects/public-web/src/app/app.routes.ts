@@ -24,6 +24,14 @@ export const routes: Routes = [
           ).then(component => component.ArtworkGallery),
         title: 'Művek | Henn László András',
       },
+      {
+        path: 'muvek/:artworkId',
+        loadComponent: () =>
+          import(
+            './features/artworks/pages/artwork-details/artwork-details'
+          ).then(component => component.ArtworkDetails),
+        title: 'Mű adatlap | Henn László András',
+      },
     ],
   },
   {

@@ -1,31 +1,45 @@
 @let item = artwork();
 
 <article class="artwork-card">
-  <div class="artwork-card__image-container">
-    <img
-      class="artwork-card__image"
-      [src]="imageUrl()"
-      [alt]="item.titleHu"
-      [attr.loading]="priority() ? 'eager' : 'lazy'"
-      [attr.fetchpriority]="priority() ? 'high' : 'auto'"
-    />
-  </div>
+  <a
+    class="artwork-card__link"
+    [routerLink]="['/muvek', item.id]"
+  >
+    <div class="artwork-card__image-container">
+      <img
+        class="artwork-card__image"
+        [src]="imageUrl()"
+        [alt]="item.titleHu"
+        [attr.loading]="priority() ? 'eager' : 'lazy'"
+        [attr.fetchpriority]="priority() ? 'high' : 'auto'"
+      />
+    </div>
 
-  <div class="artwork-card__heading">
-    <h2 class="artwork-card__title">
-      {{ item.titleHu }}
-    </h2>
+    <div class="artwork-card__heading">
+      <h2 class="artwork-card__title">
+        {{ item.titleHu }}
+      </h2>
 
-    <span class="artwork-card__year">
-      {{ item.year }}
-    </span>
-  </div>
+      @if (item.year !== null) {
+        <span class="artwork-card__year">
+          {{ item.year }}
+        </span>
+      }
+    </div>
 
-  <p class="artwork-card__technique">
-    {{ item.techniqueHu }}
-  </p>
+    @if (item.techniqueHu) {
+      <p class="artwork-card__technique">
+        {{ item.techniqueHu }}
+      </p>
+    }
 
-  <p class="artwork-card__dimensions">
-    {{ item.widthCm }} × {{ item.heightCm }} cm
-  </p>
+    @if (
+      item.widthCm !== null &&
+      item.heightCm !== null
+    ) {
+      <p class="artwork-card__dimensions">
+        {{ item.widthCm }} × {{ item.heightCm }} cm
+      </p>
+    }
+  </a>
 </article>

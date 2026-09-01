@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { ARTWORK_DATA_ACCESS_CONFIG } from '../config/artwork-data-access.config';
 import { ArtworkListItem } from '../models/artwork-list-item';
+import { ArtworkDetails } from '../models/artwork-details';
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +28,13 @@ export class ArtworkApi {
 
   getArtworkImageUrl(artworkId: string): string {
     return `${this.apiBaseUrl}/api/artworks/${encodeURIComponent(artworkId)}/image`;
+  }
+  
+  getArtworkById(
+    artworkId: string
+  ): Observable<ArtworkDetails> {
+    return this.http.get<ArtworkDetails>(
+    `${this.config.apiBaseUrl}/api/artworks/${encodeURIComponent(artworkId)}`
+  );
   }
 }

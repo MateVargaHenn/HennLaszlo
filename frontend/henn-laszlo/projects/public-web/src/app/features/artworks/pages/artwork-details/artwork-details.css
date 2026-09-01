@@ -1,0 +1,133 @@
+:host {
+  display: block;
+}
+
+.artwork-details {
+  min-height: calc(100svh - 5rem);
+  padding: clamp(2rem, 5vw, 5rem) 1.5rem;
+  background: #faf9f7;
+  color: #1c1816;
+}
+
+.artwork-details__inner {
+  width: min(100%, 80rem);
+  margin-inline: auto;
+}
+
+.artwork-details__back {
+  display: inline-flex;
+  gap: 0.65rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  color: #655b56;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.artwork-details__back:hover {
+  color: #1c1816;
+}
+
+.artwork {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr);
+  gap: clamp(3rem, 7vw, 7rem);
+  align-items: center;
+}
+
+.artwork__figure {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  margin: 0;
+  background: #ece9e7;
+}
+
+.artwork__image {
+  display: block;
+  width: 100%;
+  max-height: calc(100svh - 13rem);
+  object-fit: contain;
+}
+
+.artwork__eyebrow {
+  margin: 0 0 1rem;
+  color: #815c4d;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.artwork__title {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.artwork__english-title {
+  margin: 1rem 0 0;
+  color: #746963;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.artwork__metadata {
+  display: grid;
+  gap: 1.2rem;
+  margin: 2.5rem 0 0;
+}
+
+.artwork__metadata div {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: 1rem;
+}
+
+.artwork__metadata dt {
+  color: #81756f;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.artwork__metadata dd {
+  margin: 0;
+  color: #3d3632;
+}
+
+.artwork__description {
+  margin-top: 2.5rem;
+  color: #594f4a;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+.artwork-details__state,
+.artwork-details__error {
+  padding-block: 4rem;
+  color: #655b56;
+}
+
+.artwork-details__error button {
+  margin-top: 1rem;
+  padding: 0.7rem 1rem;
+  border: 0;
+  color: white;
+  background: #1c1816;
+  cursor: pointer;
+}
+
+@media (max-width: 850px) {
+  .artwork {
+    grid-template-columns: 1fr;
+  }
+
+  .artwork__image {
+    max-height: 70svh;
+  }
+}
