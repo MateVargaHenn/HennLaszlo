@@ -1,0 +1,49 @@
+:host {
+  display: block;
+}
+
+.artwork-card__image-container {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #ece9e7;
+}
+
+.artwork-card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.artwork-card__heading {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 0.9rem;
+}
+
+.artwork-card__title {
+  margin: 0;
+  color: #1c1816;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+}
+
+.artwork-card__year,
+.artwork-card__technique,
+.artwork-card__dimensions {
+  color: #6b605b;
+  font-size: 0.8rem;
+}
+
+.artwork-card__technique {
+  margin: 0.65rem 0 0;
+}
+
+.artwork-card__dimensions {
+  margin: 0.35rem 0 0;
+}
