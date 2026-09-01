@@ -4,10 +4,11 @@ import {
   input,
 } from '@angular/core';
 import { ArtworkListItem } from 'artwork-data-access';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-artwork-card',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './artwork-card.html',
   styleUrl: './artwork-card.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
