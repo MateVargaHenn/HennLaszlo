@@ -1,15 +1,23 @@
 <header class="sticky top-0 z-50 border-b border-stone-200 bg-stone-50/95 backdrop-blur">
   <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8">
     <a
-      routerLink="/muvek"
-      class="font-serif text-lg tracking-wide text-stone-900"
-      (click)="closeMenu()">
+  routerLink="/"
+  class="font-serif text-lg tracking-wide text-stone-900"
+  (click)="closeMenu()">
       Henn László András
     </a>
 
     <nav
       class="hidden items-center gap-8 md:flex"
       aria-label="Fő navigáció">
+        <a
+        routerLink="/"
+        routerLinkActive="text-stone-950"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
+        >
+        Kezdőlap
+      </a>
       <a
         routerLink="/muvek"
         routerLinkActive="text-stone-950"

@@ -4,14 +4,17 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import(
-        './layout/public-layout/public-layout'
-      ).then(component => component.PublicLayout),
+      import('./layout/public-layout/public-layout')
+        .then(component => component.PublicLayout),
+
     children: [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'muvek',
+        loadComponent: () =>
+          import('./features/home/pages/home/home')
+            .then(component => component.Home),
+        title: 'Henn László András | Festőművész',
       },
       {
         path: 'muvek',
@@ -25,6 +28,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'muvek',
+    redirectTo: '',
   },
 ];

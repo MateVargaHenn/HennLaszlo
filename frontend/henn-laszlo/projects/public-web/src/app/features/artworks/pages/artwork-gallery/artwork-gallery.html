@@ -36,46 +36,20 @@
         Jelenleg nincs megjeleníthető mű.
       </p>
     }
-    @else {
-      <div class="grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-        @for (artwork of store.artworks(); track artwork.id) {
-          <article>
-            <div class="flex aspect-[4/3] items-center justify-center overflow-hidden bg-stone-200">
-              <img
-                class="h-full w-full object-contain transition-transform duration-500 hover:scale-[1.02]"
-                [src]="store.getImageUrl(artwork.id)"
-                [alt]="artwork.titleHu"
-                loading="lazy">
-            </div>
-
-            <div class="mt-4">
-              <div class="flex items-baseline justify-between gap-4">
-                <h2 class="font-serif text-xl">
-                  {{ artwork.titleHu }}
-                </h2>
-
-                @if (artwork.year !== null) {
-                  <span class="shrink-0 text-sm text-stone-500">
-                    {{ artwork.year }}
-                  </span>
-                }
-              </div>
-
-              @if (artwork.techniqueHu) {
-                <p class="mt-1 text-sm text-stone-600">
-                  {{ artwork.techniqueHu }}
-                </p>
-              }
-
-              @if (getDimensions(artwork.widthCm, artwork.heightCm); as dimensions) {
-                <p class="mt-1 text-sm text-stone-500">
-                  {{ dimensions }}
-                </p>
-              }
-            </div>
-          </article>
-        }
-      </div>
+@else {
+  <div class="grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+    @for (
+      artwork of store.artworks();
+      track artwork.id;
+      let index = $index
+    ) {
+      <app-artwork-card
+        [artwork]="artwork"
+        [imageUrl]="store.getImageUrl(artwork.id)"
+        [priority]="index < 2"
+      />
     }
+  </div>
+}
   </section>
 </main>
