@@ -77,3 +77,15 @@ Accept: application/json
 
 PUT {{WebApi_HostAddress}}/api/admin/artworks/a4ba4b50-63e6-42b7-83e1-1146e72263a6/publish
 Accept: application/json
+
+### Publikált mű adatlapja
+
+@artworkId = b4ba4b50-63e6-42b7-83e1-1146e72263a5
+
+GET {{WebApi_HostAddress}}/api/artworks/{{artworkId}}
+Accept: application/json
+
+### Admin műlista
+
+GET {{WebApi_HostAddress}}/api/admin/artworks
+Accept: application/json

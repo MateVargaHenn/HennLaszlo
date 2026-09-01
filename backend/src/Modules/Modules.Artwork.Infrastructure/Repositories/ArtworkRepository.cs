@@ -45,4 +45,14 @@ public class ArtworkRepository(
                     artwork.IsPublished,
                 cancellationToken);
     }
+
+    public async Task<IReadOnlyList<Domain.Artwork>> GetAllAsync(
+    CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Artworks
+            .AsNoTracking()
+            .OrderBy(artwork => artwork.DisplayOrder)
+            .ThenByDescending(artwork => artwork.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+    }
 }
