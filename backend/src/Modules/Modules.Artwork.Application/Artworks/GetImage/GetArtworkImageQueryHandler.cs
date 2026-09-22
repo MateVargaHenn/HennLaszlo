@@ -16,18 +16,23 @@ internal sealed class GetArtworkImageQueryHandler(
         CancellationToken cancellationToken)
     {
         Domain.Artwork? artwork =
-            await artworkRepository.GetPublishedByIdAsync(
-                request.ArtworkId,
-                cancellationToken);
+            request.IncludeUnpublished
+                ? await artworkRepository.GetByIdAsync(
+                    request.ArtworkId,
+                    cancellationToken)
+                : await artworkRepository.GetPublishedByIdAsync(
+                    request.ArtworkId,
+                    cancellationToken);
 
-        if (artwork?.ImageId is not Guid imageId)
+        if (artwork is null ||
+            artwork.ImageId is null)
         {
             return null;
         }
 
         FileContentData? file =
             await fileStorageModule.GetFileContentAsync(
-                imageId,
+                artwork.ImageId.Value,
                 cancellationToken);
 
         if (file is null ||
