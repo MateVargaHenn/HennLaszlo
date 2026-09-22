@@ -32,6 +32,14 @@ export const routes: Routes = [
           ).then(component => component.ArtworkDetails),
         title: 'Mű adatlap | Henn László András',
       },
+      {
+        path: 'meghivok',
+        loadComponent: () =>
+          import(
+            './features/invitations/pages/invitation-gallery/invitation-gallery'
+          ).then(component => component.InvitationGallery),
+        title: 'Meghívók | Henn László András',
+      },
     ],
   },
   {

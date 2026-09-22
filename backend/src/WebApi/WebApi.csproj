@@ -23,6 +23,8 @@
     <ProjectReference Include="..\Modules\Modules.FileStorage.Infrastructure\Modules.FileStorage.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Modules.FileStorage.Presentation\Modules.FileStorage.Presentation.csproj" />
     <ProjectReference Include="..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\Modules\Modules.Invitation.Infrastructure\Modules.Invitation.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Modules.Invitation.Presentation\Modules.Invitation.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

@@ -129,3 +129,98 @@ Accept: application/json
 
 PUT {{WebApi_HostAddress}}/api/admin/artworks/b4ba4b50-63e6-42b7-83e1-1146e72263a6/publish
 Accept: application/json
+
+### 1. Meghívóvázlat létrehozása
+# @name createInvitation
+
+POST {{WebApi_HostAddress}}/api/admin/invitations
+Content-Type: application/json
+Accept: application/json
+
+{
+  "titleHu": "Tesztmeghívó",
+  "titleEn": "Test invitation",
+  "year": 2026,
+  "altTextHu": "A tesztmeghívó képe",
+  "altTextEn": "Image of the test invitation",
+  "displayOrder": 0
+}
+
+### 2. Képfájl feltöltése
+# @name uploadInvitationImage
+
+POST {{WebApi_HostAddress}}/api/admin/files
+Content-Type: multipart/form-data; boundary=InvitationBoundary
+Accept: application/json
+
+--InvitationBoundary
+Content-Disposition: form-data; name="file"; filename="invitation.jpg"
+Content-Type: image/jpeg
+
+< ./TestFiles/invitation.jpg
+--InvitationBoundary--
+
+### 3. Feltöltött kép csatolása a meghívóhoz
+
+PUT {{WebApi_HostAddress}}/api/admin/invitations/03f88412-2117-4114-a9a2-40035c937a8e/image
+Content-Type: application/json
+Accept: application/json
+
+{
+  "fileId": "2d6deaf6-92e3-4006-b169-ad76f5fd6c35"
+}
+
+### Meghívó publikálása
+
+PUT {{WebApi_HostAddress}}/api/admin/invitations/03f88412-2117-4114-a9a2-40035c937a8e/publish
+Accept: application/json
+
+### Publikus meghívólista
+
+GET {{WebApi_HostAddress}}/api/invitations
+Accept: application/json
+
+### Publikus meghívókép
+
+GET {{WebApi_HostAddress}}/api/invitations/03f88412-2117-4114-a9a2-40035c937a8e/image
+Accept: image/*
+
+### Admin meghívólista
+
+GET {{WebApi_HostAddress}}/api/admin/invitations
+Accept: application/json
+
+### Admin meghívókép
+
+GET {{WebApi_HostAddress}}/api/admin/invitations/03f88412-2117-4114-a9a2-40035c937a8e/image
+Accept: image/*
+
+### Meghívó visszavonása
+
+PUT {{WebApi_HostAddress}}/api/admin/invitations/03f88412-2117-4114-a9a2-40035c937a8e/unpublish
+Accept: application/json
+
+### Admin meghívó részletei
+
+GET {{WebApi_HostAddress}}/api/admin/invitations/03f88412-2117-4114-a9a2-40035c937a8e
+Accept: application/json
+
+### Meghívó adatainak módosítása
+
+PUT {{WebApi_HostAddress}}/api/admin/invitations/03f88412-2117-4114-a9a2-40035c937a8e
+Content-Type: application/json
+Accept: application/json
+
+{
+  "titleHu": "Módosított tesztmeghívó",
+  "titleEn": "Updated test invitation",
+  "year": 2026,
+  "altTextHu": "A módosított meghívó képe",
+  "altTextEn": "Image of the updated invitation",
+  "displayOrder": 1
+}
+
+### Meghívó törlése
+
+DELETE {{WebApi_HostAddress}}/api/admin/invitations/03f88412-2117-4114-a9a2-40035c937a8e
+Accept: application/json

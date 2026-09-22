@@ -1,0 +1,47 @@
+<dialog
+  #dialog
+  class="m-0 h-dvh max-h-none w-screen max-w-none overflow-hidden border-0 bg-transparent p-0 text-white"
+  aria-label="Meghívókép nagyított nézete"
+  (cancel)="onCancel($event)"
+  (close)="onClosed()"
+>
+  <div
+    class="relative grid min-h-dvh w-full place-items-center p-4 sm:p-8"
+  >
+    <button
+      type="button"
+      tabindex="-1"
+      class="absolute inset-0 cursor-zoom-out"
+      aria-label="Nagyított kép bezárása"
+      (click)="close()"
+    ></button>
+
+    <figure
+      class="relative z-10 overflow-hidden rounded-lg bg-stone-950 shadow-2xl"
+    >
+      <img
+        class="block max-h-[calc(100dvh-10rem)] max-w-[92vw] object-contain"
+        [src]="imageUrl()"
+        [alt]="alt()"
+      />
+
+      <button
+        type="button"
+        autofocus
+        class="fixed top-4 right-4 z-20 grid h-11 w-11 place-items-center rounded-full bg-black/70 text-2xl text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-stone-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white cursor-pointer"
+        aria-label="Nagyított kép bezárása"
+        (click)="close()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      @if (title(); as imageTitle) {
+        <figcaption
+        class="bg-stone-950 px-5 py-3 font-serif text-base text-stone-100"
+        >
+        {{ imageTitle }}
+        </figcaption>
+      }
+    </figure>
+  </div>
+</dialog>

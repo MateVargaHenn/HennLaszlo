@@ -4,6 +4,9 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { provideArtworkDataAccess } from 'artwork-data-access';
+import {
+  provideInvitationDataAccess,
+} from 'invitation-data-access';
 
 import { environment } from '../environments/environment';
 
@@ -15,6 +18,10 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
 
     provideArtworkDataAccess({
+      apiBaseUrl: environment.apiBaseUrl,
+    }),
+
+    provideInvitationDataAccess({
       apiBaseUrl: environment.apiBaseUrl,
     }),
   ],

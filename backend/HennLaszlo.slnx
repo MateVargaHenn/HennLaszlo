@@ -15,5 +15,9 @@
     <Project Path="src/Modules/Modules.FileStorage.Domain/Modules.FileStorage.Domain.csproj" />
     <Project Path="src/Modules/Modules.FileStorage.Infrastructure/Modules.FileStorage.Infrastructure.csproj" />
     <Project Path="src/Modules/Modules.FileStorage.Presentation/Modules.FileStorage.Presentation.csproj" />
+    <Project Path="src/Modules/Modules.Invitation.Application/Modules.Invitation.Application.csproj" />
+    <Project Path="src/Modules/Modules.Invitation.Domain/Modules.Invitation.Domain.csproj" />
+    <Project Path="src/Modules/Modules.Invitation.Infrastructure/Modules.Invitation.Infrastructure.csproj" />
+    <Project Path="src/Modules/Modules.Invitation.Presentation/Modules.Invitation.Presentation.csproj" />
   </Folder>
 </Solution>

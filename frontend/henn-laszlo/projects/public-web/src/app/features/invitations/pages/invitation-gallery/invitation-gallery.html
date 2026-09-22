@@ -1,0 +1,108 @@
+<main class="min-h-screen bg-stone-950 text-stone-100">
+  <section class="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:py-24">
+    <header class="mb-14 max-w-2xl">
+      <p class="mb-4 text-xs uppercase tracking-[0.32em] text-teal-300">
+        Henn László András
+      </p>
+
+      <h1 class="font-serif text-4xl leading-tight sm:text-6xl">
+        Meghívók
+      </h1>
+
+      <p class="mt-6 max-w-xl leading-7 text-stone-400">
+        Kiállítások, tárlatok és művészeti események
+        meghívóiból készült válogatás.
+      </p>
+    </header>
+
+    @if (store.isLoading()) {
+      <p class="text-stone-400">
+        A meghívók betöltése…
+      </p>
+    }
+    @else if (store.hasError()) {
+      <div class="border border-red-900 bg-red-950/40 p-6">
+        <p class="text-red-200">
+          A meghívók most nem tölthetők be.
+        </p>
+
+        <button
+          type="button"
+          class="mt-5 border border-stone-500 px-5 py-2 text-sm uppercase tracking-wider transition-colors hover:bg-stone-100 hover:text-stone-950"
+          (click)="store.reload()"
+        >
+          Újrapróbálom
+        </button>
+      </div>
+    }
+    @else if (store.invitations().length === 0) {
+      <p class="text-stone-400">
+        Jelenleg nincs megjeleníthető meghívó.
+      </p>
+    }
+    @else {
+      <div class="columns-1 gap-6 sm:columns-2 lg:columns-3">
+        @for (
+          invitation of store.invitations();
+          track invitation.id;
+          let index = $index
+        ) {
+          <figure
+            class="invitation-card group mb-6 break-inside-avoid"
+            [style.animation-delay.ms]="index * 70"
+          >
+            <div class="overflow-hidden bg-stone-900">
+              <button
+                type="button"
+                class="group block w-full cursor-zoom-in overflow-hidden text-left"
+                aria-haspopup="dialog"
+                [attr.aria-label]="
+                  invitation.titleHu + ' meghívó nagyítása'
+                "
+                (click)="openInvitation(invitation)"
+              >
+                <img
+                  class="block h-auto w-full transition-transform duration-500 group-hover:scale-[1.02]"
+                  [src]="store.getImageUrl(invitation.id)"
+                  [alt]="
+                    invitation.altTextHu ||
+                    invitation.titleHu
+                  "
+                  loading="lazy"
+                />
+              </button>
+            </div>
+
+            <figcaption
+              class="flex items-start justify-between gap-4 border-t border-stone-800 py-4"
+            >
+              <span class="font-serif text-lg">
+                {{ invitation.titleHu }}
+              </span>
+
+              @if (invitation.year !== null) {
+                <span class="shrink-0 text-sm text-stone-500">
+                  {{ invitation.year }}
+                </span>
+              }
+            </figcaption>
+          </figure>
+        }
+      </div>
+    }
+  </section>
+</main>
+
+@if (selectedInvitation(); as invitation) {
+  <app-image-lightbox
+    [imageUrl]="
+      store.getImageUrl(invitation.id)
+    "
+    [alt]="
+      invitation.altTextHu ||
+      invitation.titleHu
+    "
+    [title]="invitation.titleHu"
+    (closed)="closeInvitation()"
+  />
+}

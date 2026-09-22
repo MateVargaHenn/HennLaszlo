@@ -5,6 +5,9 @@ using Modules.Artwork.Presentation;
 using Modules.FileStorage.Infrastructure;
 using Modules.FileStorage.Application;
 using Modules.FileStorage.Presentation;
+using Modules.Invitation.Infrastructure;
+using Modules.Invitation.Application;
+using Modules.Invitation.Presentation;
 using BuildingBlocks.Application;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,8 +35,10 @@ string storageRootPath =
 builder.Services.AddApplicationBuildingBlocks();
 
 builder.Services.AddArtworkApplication(mediatrLicenseKey);
+builder.Services.AddInvitationApplication();
 
 builder.Services.AddArtworkInfrastructure(connectionString);
+builder.Services.AddInvitationInfrastructure(builder.Configuration);
 
 builder.Services.AddFileStorageInfrastructure(
     connectionString, 
@@ -85,6 +90,7 @@ app.UseCors(frontendCorsPolicy);
 
 app.MapArtworkEndpoints();
 app.MapFileStorageEndpoints();
+app.MapInvitationEndpoints();
 
 app.Run();
 

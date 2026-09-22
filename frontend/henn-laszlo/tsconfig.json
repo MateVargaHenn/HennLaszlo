@@ -4,7 +4,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "artwork-data-access": ["./dist/artwork-data-access"]
+      "artwork-data-access": ["./dist/artwork-data-access"],
+      "invitation-data-access": ["./dist/invitation-data-access"]
     },
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -41,6 +42,12 @@
     },
     {
       "path": "./projects/artwork-data-access/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/invitation-data-access/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/invitation-data-access/tsconfig.spec.json"
     }
   ]
 }

@@ -31,6 +31,30 @@ export const routes: Routes = [
     title: 'Művek kezelése | Henn László Admin',
   },
   {
+    path: 'invitations',
+    loadComponent: () =>
+      import(
+        './features/invitations/pages/admin-invitation-list/admin-invitation-list'
+      ).then(component => component.AdminInvitationList),
+    title: 'Meghívók kezelése | Henn László Admin',
+  },
+  {
+    path: 'invitations/new',
+    loadComponent: () =>
+      import(
+        './features/invitations/pages/admin-create-invitation/admin-create-invitation'
+      ).then(component => component.AdminCreateInvitation),
+    title: 'Új meghívó | Henn László Admin',
+  },
+  {
+    path: 'invitations/:invitationId/edit',
+    loadComponent: () =>
+      import(
+        './features/invitations/pages/admin-edit-invitation/admin-edit-invitation'
+      ).then(component => component.AdminEditInvitation),
+    title: 'Meghívó szerkesztése | Henn László Admin',
+  },
+  {
     path: '**',
     redirectTo: 'artworks',
   },

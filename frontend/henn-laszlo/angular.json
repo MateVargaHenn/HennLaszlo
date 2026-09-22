@@ -176,6 +176,32 @@
           }
         }
       }
+    },
+    "invitation-data-access": {
+      "projectType": "library",
+      "root": "projects/invitation-data-access",
+      "sourceRoot": "projects/invitation-data-access/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/invitation-data-access/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/invitation-data-access/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/invitation-data-access/tsconfig.spec.json"
+          }
+        }
+      }
     }
   }
 }
