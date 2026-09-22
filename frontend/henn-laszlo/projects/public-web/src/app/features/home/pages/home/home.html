@@ -22,7 +22,8 @@
       class="hero__artwork"
       [attr.aria-busy]="artworkStore.isLoading()"
     >
-      @if (featuredArtwork(); as artwork) {
+      @if (featuredArtworks().length > 0) {
+        @for (artwork of featuredArtworks(); track artwork.id) {
         <figure class="featured-artwork">
           <a
             class="featured-artwork__image-link"
@@ -43,6 +44,7 @@
             <span>{{ artwork.year }}</span>
           </figcaption>
         </figure>
+      }
       } @else {
         <div class="featured-artwork__placeholder"></div>
       }

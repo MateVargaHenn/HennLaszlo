@@ -52,6 +52,22 @@ internal sealed class UpdateArtworkCommandHandler(
 
         artwork.SetDisplayOrder(
             request.DisplayOrder);
+        
+        if (request.IsFeatured)
+        {
+            IReadOnlyList<Domain.Artwork> featuredArtworks =
+                await artworkRepository.GetFeaturedAsync(
+                    cancellationToken);
+
+            foreach (Domain.Artwork featuredArtwork
+                    in featuredArtworks)
+            {
+                if (featuredArtwork.Id != artwork.Id)
+                {
+                    featuredArtwork.SetFeatured(false);
+                }
+            }
+        }
 
         artwork.SetFeatured(
             request.IsFeatured);

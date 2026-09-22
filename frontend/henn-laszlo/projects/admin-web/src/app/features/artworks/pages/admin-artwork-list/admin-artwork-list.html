@@ -38,6 +38,15 @@
       </div>
     </section>
 
+    @if (store.publicationError()) {
+      <div
+        role="alert"
+        class="mb-6 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800"
+      >
+        {{ store.publicationError() }}
+      </div>
+    }
+
     @if (store.isLoading()) {
       <p class="rounded-lg bg-white p-6 shadow-sm">
         A művek betöltése…
@@ -142,22 +151,62 @@
                   {{ artwork.createdAtUtc | date:'yyyy. MM. dd.' }}
                 </td>
                 <td class="px-5 py-4">
-                  <div class="flex items-center gap-4">
+                  <div class="flex flex-wrap items-center gap-4">
                     <a
                       [routerLink]="[
                         '/artworks',
                         artwork.id,
                         'edit'
                       ]"
-                      class="text-sm font-medium text-stone-700 hover:text-stone-950 hover:underline cursor-pointer"
+                      class="text-sm font-medium text-stone-700 hover:text-stone-950 hover:underline"
                     >
                       Szerkesztés
                     </a>
 
-                    @if (!artwork.isPublished) {
+                    @if (artwork.isPublished) {
                       <button
                         type="button"
-                        class="text-sm font-medium text-red-700 hover:text-red-900 hover:underline cursor-pointer"
+                        class="text-sm font-medium text-amber-700 hover:text-amber-900 hover:underline disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                        [disabled]="
+                          store.isChangingPublication(artwork.id)
+                        "
+                        (click)="unpublishArtwork(artwork.id)"
+                      >
+                        {{
+                          store.isChangingPublication(artwork.id)
+                            ? 'Visszavonás…'
+                            : 'Visszavonás'
+                        }}
+                      </button>
+                    }
+                    @else {
+                      <button
+                        type="button"
+                        class="text-sm font-medium text-green-700 hover:text-green-900 hover:underline disabled:cursor-not-allowed disabled:text-stone-400 disabled:no-underline cursor-pointer"
+                        [disabled]="
+                          !artwork.hasImage ||
+                          store.isChangingPublication(artwork.id)
+                        "
+                        [attr.title]="
+                          !artwork.hasImage
+                            ? 'Kép nélküli mű nem publikálható.'
+                            : null
+                        "
+                        (click)="publishArtwork(artwork.id)"
+                      >
+                        {{
+                          store.isChangingPublication(artwork.id)
+                            ? 'Publikálás…'
+                            : 'Publikálás'
+                        }}
+                      </button>
+
+                      <button
+                        type="button"
+                        class="text-sm font-medium text-red-700 hover:text-red-900 hover:underline disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                        [disabled]="
+                          store.isChangingPublication(artwork.id)
+                        "
                         (click)="requestDelete(artwork)"
                       >
                         Törlés

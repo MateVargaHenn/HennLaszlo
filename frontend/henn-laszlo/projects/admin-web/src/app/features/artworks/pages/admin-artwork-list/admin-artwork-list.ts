@@ -94,4 +94,16 @@ export class AdminArtworkList {
         },
       });
   }
+
+  protected publishArtwork(
+    artworkId: string
+  ): void {
+    void this.store.publish(artworkId);
+  }
+
+  protected unpublishArtwork(
+    artworkId: string
+  ): void {
+    void this.store.unpublish(artworkId);
+  }
 }

@@ -122,4 +122,22 @@ export class ArtworkApi {
       request
     );
   }
+
+  publishArtwork(
+  artworkId: string
+): Observable<void> {
+  return this.http.put<void>(
+    `${this.apiBaseUrl}/api/admin/artworks/${artworkId}/publish`,
+    null
+  );
+}
+
+unpublishArtwork(
+  artworkId: string
+): Observable<void> {
+  return this.http.put<void>(
+    `${this.apiBaseUrl}/api/admin/artworks/${artworkId}/unpublish`,
+    null
+  );
+}
 }

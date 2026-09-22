@@ -33,6 +33,15 @@ public class ArtworkRepository(
             cancellationToken);
     }
 
+    public async Task<IReadOnlyList<Domain.Artwork>>
+    GetFeaturedAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Artworks
+            .Where(artwork => artwork.IsFeatured)
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<Domain.Artwork?> GetPublishedByIdAsync(
     Guid id,
     CancellationToken cancellationToken = default)

@@ -119,3 +119,13 @@ Accept: application/json
 
 GET {{WebApi_HostAddress}}/api/admin/artworks/b621f34b-80ce-40fc-a8ae-9e86dcba3e4a
 Accept: application/json
+
+### Publikáció visszavonása
+
+PUT {{WebApi_HostAddress}}/api/admin/artworks/b4ba4b50-63e6-42b7-83e1-1146e72263a6/unpublish
+Accept: application/json
+
+### Mű publikálása
+
+PUT {{WebApi_HostAddress}}/api/admin/artworks/b4ba4b50-63e6-42b7-83e1-1146e72263a6/publish
+Accept: application/json
