@@ -51,7 +51,7 @@ export class AdminArtworksStore {
   }
 
   getImageUrl(artworkId: string): string {
-    return this.artworkApi.getArtworkImageUrl(
+    return this.artworkApi.getAdminArtworkImageUrl(
       artworkId
     );
   }
