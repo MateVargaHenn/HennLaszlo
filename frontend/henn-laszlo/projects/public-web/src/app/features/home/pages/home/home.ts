@@ -19,15 +19,12 @@ export class Home {
   protected readonly artworkStore =
     inject(PublishedArtworksStore);
 
-  protected readonly featuredArtwork = computed(() => {
-    const artworks = this.artworkStore.artworks();
-
-    return (
-      artworks.find(artwork => artwork.isFeatured) ??
-      artworks[0] ??
-      null
-    );
-  });
+protected readonly featuredArtworks = computed(() =>
+  this.artworkStore
+    .artworks()
+    .filter(artwork => artwork.isFeatured)
+    .sort((a, b) => a.displayOrder - b.displayOrder)
+);
 
   protected readonly selectedArtworks = computed(() =>
   this.artworkStore.artworks().slice(0, 3)

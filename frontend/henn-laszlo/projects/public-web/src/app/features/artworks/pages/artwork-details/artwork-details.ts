@@ -5,11 +5,12 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ArtworkDetailsStore } from 'artwork-data-access';
 
 @Component({
   selector: 'app-artwork-details',
-  imports: [],
+  imports: [RouterLink],
   providers: [ArtworkDetailsStore],
   templateUrl: './artwork-details.html',
   styleUrl: './artwork-details.css',
