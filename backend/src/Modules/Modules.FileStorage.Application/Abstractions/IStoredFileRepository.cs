@@ -9,4 +9,6 @@ public interface IStoredFileRepository
 	Task<StoredFile?> GetByIdAsync(
     Guid id,
     CancellationToken cancellationToken = default);
+
+    void Remove(StoredFile storedFile);
 }

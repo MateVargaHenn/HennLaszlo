@@ -85,6 +85,8 @@ internal sealed class LocalFileContentStorage(
         string storageKey,
         CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         string fullPath = GetFullPath(storageKey);
 
         if (File.Exists(fullPath))

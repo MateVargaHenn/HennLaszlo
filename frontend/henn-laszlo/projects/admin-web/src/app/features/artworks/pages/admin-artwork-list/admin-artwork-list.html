@@ -1,6 +1,7 @@
 <main class="min-h-screen bg-stone-100 px-5 py-10 text-stone-900">
   <div class="mx-auto max-w-7xl">
-    <header class="mb-8">
+  <header class="mb-8 flex flex-wrap items-end justify-between gap-5">
+    <div>
       <p class="text-sm uppercase tracking-[0.2em] text-stone-500">
         Adminisztráció
       </p>
@@ -8,7 +9,15 @@
       <h1 class="mt-2 font-serif text-4xl">
         Művek kezelése
       </h1>
-    </header>
+    </div>
+
+    <a
+      routerLink="/artworks/new"
+      class="rounded-md bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-700"
+    >
+      Új mű feltöltése
+    </a>
+  </header>
 
     <section
       class="mb-8 grid gap-4 sm:grid-cols-2"
@@ -64,6 +73,7 @@
               <th class="px-5 py-4 text-sm font-medium">Kiemelt</th>
               <th class="px-5 py-4 text-sm font-medium">Sorrend</th>
               <th class="px-5 py-4 text-sm font-medium">Létrehozva</th>
+              <th class="px-5 py-4 text-sm font-medium">Műveletek</th>
             </tr>
           </thead>
 
@@ -131,6 +141,20 @@
                 <td class="px-5 py-4 text-sm text-stone-600">
                   {{ artwork.createdAtUtc | date:'yyyy. MM. dd.' }}
                 </td>
+                <td class="px-5 py-4">
+                  @if (!artwork.isPublished) {
+                    <button
+                      type="button"
+                      class="rounded-md px-3 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50"
+                      (click)="requestDelete(artwork)"
+                    >
+                      Törlés
+                    </button>
+                  }
+                  @else {
+                    <span class="text-stone-400">—</span>
+                  }
+                </td>
               </tr>
             }
           </tbody>
@@ -138,4 +162,68 @@
       </div>
     }
   </div>
+
+  @if (artworkPendingDeletion(); as artwork) {
+    <div
+      class="fixed inset-0 z-50 grid place-items-center bg-stone-950/50 p-5"
+      (click)="cancelDelete()"
+    >
+      <section
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="delete-dialog-title"
+        class="w-full max-w-md rounded-xl bg-white p-7 shadow-2xl"
+        (click)="$event.stopPropagation()"
+      >
+        <p class="text-sm uppercase tracking-[0.18em] text-red-700">
+          Vázlat törlése
+        </p>
+      
+        <h2
+          id="delete-dialog-title"
+          class="mt-2 font-serif text-2xl"
+        >
+          Biztosan törlöd?
+        </h2>
+      
+        <p class="mt-4 leading-7 text-stone-600">
+          A(z)
+          <strong class="text-stone-900">
+            {{ artwork.titleHu }}
+          </strong>
+          mű és a hozzá tartozó kép véglegesen törlődik.
+        </p>
+      
+        @if (deleteError()) {
+          <p class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-800">
+            {{ deleteError() }}
+          </p>
+        }
+      
+        <div class="mt-7 flex justify-end gap-3">
+          <button
+            type="button"
+            class="rounded-md px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-100 disabled:opacity-50"
+            [disabled]="deletingArtworkId() !== null"
+            (click)="cancelDelete()"
+          >
+            Mégse
+          </button>
+        
+          <button
+            type="button"
+            class="rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800 disabled:cursor-wait disabled:opacity-60"
+            [disabled]="deletingArtworkId() !== null"
+            (click)="confirmDelete()"
+          >
+            {{
+              deletingArtworkId()
+                ? 'Törlés…'
+                : 'Végleges törlés'
+            }}
+          </button>
+        </div>
+      </section>
+    </div>
+  }
 </main>

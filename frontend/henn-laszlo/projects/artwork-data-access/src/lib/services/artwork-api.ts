@@ -96,4 +96,12 @@ export class ArtworkApi {
   ): string {
     return `${this.config.apiBaseUrl}/api/admin/artworks/${artworkId}/image`;
   }
+
+  deleteArtwork(
+  artworkId: string
+  ): Observable<void> {
+    return this.http.delete<void>(
+      `${this.config.apiBaseUrl}/api/admin/artworks/${artworkId}`
+    );
+  }
 }
