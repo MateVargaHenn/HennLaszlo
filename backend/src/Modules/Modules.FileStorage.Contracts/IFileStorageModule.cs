@@ -9,4 +9,8 @@ public interface IFileStorageModule
     Task<FileContentData?> GetFileContentAsync(
         Guid fileId,
         CancellationToken cancellationToken = default);
+
+    Task DeleteFileAsync(
+        Guid fileId,
+        CancellationToken cancellationToken = default);
 }

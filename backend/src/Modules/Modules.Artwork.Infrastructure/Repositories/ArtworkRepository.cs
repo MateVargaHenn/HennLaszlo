@@ -55,4 +55,9 @@ public class ArtworkRepository(
             .ThenByDescending(artwork => artwork.CreatedAtUtc)
             .ToListAsync(cancellationToken);
     }
+
+    public void Remove(Domain.Artwork artwork)
+    {
+        dbContext.Artworks.Remove(artwork);
+    }
 }

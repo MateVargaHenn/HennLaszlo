@@ -24,4 +24,9 @@ internal sealed class StoredFileRepository(
 				storedFile => storedFile.Id == id,
 				cancellationToken);
 	}
+
+    public void Remove(StoredFile storedFile)
+    {
+        dbContext.StoredFiles.Remove(storedFile);
+    }
 }

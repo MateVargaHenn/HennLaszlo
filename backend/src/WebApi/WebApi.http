@@ -89,3 +89,8 @@ Accept: application/json
 
 GET {{WebApi_HostAddress}}/api/admin/artworks
 Accept: application/json
+
+### Delete Artwork
+
+DELETE {{WebApi_HostAddress}}/api/admin/artworks/71280310-89b6-425d-8bfd-227cd3a942f0
+Accept: application/json
