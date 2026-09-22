@@ -1,0 +1,95 @@
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__inner">
+    <div class="hero__content">
+      <p class="hero__eyebrow">Henn László András</p>
+
+      <h1 id="hero-title" class="hero__title">
+        Festőművész
+      </h1>
+
+      <p class="hero__description">
+        Válogatás az alkotó festményeiből, kiállításaiból
+        és több évtizedes művészi munkásságából.
+      </p>
+
+      <a class="hero__link" routerLink="/muvek">
+        Művek megtekintése
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div
+      class="hero__artwork"
+      [attr.aria-busy]="artworkStore.isLoading()"
+    >
+      @if (featuredArtwork(); as artwork) {
+        <figure class="featured-artwork">
+          <a
+            class="featured-artwork__image-link"
+            routerLink="/muvek"
+            [attr.aria-label]="artwork.titleHu + ' megtekintése'"
+          >
+            <img
+              class="featured-artwork__image"
+              [src]="artworkStore.getImageUrl(artwork.id)"
+              [alt]="artwork.titleHu"
+              loading="eager"
+              fetchpriority="high"
+            />
+          </a>
+
+          <figcaption class="featured-artwork__caption">
+            <span>{{ artwork.titleHu }}</span>
+            <span>{{ artwork.year }}</span>
+          </figcaption>
+        </figure>
+      } @else {
+        <div class="featured-artwork__placeholder"></div>
+      }
+    </div>
+  </div>
+</section>
+
+@if (selectedArtworks().length > 0) {
+  <section
+    class="selected-artworks"
+    aria-labelledby="selected-artworks-title"
+  >
+    <div class="selected-artworks__inner">
+      <header class="selected-artworks__header">
+        <div>
+          <p class="selected-artworks__eyebrow">
+            Válogatás
+          </p>
+
+          <h2
+            id="selected-artworks-title"
+            class="selected-artworks__title"
+          >
+            Kiemelt művek
+          </h2>
+        </div>
+
+        <a
+          class="selected-artworks__link"
+          routerLink="/muvek"
+        >
+          Összes mű
+          <span aria-hidden="true">→</span>
+        </a>
+      </header>
+
+      <div class="selected-artworks__grid">
+        @for (
+          artwork of selectedArtworks();
+          track artwork.id
+        ) {
+          <app-artwork-card
+            [artwork]="artwork"
+            [imageUrl]="artworkStore.getImageUrl(artwork.id)"
+          />
+        }
+      </div>
+    </div>
+  </section>
+}

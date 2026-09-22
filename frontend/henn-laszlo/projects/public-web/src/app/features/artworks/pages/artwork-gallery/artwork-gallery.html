@@ -1,0 +1,55 @@
+<main class="min-h-screen bg-stone-50 text-stone-900">
+  <section class="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:py-20">
+    <header class="mb-12 max-w-2xl">
+      <p class="mb-3 text-sm uppercase tracking-[0.24em] text-stone-500">
+        Henn László András
+      </p>
+
+      <h1 class="font-serif text-4xl leading-tight sm:text-5xl">
+        Művek
+      </h1>
+
+      <p class="mt-5 text-lg leading-8 text-stone-600">
+        Válogatás az alkotó munkáiból.
+      </p>
+    </header>
+
+    @if (store.isLoading()) {
+      <p class="text-stone-600">A művek betöltése…</p>
+    }
+    @else if (store.error()) {
+      <div class="rounded-lg border border-red-200 bg-red-50 p-5">
+        <p class="text-red-800">
+          A művek most nem tölthetők be.
+        </p>
+
+        <button
+          type="button"
+          class="mt-4 rounded-md bg-stone-900 px-4 py-2 text-white"
+          (click)="store.reload()">
+          Újrapróbálom
+        </button>
+      </div>
+    }
+    @else if (store.artworks().length === 0) {
+      <p class="text-stone-600">
+        Jelenleg nincs megjeleníthető mű.
+      </p>
+    }
+@else {
+  <div class="grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+    @for (
+      artwork of store.artworks();
+      track artwork.id;
+      let index = $index
+    ) {
+      <app-artwork-card
+        [artwork]="artwork"
+        [imageUrl]="store.getImageUrl(artwork.id)"
+        [priority]="index < 2"
+      />
+    }
+  </div>
+}
+  </section>
+</main>

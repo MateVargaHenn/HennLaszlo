@@ -1,0 +1,201 @@
+<main class="min-h-screen bg-stone-100 px-5 py-10 text-stone-900">
+  <div class="mx-auto max-w-7xl">
+  <header class="mb-8 flex flex-wrap items-end justify-between gap-5">
+    <div>
+      <p class="text-sm uppercase tracking-[0.2em] text-stone-500">
+        Adminisztráció
+      </p>
+
+      <h1 class="mt-2 font-serif text-4xl">
+        Művek kezelése
+      </h1>
+    </div>
+
+    <a
+      routerLink="/artworks/new"
+      class="rounded-md bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-700"
+    >
+      Új mű feltöltése
+    </a>
+  </header>
+
+    <section
+      class="mb-8 grid gap-4 sm:grid-cols-2"
+      aria-label="Művek összesítése"
+    >
+      <div class="rounded-lg bg-white p-5 shadow-sm">
+        <p class="text-sm text-stone-500">Publikálva</p>
+        <p class="mt-2 text-3xl font-semibold">
+          {{ store.publishedCount() }}
+        </p>
+      </div>
+
+      <div class="rounded-lg bg-white p-5 shadow-sm">
+        <p class="text-sm text-stone-500">Vázlat</p>
+        <p class="mt-2 text-3xl font-semibold">
+          {{ store.draftCount() }}
+        </p>
+      </div>
+    </section>
+
+    @if (store.isLoading()) {
+      <p class="rounded-lg bg-white p-6 shadow-sm">
+        A művek betöltése…
+      </p>
+    }
+    @else if (store.error()) {
+      <div class="rounded-lg border border-red-200 bg-red-50 p-6">
+        <p class="text-red-800">
+          A művek most nem tölthetők be.
+        </p>
+
+        <button
+          type="button"
+          class="mt-4 rounded-md bg-stone-900 px-4 py-2 text-white"
+          (click)="store.reload()"
+        >
+          Újrapróbálom
+        </button>
+      </div>
+    }
+    @else if (store.artworks().length === 0) {
+      <p class="rounded-lg bg-white p-6 shadow-sm">
+        Még nincs feltöltött mű.
+      </p>
+    }
+    @else {
+      <div class="overflow-x-auto rounded-lg bg-white shadow-sm">
+        <table class="w-full min-w-3xl border-collapse text-left">
+          <thead class="border-b border-stone-200 bg-stone-50">
+            <tr>
+              <th class="px-5 py-4 text-sm font-medium">Mű</th>
+              <th class="px-5 py-4 text-sm font-medium">Állapot</th>
+              <th class="px-5 py-4 text-sm font-medium">Kiemelt</th>
+              <th class="px-5 py-4 text-sm font-medium">Sorrend</th>
+              <th class="px-5 py-4 text-sm font-medium">Létrehozva</th>
+              <th class="px-5 py-4 text-sm font-medium">Műveletek</th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-stone-200">
+            @for (
+              artwork of store.artworks();
+              track artwork.id
+            ) {
+              <tr class="hover:bg-stone-50">
+                <td class="px-5 py-4">
+                  <div class="flex min-w-64 items-center gap-4">
+                    <div
+                      class="grid h-20 w-20 shrink-0 place-items-center overflow-hidden bg-stone-200"
+                    >
+                      @if (artwork.hasImage) {
+                        <img
+                          class="h-full w-full object-contain"
+                          [src]="store.getImageUrl(artwork.id)"
+                          [alt]="artwork.titleHu"
+                          loading="lazy"
+                        />
+                      }
+                      @else {
+                        <span class="text-xs text-stone-500">
+                          Nincs kép
+                        </span>
+                      }
+                    </div>
+
+                    <div>
+                      <p class="font-medium">
+                        {{ artwork.titleHu }}
+                      </p>
+
+                      @if (artwork.year !== null) {
+                        <p class="mt-1 text-sm text-stone-500">
+                          {{ artwork.year }}
+                        </p>
+                      }
+                    </div>
+                  </div>
+                </td>
+
+                <td class="px-5 py-4">
+                  @if (artwork.isPublished) {
+                    <span class="rounded-full bg-green-100 px-3 py-1 text-sm text-green-800">
+                      Publikálva
+                    </span>
+                  }
+                  @else {
+                    <span class="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-800">
+                      Vázlat
+                    </span>
+                  }
+                </td>
+
+                <td class="px-5 py-4">
+                  {{ artwork.isFeatured ? 'Igen' : 'Nem' }}
+                </td>
+
+                <td class="px-5 py-4">
+                  {{ artwork.displayOrder }}
+                </td>
+
+                <td class="px-5 py-4 text-sm text-stone-600">
+                  {{ artwork.createdAtUtc | date:'yyyy. MM. dd.' }}
+                </td>
+                <td class="px-5 py-4">
+                  <div class="flex items-center gap-4">
+                    <a
+                      [routerLink]="[
+                        '/artworks',
+                        artwork.id,
+                        'edit'
+                      ]"
+                      class="text-sm font-medium text-stone-700 hover:text-stone-950 hover:underline cursor-pointer"
+                    >
+                      Szerkesztés
+                    </a>
+
+                    @if (!artwork.isPublished) {
+                      <button
+                        type="button"
+                        class="text-sm font-medium text-red-700 hover:text-red-900 hover:underline cursor-pointer"
+                        (click)="requestDelete(artwork)"
+                      >
+                        Törlés
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  @if (artworkPendingDeletion(); as artwork) {
+    <div
+      class="fixed inset-0 z-50 grid place-items-center bg-stone-950/50 p-5"
+    >
+      <section
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="delete-dialog-title"
+        class="w-full max-w-md rounded-xl bg-white p-7 shadow-2xl"
+      >
+        <p class="text-sm uppercase tracking-[0.18em] text-red-700">
+          Vázlat törlése
+        </p>
+
+        <h2
+          id="delete-dialog-title"
+          class="mt-2 font-serif text-2xl"
+        >
+          Biztosan törlöd?
+        </h2>
+
+        <!-- A meglévő tartalom és gombok maradnak. -->
+      </section>
+    </div>
+  }
+</main>

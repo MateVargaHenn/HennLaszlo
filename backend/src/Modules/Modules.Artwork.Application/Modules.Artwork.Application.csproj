@@ -2,6 +2,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules.Artwork.Domain\Modules.Artwork.Domain.csproj" />
+    <ProjectReference Include="..\Modules.FileStorage.Contracts\Modules.FileStorage.Contracts.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="MediatR" Version="14.2.0" />
   </ItemGroup>
 
   <PropertyGroup>

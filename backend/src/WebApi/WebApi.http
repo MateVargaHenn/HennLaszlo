@@ -1,6 +1,121 @@
 @WebApi_HostAddress = http://localhost:5270
 
-GET {{WebApi_HostAddress}}/weatherforecast/
+POST {{WebApi_HostAddress}}/api/admin/artworks
+Content-Type: application/json
+Accept: application/json
+
+{
+  "titleHu": "Táj",
+  "titleEn": "Landscape",
+  "year": 2024,
+  "techniqueHu": "olaj, vászon",
+  "techniqueEn": "oil on canvas",
+  "widthCm": 80,
+  "heightCm": 60
+}
+
+###
+
+POST {{WebApi_HostAddress}}/api/admin/artworks
+Content-Type: application/json
+Accept: application/json
+
+{
+  "titleHu": "",
+  "year": 9999,
+  "widthCm": -10,
+  "heightCm": 0
+}
+
+###
+
+GET {{WebApi_HostAddress}}/api/artworks
 Accept: application/json
 
 ###
+
+POST {{WebApi_HostAddress}}/api/admin/files
+Content-Type: multipart/form-data; boundary=FileBoundary
+Accept: application/json
+
+--FileBoundary
+Content-Disposition: form-data; name="file"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< ./TestFiles/test.jpg
+--FileBoundary--
+
+######
+
+GET {{WebApi_HostAddress}}/api/admin/files/27139e0b-9c50-4457-9fb1-6059ff0ff502
+
+###
+
+PUT {{WebApi_HostAddress}}/api/admin/artworks/b4ba4b50-63e6-42b7-83e1-1146e72263a6/image
+Content-Type: application/json
+
+{
+  "fileId": "27139e0b-9c50-4457-9fb1-6059ff0ff502"
+}
+
+###
+
+PUT {{WebApi_HostAddress}}/api/admin/artworks/b4ba4b50-63e6-42b7-83e1-1146e72263a6/publish
+Accept: application/json
+
+###
+
+GET {{WebApi_HostAddress}}/api/artworks/b4ba4b50-63e6-42b7-83e1-1146e72263a6/image
+Accept: image/*
+
+###
+
+GET {{WebApi_HostAddress}}/api/artworks
+Accept: application/json
+
+###
+
+PUT {{WebApi_HostAddress}}/api/admin/artworks/a4ba4b50-63e6-42b7-83e1-1146e72263a6/publish
+Accept: application/json
+
+### Publikált mű adatlapja
+
+@artworkId = b4ba4b50-63e6-42b7-83e1-1146e72263a5
+
+GET {{WebApi_HostAddress}}/api/artworks/{{artworkId}}
+Accept: application/json
+
+### Admin műlista
+
+GET {{WebApi_HostAddress}}/api/admin/artworks
+Accept: application/json
+
+### Delete Artwork
+
+DELETE {{WebApi_HostAddress}}/api/admin/artworks/71280310-89b6-425d-8bfd-227cd3a942f0
+Accept: application/json
+
+### Mű adatainak módosítása
+
+PUT {{WebApi_HostAddress}}/api/admin/artworks/b621f34b-80ce-40fc-a8ae-9e86dcba3e4a
+Content-Type: application/json
+Accept: application/json
+
+{
+  "titleHu": "Lélek-táj",
+  "titleEn": "Soul Landscape",
+  "year": 2025,
+  "techniqueHu": "olaj, vászon",
+  "techniqueEn": "oil on canvas",
+  "widthCm": 80,
+  "heightCm": 60,
+  "descriptionHu": "A mű magyar nyelvű leírása.",
+  "descriptionEn": "English description of the artwork.",
+  "isFeatured": false,
+  "displayOrder": 1
+}
+
+### Admin mű részletei
+
+GET {{WebApi_HostAddress}}/api/admin/artworks/b621f34b-80ce-40fc-a8ae-9e86dcba3e4a
+Accept: application/json

@@ -480,3 +480,12 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# disable storage folder
+/backend/src/WebApi/TestFiles/
+/backend/src/WebApi/storage/
+
+test.jpg
+
+# disable .vscode
+.vscode/

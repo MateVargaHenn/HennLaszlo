@@ -1,0 +1,53 @@
+<header class="sticky top-0 z-50 border-b border-stone-200 bg-stone-50/95 backdrop-blur">
+  <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8">
+    <a
+  routerLink="/"
+  class="font-serif text-lg tracking-wide text-stone-900"
+  (click)="closeMenu()">
+      Henn László András
+    </a>
+
+    <nav
+      class="hidden items-center gap-8 md:flex"
+      aria-label="Fő navigáció">
+        <a
+        routerLink="/"
+        routerLinkActive="text-stone-950"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
+        >
+        Kezdőlap
+      </a>
+      <a
+        routerLink="/muvek"
+        routerLinkActive="text-stone-950"
+        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950">
+        Művek
+      </a>
+    </nav>
+
+    <button
+      type="button"
+      class="rounded-md px-3 py-2 text-sm uppercase tracking-wider text-stone-700 md:hidden"
+      [attr.aria-expanded]="isMenuOpen()"
+      aria-controls="mobile-navigation"
+      (click)="toggleMenu()">
+      {{ isMenuOpen() ? 'Bezárás' : 'Menü' }}
+    </button>
+  </div>
+
+  @if (isMenuOpen()) {
+    <nav
+      id="mobile-navigation"
+      class="border-t border-stone-200 px-5 py-5 md:hidden"
+      aria-label="Mobil navigáció">
+      <a
+        routerLink="/muvek"
+        routerLinkActive="font-semibold"
+        class="block py-2 text-stone-700"
+        (click)="closeMenu()">
+        Művek
+      </a>
+    </nav>
+  }
+</header>

@@ -53,7 +53,13 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/public-web/src/environments/environment.ts",
+                  "with": "projects/public-web/src/environments/environment.development.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -114,7 +120,13 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/admin-web/src/environments/environment.ts",
+                  "with": "projects/admin-web/src/environments/environment.development.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -129,10 +141,39 @@
               "buildTarget": "admin-web:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "port": 4201
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        }
+      }
+    },
+    "artwork-data-access": {
+      "projectType": "library",
+      "root": "projects/artwork-data-access",
+      "sourceRoot": "projects/artwork-data-access/src",
+      "prefix": "henn",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/artwork-data-access/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/artwork-data-access/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/artwork-data-access/tsconfig.spec.json"
+          }
         }
       }
     }
