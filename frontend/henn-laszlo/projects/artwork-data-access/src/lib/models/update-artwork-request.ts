@@ -1,4 +1,4 @@
-export interface CreateArtworkRequest {
+export interface UpdateArtworkRequest {
   readonly titleHu: string;
   readonly titleEn: string | null;
   readonly year: number | null;

@@ -1,0 +1,23 @@
+@if (store.isLoading()) {
+  <p class="p-8">A mű adatainak betöltése…</p>
+}
+@else if (store.error()) {
+  <p class="p-8 text-red-700">
+    A mű adatai nem tölthetők be.
+  </p>
+}
+@else if (store.artwork(); as artwork) {
+  <app-artwork-form
+    [mode]="'edit'"
+  [initialValue]="artwork"
+  [existingImageUrl]="
+    artwork.hasImage
+      ? store.getImageUrl(artwork.id)
+      : null
+  "
+  [isSubmitting]="store.isSaving()"
+  [submitError]="store.saveError()"
+  (submitted)="save($event)"
+  (cancelled)="cancel()"
+  />
+}

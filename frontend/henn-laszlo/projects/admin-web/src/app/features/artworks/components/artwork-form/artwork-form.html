@@ -13,8 +13,13 @@
           </p>
 
           <p class="mt-1 text-sm leading-6 text-stone-500">
-            JPG, PNG vagy WebP formátum. A kép vázlat
-            mentése után is feltölthető.
+            @if (mode() === 'edit') {
+              Új kép kiválasztásával lecserélheted a jelenlegi képet.
+            }
+            @else {
+              JPG, PNG vagy WebP formátum. A kép vázlat
+              mentése után is feltölthető.
+            }
           </p>
         </div>
 
@@ -33,7 +38,7 @@
             (change)="onFileSelected($event)"
           />
 
-          @if (imagePreviewUrl(); as previewUrl) {
+          @if (displayedImageUrl(); as previewUrl) {
             <img
               class="h-full w-full object-contain"
               [src]="previewUrl"
@@ -110,12 +115,20 @@
         </p>
 
         <h2 class="mt-2 font-serif text-3xl text-stone-950">
-          Új alkotás
+          {{ mode() === 'edit'
+            ? 'Alkotás szerkesztése'
+            : 'Új alkotás'
+          }}
         </h2>
 
         <p class="mt-3 max-w-xl text-sm leading-6 text-stone-600">
-          Elsőként csak a magyar cím kötelező.
-          A hiányzó adatokat később is megadhatod.
+          @if (mode() === 'edit') {
+            Módosítsd az adatokat, majd mentsd el a változtatásokat.
+          }
+          @else {
+            Elsőként csak a magyar cím kötelező.
+            A hiányzó adatokat később is megadhatod.
+          }
         </p>
       </header>
 
@@ -308,6 +321,107 @@
             </div>
           </div>
         </fieldset>
+
+        <!-- Leírás -->
+        <fieldset>
+          <legend class="mb-4 text-sm font-semibold text-stone-900">
+            Leírás
+          </legend>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label
+                for="description-hu"
+                class="block text-sm font-medium text-stone-700"
+              >
+                Magyar leírás
+              </label>
+
+              <textarea
+                id="description-hu"
+                rows="6"
+                maxlength="5000"
+                formControlName="descriptionHu"
+                class="mt-2 w-full resize-y rounded-lg border border-stone-300 bg-white px-4 py-3 leading-6 outline-none transition focus:border-stone-700 focus:ring-2 focus:ring-stone-200"
+              ></textarea>
+            </div>
+
+            <div>
+              <label
+                for="description-en"
+                class="block text-sm font-medium text-stone-700"
+              >
+                Angol leírás
+              </label>
+
+              <textarea
+                id="description-en"
+                rows="6"
+                maxlength="5000"
+                formControlName="descriptionEn"
+                class="mt-2 w-full resize-y rounded-lg border border-stone-300 bg-white px-4 py-3 leading-6 outline-none transition focus:border-stone-700 focus:ring-2 focus:ring-stone-200"
+              ></textarea>
+            </div>
+          </div>
+        </fieldset>
+
+        @if (mode() === 'edit') {
+        <!-- Megjelenés -->
+        <fieldset>
+          <legend class="mb-4 text-sm font-semibold text-stone-900">
+            Megjelenés
+          </legend>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label
+                for="display-order"
+                class="block text-sm font-medium text-stone-700"
+              >
+                Megjelenési sorrend
+              </label>
+
+              <input
+                id="display-order"
+                type="number"
+                min="0"
+                formControlName="displayOrder"
+                class="mt-2 w-full rounded-lg border border-stone-300 bg-white px-4 py-3 outline-none transition focus:border-stone-700 focus:ring-2 focus:ring-stone-200"
+              />
+
+              <p class="mt-2 text-sm text-stone-500">
+                A kisebb szám előrébb jelenik meg.
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-stone-200 bg-stone-50 p-5">
+              <label class="flex cursor-pointer items-start gap-3">
+                <input
+                  type="checkbox"
+                  formControlName="isFeatured"
+                  class="mt-1 h-4 w-4 rounded border-stone-300 text-stone-900"
+                />
+
+                <span>
+                  <span class="block font-medium text-stone-900">
+                    Kiemelt mű
+                  </span>
+
+                  <span class="mt-1 block text-sm leading-6 text-stone-500">
+                    A kezdőlapon hangsúlyosan jelenik meg.
+                  </span>
+                </span>
+              </label>
+
+              @if (!initialValue()?.isPublished) {
+                <p class="mt-3 text-sm text-amber-700">
+                  Csak publikált mű állítható be kiemeltként.
+                </p>
+              }
+            </div>
+          </div>
+        </fieldset>
+        }
       </div>
     </section>
   </div>
@@ -321,7 +435,7 @@
   <footer class="flex flex-col-reverse gap-3 border-t border-stone-200 bg-stone-50 px-6 py-5 sm:flex-row sm:justify-end sm:px-8">
     <button
       type="button"
-      class="rounded-lg px-5 py-3 font-medium text-stone-700 transition hover:bg-stone-200"
+      class="rounded-lg px-5 py-3 font-medium text-stone-700 transition hover:bg-stone-200 cursor-pointer"
       [disabled]="isSubmitting()"
       (click)="cancel()"
     >
@@ -330,10 +444,18 @@
 
     <button
       type="submit"
-      class="rounded-lg bg-stone-900 px-6 py-3 font-medium text-white transition hover:bg-stone-700 disabled:cursor-not-allowed disabled:opacity-50"
+      class="rounded-lg bg-stone-900 px-6 py-3 font-medium text-white transition hover:bg-stone-700 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
       [disabled]="isSubmitting()"
     >
-      {{ isSubmitting() ? 'Mentés…' : 'Mentés vázlatként' }}
+    @if (isSubmitting()) {
+      Mentés…
+    }
+    @else if (mode() === 'edit') {
+      Módosítások mentése
+    }
+    @else {
+      Mentés vázlatként
+    }
     </button>
   </footer>
 </form>

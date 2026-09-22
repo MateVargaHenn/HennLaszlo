@@ -8,6 +8,8 @@ using Modules.Artwork.Presentation.Artworks.GetById;
 using Modules.Artwork.Presentation.Artworks.GetAdminList;
 using Modules.Artwork.Presentation.Artworks.GetAdminImage;
 using Modules.Artwork.Presentation.Artworks.Delete;
+using Modules.Artwork.Presentation.Artworks.Update;
+using Modules.Artwork.Presentation.Artworks.GetAdminById;
 
 namespace Modules.Artwork.Presentation;
 
@@ -25,6 +27,8 @@ public static class ArtworkEndpoints
         endpoints.MapGetAdminArtworks();
         endpoints.MapGetAdminArtworkImage();
         endpoints.MapDeleteArtwork();
+        endpoints.MapUpdateArtwork();
+        endpoints.MapGetAdminArtworkById();
 
         return endpoints;
     }
