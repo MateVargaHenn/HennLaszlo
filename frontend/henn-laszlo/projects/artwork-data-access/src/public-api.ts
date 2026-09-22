@@ -13,3 +13,6 @@ export * from './lib/stores/admin-artworks.store';
 export * from './lib/models/create-artwork-request';
 export * from './lib/models/create-artwork-response';
 export * from './lib/models/upload-file-response';
+export * from './lib/models/admin-artwork-details';
+export * from './lib/models/update-artwork-request';
+export * from './lib/stores/admin-artwork-details-store';

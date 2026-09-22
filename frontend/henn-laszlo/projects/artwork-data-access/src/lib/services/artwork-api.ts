@@ -6,7 +6,7 @@ import { ARTWORK_DATA_ACCESS_CONFIG } from '../config/artwork-data-access.config
 import { ArtworkListItem } from '../models/artwork-list-item';
 import { ArtworkDetails } from '../models/artwork-details';
 import { AdminArtworkListItem } from '../models/admin-artwork-list-item';
-import { CreateArtworkRequest, CreateArtworkResponse } from '../../public-api';
+import { AdminArtworkDetails, CreateArtworkRequest, CreateArtworkResponse, UpdateArtworkRequest } from '../../public-api';
 import { UploadFileResponse } from '../models/upload-file-response';
 
 
@@ -102,6 +102,24 @@ export class ArtworkApi {
   ): Observable<void> {
     return this.http.delete<void>(
       `${this.config.apiBaseUrl}/api/admin/artworks/${artworkId}`
+    );
+  }
+
+  getAdminArtworkById(
+    artworkId: string
+  ): Observable<AdminArtworkDetails> {
+    return this.http.get<AdminArtworkDetails>(
+      `${this.apiBaseUrl}/api/admin/artworks/${artworkId}`
+    );
+  }
+
+  updateArtwork(
+    artworkId: string,
+    request: UpdateArtworkRequest
+  ): Observable<void> {
+    return this.http.put<void>(
+      `${this.apiBaseUrl}/api/admin/artworks/${artworkId}`,
+      request
     );
   }
 }

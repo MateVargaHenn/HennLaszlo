@@ -94,3 +94,28 @@ Accept: application/json
 
 DELETE {{WebApi_HostAddress}}/api/admin/artworks/71280310-89b6-425d-8bfd-227cd3a942f0
 Accept: application/json
+
+### Mű adatainak módosítása
+
+PUT {{WebApi_HostAddress}}/api/admin/artworks/b621f34b-80ce-40fc-a8ae-9e86dcba3e4a
+Content-Type: application/json
+Accept: application/json
+
+{
+  "titleHu": "Lélek-táj",
+  "titleEn": "Soul Landscape",
+  "year": 2025,
+  "techniqueHu": "olaj, vászon",
+  "techniqueEn": "oil on canvas",
+  "widthCm": 80,
+  "heightCm": 60,
+  "descriptionHu": "A mű magyar nyelvű leírása.",
+  "descriptionEn": "English description of the artwork.",
+  "isFeatured": false,
+  "displayOrder": 1
+}
+
+### Admin mű részletei
+
+GET {{WebApi_HostAddress}}/api/admin/artworks/b621f34b-80ce-40fc-a8ae-9e86dcba3e4a
+Accept: application/json

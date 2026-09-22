@@ -7,13 +7,17 @@ public sealed class Artwork
     }
 
     private Artwork(
-        string titleHu,
-        string? titleEn,
-        int? year,
-        string? techniqueHu,
-        string? techniqueEn,
-        decimal? widthCm,
-        decimal? heightCm)
+            string titleHu,
+            string titleEn,
+            int? year,
+            string techniqueHu,
+            string techniqueEn,
+            decimal? widthCm,
+            decimal? heightCm,
+            string? descriptionHu,
+            string? descriptionEn,
+            bool isFeatured,
+            int displayOrder)
     {
         TitleHu = titleHu;
         TitleEn = titleEn;
@@ -22,6 +26,10 @@ public sealed class Artwork
         TechniqueEn = techniqueEn;
         WidthCm = widthCm;
         HeightCm = heightCm;
+        DescriptionHu = descriptionHu;
+        DescriptionEn = descriptionEn;
+        IsFeatured = isFeatured;
+        DisplayOrder = displayOrder;
     }
 
     public Guid Id { get; private set; } = Guid.NewGuid();
@@ -55,13 +63,17 @@ public sealed class Artwork
     public DateTime CreatedAtUtc { get; private set; } = DateTime.UtcNow;
 
     public static Artwork Create(
-        string titleHu,
-        string? titleEn,
-        int? year,
-        string? techniqueHu,
-        string? techniqueEn,
-        decimal? widthCm,
-        decimal? heightCm)
+            string titleHu,
+            string titleEn,
+            int? year,
+            string techniqueHu,
+            string techniqueEn,
+            decimal? widthCm,
+            decimal? heightCm,
+            string? descriptionHu,
+            string? descriptionEn,
+            bool isFeatured,
+            int displayOrder)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(titleHu);
 
@@ -70,12 +82,22 @@ public sealed class Artwork
 
         return new Artwork(
             titleHu.Trim(),
-            NormalizeOptionalText(titleEn),
+            NormalizeOptionalText(titleEn)!,
             year,
-            NormalizeOptionalText(techniqueHu),
-            NormalizeOptionalText(techniqueEn),
+            NormalizeOptionalText(techniqueHu)!,
+            NormalizeOptionalText(techniqueEn)!,
             widthCm,
-            heightCm);
+            heightCm,
+            NormalizeOptionalText(descriptionHu)!,
+            NormalizeOptionalText(descriptionEn)!,
+            isFeatured,
+            displayOrder)
+        {
+            DescriptionHu = NormalizeOptionalText(descriptionHu),
+            DescriptionEn = NormalizeOptionalText(descriptionEn),
+            IsFeatured = isFeatured,
+            DisplayOrder = displayOrder
+        };
     }
 
     private static string? NormalizeOptionalText(string? value)
@@ -94,7 +116,8 @@ public sealed class Artwork
     decimal? widthCm,
     decimal? heightCm,
     string? descriptionHu,
-    string? descriptionEn)
+    string? descriptionEn,
+	int displayOrder)
 	{
 		ArgumentException.ThrowIfNullOrWhiteSpace(titleHu);
 
@@ -110,6 +133,7 @@ public sealed class Artwork
 		HeightCm = heightCm;
 		DescriptionHu = NormalizeOptionalText(descriptionHu);
 		DescriptionEn = NormalizeOptionalText(descriptionEn);
+		DisplayOrder = displayOrder;
 	}
 
 	public void SetImage(Guid imageId)

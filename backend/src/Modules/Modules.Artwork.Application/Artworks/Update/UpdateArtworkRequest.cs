@@ -1,6 +1,6 @@
-namespace Modules.Artwork.Presentation.Artworks.Create;
+namespace Modules.Artwork.Presentation.Artworks.Update;
 
-public sealed record CreateArtworkRequest(
+internal sealed record UpdateArtworkRequest(
     string TitleHu,
     string? TitleEn,
     int? Year,

@@ -1,9 +1,10 @@
 using MediatR;
 using Modules.Artwork.Application.Artworks.Common;
 
-namespace Modules.Artwork.Application.Artworks.Create;
+namespace Modules.Artwork.Application.Artworks.Update;
 
-public sealed record CreateArtworkCommand(
+public sealed record UpdateArtworkCommand(
+    Guid ArtworkId,
     string TitleHu,
     string? TitleEn,
     int? Year,
@@ -14,4 +15,5 @@ public sealed record CreateArtworkCommand(
     string? DescriptionHu,
     string? DescriptionEn,
     bool IsFeatured,
-    int DisplayOrder) : IRequest<Guid>, IArtworkDetailsCommand;
+    int DisplayOrder
+) : IRequest, IArtworkDetailsCommand;

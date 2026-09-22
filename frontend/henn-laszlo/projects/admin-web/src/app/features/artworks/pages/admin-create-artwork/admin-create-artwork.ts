@@ -19,6 +19,7 @@ import {
 import {
   AdminArtworksStore,
   ArtworkApi,
+  CreateArtworkRequest,
 } from 'artwork-data-access';
 import {
   ArtworkForm,
@@ -117,9 +118,24 @@ export class AdminCreateArtwork {
     if (this.createdArtworkId) {
       return of(this.createdArtworkId);
     }
+const request: CreateArtworkRequest = {
+  titleHu: submission.artwork.titleHu,
+  titleEn: submission.artwork.titleEn,
+  year: submission.artwork.year,
+  techniqueHu: submission.artwork.techniqueHu,
+  techniqueEn: submission.artwork.techniqueEn,
+  widthCm: submission.artwork.widthCm,
+  heightCm: submission.artwork.heightCm,
+  descriptionHu:
+    submission.artwork.descriptionHu,
+  descriptionEn:
+    submission.artwork.descriptionEn,
+  isFeatured: submission.artwork.isFeatured,
+  displayOrder: submission.artwork.displayOrder,
+};
 
     return this.artworkApi
-      .createArtwork(submission.artwork)
+      .createArtwork(request)
       .pipe(
         tap(response => {
           this.createdArtworkId =

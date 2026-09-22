@@ -1,6 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
+  effect,
   ElementRef,
   input,
   OnDestroy,
@@ -14,16 +16,38 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CreateArtworkRequest } from 'artwork-data-access';
+import { 
+  AdminArtworkDetails, 
+  AdminArtworkDetailsStore, 
+  AdminArtworksStore, 
+  CreateArtworkRequest 
+} from 'artwork-data-access';
+
+export interface ArtworkFormValue {
+  readonly titleHu: string;
+  readonly titleEn: string | null;
+  readonly year: number | null;
+  readonly techniqueHu: string | null;
+  readonly techniqueEn: string | null;
+  readonly widthCm: number | null;
+  readonly heightCm: number | null;
+  readonly descriptionHu: string | null;
+  readonly descriptionEn: string | null;
+  readonly isFeatured: boolean;
+  readonly displayOrder: number;
+}
 
 export interface ArtworkFormSubmission {
-  readonly artwork: CreateArtworkRequest;
+  readonly artwork: ArtworkFormValue;
   readonly imageFile: File | null;
 }
 
 @Component({
   selector: 'app-artwork-form',
   imports: [ReactiveFormsModule],
+  providers: [
+    AdminArtworkDetailsStore,
+  ],
   templateUrl: './artwork-form.html',
   styleUrl: './artwork-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,6 +69,17 @@ export class ArtworkForm implements OnDestroy {
   readonly imageFile = signal<File | null>(null);
   readonly imagePreviewUrl = signal<string | null>(null);
   readonly imageError = signal<string | null>(null);
+
+  readonly mode =
+    input<'create' | 'edit'>('create');
+
+  readonly existingImageUrl =
+    input<string | null>(null);
+
+  readonly displayedImageUrl = computed(() =>
+    this.imagePreviewUrl() ??
+    this.existingImageUrl()
+  );
 
   protected readonly maximumYear =
     new Date().getFullYear() + 1;
@@ -91,33 +126,117 @@ export class ArtworkForm implements OnDestroy {
       null,
       Validators.min(0.01)
     ),
-  });
+    descriptionHu: new FormControl<string | null>(
+      null,
+      Validators.maxLength(5000)
+    ),
 
-  protected onSubmit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    descriptionEn: new FormControl<string | null>(
+      null,
+      Validators.maxLength(5000)
+    ),
+
+    displayOrder: new FormControl(0, {
+      nonNullable: true,
+      validators: [
+        Validators.min(0),
+      ],
+    }),
+
+    isFeatured: new FormControl(false, {
+      nonNullable: true,
+    }),
+  });
+  readonly initialValue =
+  input<AdminArtworkDetails | null>(null);
+
+private initializedArtworkId: string | null = null;
+
+constructor() {
+  effect(() => {
+    const artwork = this.initialValue();
+
+    if (
+      !artwork ||
+      this.initializedArtworkId === artwork.id
+    ) {
       return;
     }
 
-    const value = this.form.getRawValue();
-
-    this.submitted.emit({
-      artwork: {
-        titleHu: value.titleHu.trim(),
-        titleEn: this.normalizeText(value.titleEn),
-        year: value.year,
-        techniqueHu: this.normalizeText(
-          value.techniqueHu
-        ),
-        techniqueEn: this.normalizeText(
-          value.techniqueEn
-        ),
-        widthCm: value.widthCm,
-        heightCm: value.heightCm,
-      },
-      imageFile: this.imageFile(),
-    });
+this.form.patchValue(
+  {
+    titleHu: artwork.titleHu,
+    titleEn: artwork.titleEn,
+    year: artwork.year,
+    techniqueHu: artwork.techniqueHu,
+    techniqueEn: artwork.techniqueEn,
+    widthCm: artwork.widthCm,
+    heightCm: artwork.heightCm,
+    descriptionHu: artwork.descriptionHu,
+    descriptionEn: artwork.descriptionEn,
+    displayOrder: artwork.displayOrder,
+    isFeatured: artwork.isFeatured,
+  },
+  {
+    emitEvent: false,
   }
+);
+
+    if (artwork.isPublished) {
+      this.form.controls.isFeatured.enable({
+        emitEvent: false,
+      });
+    }
+    else {
+      this.form.controls.isFeatured.setValue(
+        false,
+        {
+          emitEvent: false,
+        }
+      );
+
+      this.form.controls.isFeatured.disable({
+        emitEvent: false,
+      });
+    }
+
+    this.initializedArtworkId = artwork.id;
+  });
+}
+
+protected onSubmit(): void {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
+
+  const value = this.form.getRawValue();
+
+  this.submitted.emit({
+    artwork: {
+      titleHu: value.titleHu.trim(),
+      titleEn: this.normalizeText(value.titleEn),
+      year: value.year,
+      techniqueHu: this.normalizeText(
+        value.techniqueHu
+      ),
+      techniqueEn: this.normalizeText(
+        value.techniqueEn
+      ),
+      widthCm: value.widthCm,
+      heightCm: value.heightCm,
+      descriptionHu: this.normalizeText(
+        value.descriptionHu
+      ),
+      descriptionEn: this.normalizeText(
+        value.descriptionEn
+      ),
+      displayOrder: value.displayOrder,
+      isFeatured: value.isFeatured,
+    },
+    imageFile: this.imageFile(),
+  });
+}
 
   protected onFileSelected(event: Event): void {
     const inputElement =

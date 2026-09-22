@@ -2,31 +2,33 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Modules.Artwork.Application.Artworks.Create;
+using Modules.Artwork.Application.Artworks.Update;
 
-namespace Modules.Artwork.Presentation.Artworks.Create;
+namespace Modules.Artwork.Presentation.Artworks.Update;
 
-internal static class CreateArtworkEndpoint
+internal static class UpdateArtworkEndpoint
 {
-    internal static void MapCreateArtwork(
+    internal static void MapUpdateArtwork(
         this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost(
-                "/api/admin/artworks",
+        endpoints.MapPut(
+                "/api/admin/artworks/{artworkId:guid}",
                 HandleAsync)
-            .WithName("CreateArtwork")
+            .WithName("UpdateArtwork")
             .WithTags("Artworks")
-            .Produces<CreateArtworkResponse>(
-                StatusCodes.Status201Created)
-            .ProducesValidationProblem();
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status404NotFound);
     }
 
     private static async Task<IResult> HandleAsync(
-        CreateArtworkRequest request,
+        Guid artworkId,
+        UpdateArtworkRequest request,
         ISender sender,
         CancellationToken cancellationToken)
     {
-        var command = new CreateArtworkCommand(
+        var command = new UpdateArtworkCommand(
+            artworkId,
             request.TitleHu,
             request.TitleEn,
             request.Year,
@@ -39,14 +41,10 @@ internal static class CreateArtworkEndpoint
             request.IsFeatured,
             request.DisplayOrder);
 
-        Guid artworkId = await sender.Send(
+        await sender.Send(
             command,
             cancellationToken);
 
-        var response = new CreateArtworkResponse(artworkId);
-
-        return Results.Created(
-            $"/api/admin/artworks/{artworkId}",
-            response);
+        return Results.NoContent();
     }
 }

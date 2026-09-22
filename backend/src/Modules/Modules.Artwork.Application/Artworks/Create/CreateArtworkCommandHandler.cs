@@ -19,7 +19,11 @@ internal sealed class CreateArtworkCommandHandler(
             request.TechniqueHu,
             request.TechniqueEn,
             request.WidthCm,
-            request.HeightCm);
+            request.HeightCm,
+            request.DescriptionHu,
+            request.DescriptionEn,
+            request.IsFeatured,
+            request.DisplayOrder);
 
         artworkRepository.Add(artwork);
 

@@ -15,6 +15,14 @@ export const routes: Routes = [
     title: 'Új mű | Henn László Admin',
   },
   {
+  path: 'artworks/:artworkId/edit',
+  loadComponent: () =>
+    import(
+      './features/artworks/pages/admin-edit-artwork/admin-edit-artwork'
+    ).then(component => component.AdminEditArtwork),
+  title: 'Mű szerkesztése | Henn László Admin',
+  },
+  {
     path: 'artworks',
     loadComponent: () =>
       import(

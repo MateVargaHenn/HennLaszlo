@@ -21,6 +21,9 @@ import { finalize } from 'rxjs';
     DatePipe,
     RouterLink,
   ],
+  providers: [
+    AdminArtworksStore,
+  ],
   templateUrl: './admin-artwork-list.html',
   styleUrl: './admin-artwork-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
