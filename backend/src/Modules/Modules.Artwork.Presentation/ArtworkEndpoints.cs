@@ -10,6 +10,7 @@ using Modules.Artwork.Presentation.Artworks.GetAdminImage;
 using Modules.Artwork.Presentation.Artworks.Delete;
 using Modules.Artwork.Presentation.Artworks.Update;
 using Modules.Artwork.Presentation.Artworks.GetAdminById;
+using Modules.Artwork.Presentation.Artworks.Unpublish;
 
 namespace Modules.Artwork.Presentation;
 
@@ -22,6 +23,7 @@ public static class ArtworkEndpoints
         endpoints.MapGetArtworks();
         endpoints.MapAttachArtworkImage();
         endpoints.MapPublishArtwork();
+        endpoints.MapUnpublishArtwork();
         endpoints.MapGetArtworkImage();
         endpoints.MapGetArtworkById();
         endpoints.MapGetAdminArtworks();

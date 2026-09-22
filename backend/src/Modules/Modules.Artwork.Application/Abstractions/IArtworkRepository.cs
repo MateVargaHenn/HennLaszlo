@@ -18,5 +18,8 @@ public interface IArtworkRepository
     Task<IReadOnlyList<Domain.Artwork>> GetAllAsync(
     CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<Domain.Artwork>> GetFeaturedAsync(
+    CancellationToken cancellationToken = default);
+
     void Remove(Domain.Artwork artwork);
 }
