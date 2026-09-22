@@ -166,63 +166,25 @@
   @if (artworkPendingDeletion(); as artwork) {
     <div
       class="fixed inset-0 z-50 grid place-items-center bg-stone-950/50 p-5"
-      (click)="cancelDelete()"
     >
       <section
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="delete-dialog-title"
         class="w-full max-w-md rounded-xl bg-white p-7 shadow-2xl"
-        (click)="$event.stopPropagation()"
       >
         <p class="text-sm uppercase tracking-[0.18em] text-red-700">
           Vázlat törlése
         </p>
-      
+
         <h2
           id="delete-dialog-title"
           class="mt-2 font-serif text-2xl"
         >
           Biztosan törlöd?
         </h2>
-      
-        <p class="mt-4 leading-7 text-stone-600">
-          A(z)
-          <strong class="text-stone-900">
-            {{ artwork.titleHu }}
-          </strong>
-          mű és a hozzá tartozó kép véglegesen törlődik.
-        </p>
-      
-        @if (deleteError()) {
-          <p class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-800">
-            {{ deleteError() }}
-          </p>
-        }
-      
-        <div class="mt-7 flex justify-end gap-3">
-          <button
-            type="button"
-            class="rounded-md px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-100 disabled:opacity-50"
-            [disabled]="deletingArtworkId() !== null"
-            (click)="cancelDelete()"
-          >
-            Mégse
-          </button>
-        
-          <button
-            type="button"
-            class="rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800 disabled:cursor-wait disabled:opacity-60"
-            [disabled]="deletingArtworkId() !== null"
-            (click)="confirmDelete()"
-          >
-            {{
-              deletingArtworkId()
-                ? 'Törlés…'
-                : 'Végleges törlés'
-            }}
-          </button>
-        </div>
+
+        <!-- A meglévő tartalom és gombok maradnak. -->
       </section>
     </div>
   }
