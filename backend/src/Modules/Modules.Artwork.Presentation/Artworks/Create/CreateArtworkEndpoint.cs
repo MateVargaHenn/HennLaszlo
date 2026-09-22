@@ -42,7 +42,7 @@ internal static class CreateArtworkEndpoint
         var response = new CreateArtworkResponse(artworkId);
 
         return Results.Created(
-            $"/api/artworks/{artworkId}",
+            $"/api/admin/artworks/{artworkId}",
             response);
     }
 }

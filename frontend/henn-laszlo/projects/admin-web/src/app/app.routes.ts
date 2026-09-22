@@ -7,6 +7,14 @@ export const routes: Routes = [
     redirectTo: 'artworks',
   },
   {
+    path: 'artworks/new',
+    loadComponent: () =>
+      import(
+        './features/artworks/pages/admin-create-artwork/admin-create-artwork'
+      ).then(component => component.AdminCreateArtwork),
+    title: 'Új mű | Henn László Admin',
+  },
+  {
     path: 'artworks',
     loadComponent: () =>
       import(
