@@ -5,10 +5,15 @@ import { provideHttpClient } from '@angular/common/http';
 import {
   provideArtworkDataAccess,
 } from 'artwork-data-access';
+import {
+  provideInvitationDataAccess,
+} from 'invitation-data-access';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideBrowserGlobalErrorListeners(), provideRouter(routes), provideHttpClient(), provideArtworkDataAccess({
+  apiBaseUrl: environment.apiBaseUrl,
+}), provideInvitationDataAccess({
   apiBaseUrl: environment.apiBaseUrl,
 })],
 };

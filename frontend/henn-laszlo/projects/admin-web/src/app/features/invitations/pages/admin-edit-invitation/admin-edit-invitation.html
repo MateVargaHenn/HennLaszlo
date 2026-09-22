@@ -1,0 +1,45 @@
+<main class="min-h-screen bg-stone-100 px-5 py-10 text-stone-900">
+  <div class="mx-auto max-w-7xl">
+    @if (store.isLoading()) {
+      <p class="rounded-xl bg-white p-6 shadow-sm">
+        A meghívó betöltése…
+      </p>
+    }
+    @else if (store.hasError()) {
+      <div class="rounded-xl border border-red-200 bg-red-50 p-6">
+        <p class="text-red-800">
+          A meghívó adatait nem sikerült betölteni.
+        </p>
+
+        <button
+          type="button"
+          class="mt-4 rounded-md bg-stone-950 px-4 py-2 text-white"
+          (click)="store.reload()"
+        >
+          Újrapróbálom
+        </button>
+      </div>
+    }
+    @else if (store.invitation(); as invitation) {
+      <header class="mb-8">
+        <p class="text-sm uppercase tracking-[0.2em] text-stone-500">
+          Meghívók kezelése
+        </p>
+
+        <h1 class="mt-2 font-serif text-4xl">
+          {{ invitation.titleHu }} szerkesztése
+        </h1>
+      </header>
+
+      <app-invitation-form
+        mode="edit"
+        [initialValue]="invitation"
+        [existingImageUrl]="existingImageUrl()"
+        [isSubmitting]="isSubmitting()"
+        [submitError]="submitError()"
+        (submitted)="save($event)"
+        (cancelled)="cancel()"
+      />
+    }
+  </div>
+</main>

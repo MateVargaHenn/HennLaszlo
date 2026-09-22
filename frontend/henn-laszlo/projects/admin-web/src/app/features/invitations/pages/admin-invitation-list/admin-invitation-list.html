@@ -1,0 +1,336 @@
+<main class="min-h-screen bg-stone-100 px-5 py-10 text-stone-900">
+  <div class="mx-auto max-w-7xl">
+    <header class="mb-8 flex flex-wrap items-end justify-between gap-5">
+      <div>
+        <p class="text-sm uppercase tracking-[0.2em] text-stone-500">
+          Adminisztráció
+        </p>
+
+        <h1 class="mt-2 font-serif text-4xl">
+          Meghívók kezelése
+        </h1>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-5">
+        <a
+          routerLink="/artworks"
+          class="text-sm uppercase tracking-[0.14em] text-stone-600 transition-colors hover:text-stone-950"
+        >
+          Művek kezelése
+        </a>
+
+        <a
+          routerLink="/invitations/new"
+          class="rounded-lg bg-stone-950 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
+        >
+          Új meghívó
+        </a>
+      </div>
+    </header>
+
+    <section
+      class="mb-8 grid gap-4 sm:grid-cols-2"
+      aria-label="Meghívók összesítése"
+    >
+      <div class="rounded-lg bg-white p-5 shadow-sm">
+        <p class="text-sm text-stone-500">
+          Publikálva
+        </p>
+
+        <p class="mt-2 text-3xl font-semibold">
+          {{ store.publishedCount() }}
+        </p>
+      </div>
+
+      <div class="rounded-lg bg-white p-5 shadow-sm">
+        <p class="text-sm text-stone-500">
+          Vázlat
+        </p>
+
+        <p class="mt-2 text-3xl font-semibold">
+          {{ store.draftCount() }}
+        </p>
+      </div>
+    </section>
+
+    @if (store.publicationError(); as error) {
+      <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+        <p class="text-sm text-red-800">
+          {{ error }}
+        </p>
+      </div>
+    }
+
+    @if (store.isLoading()) {
+      <p class="rounded-lg bg-white p-6 shadow-sm">
+        A meghívók betöltése…
+      </p>
+    }
+    @else if (store.hasError()) {
+      <div class="rounded-lg border border-red-200 bg-red-50 p-6">
+        <p class="text-red-800">
+          A meghívók most nem tölthetők be.
+        </p>
+
+        <button
+          type="button"
+          class="mt-4 rounded-md bg-stone-900 px-4 py-2 text-white"
+          (click)="store.reload()"
+        >
+          Újrapróbálom
+        </button>
+      </div>
+    }
+    @else if (store.invitations().length === 0) {
+      <p class="rounded-lg bg-white p-6 shadow-sm">
+        Még nincs feltöltött meghívó.
+      </p>
+    }
+    @else {
+      <div class="overflow-x-auto rounded-lg bg-white shadow-sm">
+        <table class="w-full min-w-208 border-collapse text-left">
+          <thead class="border-b border-stone-200 bg-stone-50">
+            <tr>
+              <th class="px-5 py-4 text-sm font-medium">
+                Meghívó
+              </th>
+
+              <th class="px-5 py-4 text-sm font-medium">
+                Állapot
+              </th>
+
+              <th class="px-5 py-4 text-sm font-medium">
+                Sorrend
+              </th>
+
+              <th class="px-5 py-4 text-sm font-medium">
+                Létrehozva
+              </th>
+              <th class="px-5 py-4 text-sm font-medium">
+                Műveletek
+              </th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-stone-200">
+            @for (
+              invitation of store.invitations();
+              track invitation.id
+            ) {
+              <tr class="transition-colors hover:bg-stone-50">
+                <td class="px-5 py-4">
+                  <div class="flex min-w-64 items-center gap-4">
+                    <div
+                      class="grid h-20 w-20 shrink-0 place-items-center overflow-hidden bg-stone-200"
+                    >
+                      @if (invitation.hasImage) {
+                        <img
+                          class="h-full w-full object-contain"
+                          [src]="store.getImageUrl(invitation.id)"
+                          [alt]="invitation.titleHu"
+                          loading="lazy"
+                        />
+                      }
+                      @else {
+                        <span class="text-xs text-stone-500">
+                          Nincs kép
+                        </span>
+                      }
+                    </div>
+
+                    <div>
+                      <p class="font-medium">
+                        {{ invitation.titleHu }}
+                      </p>
+
+                      @if (invitation.year !== null) {
+                        <p class="mt-1 text-sm text-stone-500">
+                          {{ invitation.year }}
+                        </p>
+                      }
+                    </div>
+                  </div>
+                </td>
+
+                <td class="px-5 py-4">
+                  @if (invitation.isPublished) {
+                    <span class="rounded-full bg-green-100 px-3 py-1 text-sm text-green-800">
+                      Publikálva
+                    </span>
+                  }
+                  @else {
+                    <span class="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-800">
+                      Vázlat
+                    </span>
+                  }
+                </td>
+
+                <td class="px-5 py-4">
+                  {{ invitation.displayOrder }}
+                </td>
+
+                <td class="px-5 py-4 text-sm text-stone-600">
+                  {{
+                    invitation.createdAtUtc
+                      | date:'yyyy. MM. dd.'
+                  }}
+                </td>
+                <td class="px-5 py-4">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <a
+                      [routerLink]="[
+                        '/invitations',
+                        invitation.id,
+                        'edit'
+                      ]"
+                      class="rounded-md bg-stone-100 px-3 py-2 text-xs font-medium text-stone-700 transition-colors hover:bg-stone-200 hover:text-stone-950"
+                    >
+                      Szerkesztés
+                    </a>
+
+                    @if (invitation.isPublished) {
+                      <button
+                        type="button"
+                        class="rounded-md bg-amber-50 px-3 py-2 text-xs font-medium text-amber-800 transition-colors hover:bg-amber-100 disabled:cursor-wait disabled:opacity-50"
+                        [disabled]="
+                          store.isChangingPublication(invitation.id)
+                        "
+                        (click)="unpublishInvitation(invitation.id)"
+                      >
+                        {{
+                          store.isChangingPublication(invitation.id)
+                            ? 'Mentés…'
+                            : 'Visszavonás'
+                        }}
+                      </button>
+                    }
+                    @else {
+                      <button
+                        type="button"
+                        class="rounded-md bg-green-50 px-3 py-2 text-xs font-medium text-green-800 transition-colors hover:bg-green-100 disabled:cursor-not-allowed disabled:opacity-40"
+                        [disabled]="
+                          !invitation.hasImage ||
+                          store.isChangingPublication(invitation.id)
+                        "
+                        (click)="publishInvitation(invitation.id)"
+                      >
+                        {{
+                          store.isChangingPublication(invitation.id)
+                            ? 'Mentés…'
+                            : 'Publikálás'
+                        }}
+                      </button>
+
+                      <button
+                        type="button"
+                        class="rounded-md bg-red-50 px-3 py-2 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 disabled:cursor-wait disabled:opacity-50"
+                        [disabled]="store.isDeleting(invitation.id)"
+                        (click)="requestDeletion(invitation)"
+                      >
+                        {{
+                          store.isDeleting(invitation.id)
+                            ? 'Törlés…'
+                            : 'Törlés'
+                        }}
+                      </button>
+                    }
+                  </div>
+
+                  @if (
+                    !invitation.isPublished &&
+                    !invitation.hasImage
+                  ) {
+                    <p class="mt-2 text-xs text-stone-500">
+                      Publikáláshoz előbb képet kell feltölteni.
+                    </p>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</main>
+
+@if (invitationPendingDeletion(); as invitation) {
+  <div
+    class="fixed inset-0 z-50 grid place-items-center p-5"
+    (keydown.escape)="cancelDeletion()"
+  >
+    <button
+      type="button"
+      class="absolute inset-0 bg-stone-950/60 backdrop-blur-sm"
+      aria-label="Törlés megszakítása"
+      [disabled]="store.isDeleting(invitation.id)"
+      (click)="cancelDeletion()"
+    ></button>
+
+    <section
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="delete-invitation-title"
+      aria-describedby="delete-invitation-description"
+      class="relative z-10 w-full max-w-md rounded-xl bg-white p-7 shadow-2xl"
+    >
+      <p
+        class="text-sm uppercase tracking-[0.18em] text-red-700"
+      >
+        Vázlat törlése
+      </p>
+
+      <h2
+        id="delete-invitation-title"
+        class="mt-2 font-serif text-2xl"
+      >
+        Biztosan törlöd?
+      </h2>
+
+      <p
+        id="delete-invitation-description"
+        class="mt-4 text-stone-600"
+      >
+        A(z)
+        <strong>{{ invitation.titleHu }}</strong>
+        meghívó és a hozzá tartozó kép véglegesen
+        törlődik.
+      </p>
+
+      @if (store.deletionError(); as error) {
+        <p
+          class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-800"
+        >
+          {{ error }}
+        </p>
+      }
+
+      <div
+        class="mt-7 flex justify-end gap-3"
+      >
+        <button
+          type="button"
+          autofocus
+          class="rounded-md px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-100 disabled:opacity-50"
+          [disabled]="store.isDeleting(invitation.id)"
+          (click)="cancelDeletion()"
+        >
+          Mégse
+        </button>
+
+        <button
+          type="button"
+          class="rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800 disabled:cursor-wait disabled:opacity-50"
+          [disabled]="store.isDeleting(invitation.id)"
+          (click)="confirmDeletion()"
+        >
+          {{
+            store.isDeleting(invitation.id)
+              ? 'Törlés…'
+              : 'Végleges törlés'
+          }}
+        </button>
+      </div>
+    </section>
+  </div>
+}

@@ -1,0 +1,33 @@
+<main class="min-h-screen bg-stone-100 px-5 py-10 text-stone-900">
+  <div class="mx-auto max-w-7xl">
+    <a
+      routerLink="/invitations"
+      class="inline-flex items-center gap-2 text-sm text-stone-600 transition-colors hover:text-stone-950"
+    >
+      <span aria-hidden="true">←</span>
+      Vissza a meghívókhoz
+    </a>
+
+    <header class="mt-8 mb-8">
+        <p class="text-sm uppercase tracking-[0.2em] text-stone-500">
+            Adminisztráció
+        </p>
+
+        <h1 class="mt-2 font-serif text-4xl">
+            Új meghívó
+        </h1>
+
+        <p class="mt-4 max-w-2xl leading-7 text-stone-600">
+            Töltsd fel a meghívó képét és add meg a
+            megjelenítéshez szükséges adatokat.
+        </p>
+    </header>
+
+    <app-invitation-form
+      [isSubmitting]="isSubmitting()"
+      [submitError]="submitError()"
+      (submitted)="save($event)"
+      (cancelled)="cancel()"
+    />
+  </div>
+</main>
