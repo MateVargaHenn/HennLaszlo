@@ -1,0 +1,66 @@
+app-writings-page .writings-introduction {
+  margin-top: 3rem;
+  color: #a8a29e;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+app-writings-page
+  .writings-introduction
+  > :first-child {
+  margin-top: 0;
+}
+
+app-writings-page
+  .writings-introduction
+  > :last-child {
+  margin-bottom: 0;
+}
+
+app-writings-page .writings-introduction p {
+  margin-bottom: 1.25rem;
+}
+
+app-writings-page .writings-introduction h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: #fafaf9;
+  font-family: Georgia, serif;
+  font-size: 1.75rem;
+  line-height: 1.3;
+}
+
+app-writings-page .writings-introduction h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: #f5f5f4;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+app-writings-page .writings-introduction blockquote {
+  margin: 2rem auto;
+  max-width: 44rem;
+  border-left: 3px solid #67e8f9;
+  padding: 1rem 1.5rem;
+  color: #d6d3d1;
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  text-align: center;
+}
+
+app-writings-page .writings-introduction strong {
+  color: #fafaf9;
+  font-weight: 600;
+}
+
+app-writings-page .writings-introduction a {
+  color: #67e8f9;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+app-writings-page .writings-introduction a:hover {
+  color: #cffafe;
+}

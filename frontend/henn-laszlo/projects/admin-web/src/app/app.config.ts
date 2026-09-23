@@ -8,12 +8,17 @@ import {
 import {
   provideInvitationDataAccess,
 } from 'invitation-data-access';
+import {
+  provideContentDataAccess,
+} from 'content-data-access';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideBrowserGlobalErrorListeners(), provideRouter(routes), provideHttpClient(), provideArtworkDataAccess({
   apiBaseUrl: environment.apiBaseUrl,
 }), provideInvitationDataAccess({
+  apiBaseUrl: environment.apiBaseUrl,
+}), provideContentDataAccess({
   apiBaseUrl: environment.apiBaseUrl,
 })],
 };

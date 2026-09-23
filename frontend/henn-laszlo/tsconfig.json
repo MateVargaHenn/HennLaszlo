@@ -5,6 +5,7 @@
   "compilerOptions": {
     "paths": {
       "artwork-data-access": ["./dist/artwork-data-access"],
+      "content-data-access": ["./dist/content-data-access"],
       "invitation-data-access": ["./dist/invitation-data-access"]
     },
     "noImplicitOverride": true,
@@ -48,6 +49,12 @@
     },
     {
       "path": "./projects/invitation-data-access/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/content-data-access/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/content-data-access/tsconfig.spec.json"
     }
   ]
 }

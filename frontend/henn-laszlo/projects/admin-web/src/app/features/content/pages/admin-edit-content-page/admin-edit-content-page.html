@@ -1,0 +1,251 @@
+<main class="min-h-screen bg-stone-100 px-5 py-10 text-stone-900">
+  <div class="mx-auto max-w-7xl">
+    <header
+      class="mb-8 flex flex-wrap items-end justify-between gap-5"
+    >
+      <div>
+        <p class="text-sm uppercase tracking-[0.2em] text-stone-500">
+          Adminisztráció
+        </p>
+
+        <h1 class="mt-2 font-serif text-4xl">
+          Tartalmi oldal szerkesztése
+        </h1>
+      </div>
+
+      <a
+        routerLink="/content"
+        class="text-sm uppercase tracking-[0.14em] text-stone-600 transition-colors hover:text-stone-950"
+      >
+        Vissza az oldalakhoz
+      </a>
+    </header>
+
+    @if (store.isLoading()) {
+      <p class="rounded-lg bg-white p-6 shadow-sm">
+        Az oldal betöltése…
+      </p>
+    }
+    @else if (store.error()) {
+      <div class="rounded-lg border border-red-200 bg-red-50 p-6">
+        <p class="text-red-800">
+          Az oldal most nem tölthető be.
+        </p>
+
+        <button
+          type="button"
+          class="mt-4 rounded-md bg-stone-900 px-4 py-2 text-white"
+          (click)="store.reload()"
+        >
+          Újrapróbálom
+        </button>
+      </div>
+    }
+    @else if (store.contentPage(); as contentPage) {
+      <form
+        class="overflow-hidden rounded-xl bg-white shadow-sm"
+        [formGroup]="form"
+        (ngSubmit)="save()"
+      >
+        <div
+          class="flex flex-wrap items-center justify-between gap-4 border-b border-stone-200 px-6 py-5"
+        >
+          <div>
+            <h2 class="font-serif text-2xl">
+              {{ contentPage.titleHu }}
+            </h2>
+
+            <p class="mt-1 font-mono text-xs text-stone-400">
+              {{ contentPage.key }}
+            </p>
+          </div>
+
+          @if (contentPage.isPublished) {
+            <span
+              class="rounded-full bg-green-100 px-3 py-1 text-sm text-green-800"
+            >
+              Publikálva
+            </span>
+          }
+          @else {
+            <span
+              class="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-800"
+            >
+              Vázlat
+            </span>
+          }
+        </div>
+
+        <div class="space-y-10 p-6">
+          <section aria-labelledby="content-page-titles">
+            <h3
+              id="content-page-titles"
+              class="mb-5 font-medium"
+            >
+              Oldalcímek
+            </h3>
+
+            <div class="grid gap-5 md:grid-cols-2">
+              <div>
+                <label
+                  for="titleHu"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  Magyar cím
+                  <span class="text-red-700">*</span>
+                </label>
+
+                <input
+                  id="titleHu"
+                  type="text"
+                  formControlName="titleHu"
+                  class="w-full rounded-lg border border-stone-300 px-4 py-3 outline-none transition-colors focus:border-stone-900"
+                />
+
+                @if (
+                  form.controls.titleHu.touched &&
+                  form.controls.titleHu.hasError('required')
+                ) {
+                  <p class="mt-2 text-sm text-red-700">
+                    A magyar cím megadása kötelező.
+                  </p>
+                }
+
+                @if (
+                  form.controls.titleHu.touched &&
+                  form.controls.titleHu.hasError('maxlength')
+                ) {
+                  <p class="mt-2 text-sm text-red-700">
+                    A cím legfeljebb 250 karakter lehet.
+                  </p>
+                }
+              </div>
+
+              <div>
+                <label
+                  for="titleEn"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  Angol cím
+                  <span class="font-normal text-stone-400">
+                    – opcionális
+                  </span>
+                </label>
+
+                <input
+                  id="titleEn"
+                  type="text"
+                  formControlName="titleEn"
+                  class="w-full rounded-lg border border-stone-300 px-4 py-3 outline-none transition-colors focus:border-stone-900"
+                />
+
+                @if (
+                  form.controls.titleEn.touched &&
+                  form.controls.titleEn.hasError('maxlength')
+                ) {
+                  <p class="mt-2 text-sm text-red-700">
+                    A cím legfeljebb 250 karakter lehet.
+                  </p>
+                }
+              </div>
+            </div>
+          </section>
+
+          <section aria-labelledby="content-page-contents">
+            <div class="mb-5">
+              <h3
+                id="content-page-contents"
+                class="font-medium"
+              >
+                Oldaltartalom
+              </h3>
+
+                <p class="mt-1 text-sm text-stone-500">
+                A szöveget az eszköztár segítségével formázhatod.
+                </p>
+            </div>
+
+            <div class="grid gap-5 xl:grid-cols-2">
+              <div>
+                <label
+                  for="contentHu"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  Magyar tartalom
+                  <span class="text-red-700">*</span>
+                </label>
+
+                <editor
+                id="contentHu"
+                [apiKey]="tinyMceApiKey"
+                [init]="editorConfig"
+                formControlName="contentHu"
+                ></editor>
+
+                @if (
+                  form.controls.contentHu.touched &&
+                  form.controls.contentHu.hasError('required')
+                ) {
+                  <p class="mt-2 text-sm text-red-700">
+                    A magyar tartalom megadása kötelező.
+                  </p>
+                }
+              </div>
+
+              <div>
+                <label
+                  for="contentEn"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  Angol tartalom
+                  <span class="font-normal text-stone-400">
+                    – opcionális
+                  </span>
+                </label>
+
+                <editor
+                id="contentEn"
+                [apiKey]="tinyMceApiKey"
+                [init]="editorConfig"
+                formControlName="contentEn"
+                ></editor>
+              </div>
+            </div>
+          </section>
+
+          @if (store.saveError()) {
+            <p
+              class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+              role="alert"
+            >
+              A módosítások mentése sikertelen.
+            </p>
+          }
+        </div>
+
+        <footer
+          class="flex flex-wrap items-center justify-end gap-3 border-t border-stone-200 bg-stone-50 px-6 py-5"
+        >
+          <a
+            routerLink="/content"
+            class="rounded-lg px-5 py-3 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-200"
+          >
+            Mégse
+          </a>
+
+          <button
+            type="submit"
+            class="rounded-lg bg-stone-950 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800 disabled:cursor-wait disabled:opacity-50"
+            [disabled]="store.isSaving()"
+          >
+            {{
+              store.isSaving()
+                ? 'Mentés…'
+                : 'Módosítások mentése'
+            }}
+          </button>
+        </footer>
+      </form>
+    }
+  </div>
+</main>

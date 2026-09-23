@@ -10,6 +10,10 @@
     <Project Path="src/Modules/Modules.Artwork.Domain/Modules.Artwork.Domain.csproj" />
     <Project Path="src/Modules/Modules.Artwork.Infrastructure/Modules.Artwork.Infrastructure.csproj" />
     <Project Path="src/Modules/Modules.Artwork.Presentation/Modules.Artwork.Presentation.csproj" />
+    <Project Path="src/Modules/Modules.Content.Application/Modules.Content.Application.csproj" />
+    <Project Path="src/Modules/Modules.Content.Domain/Modules.Content.Domain.csproj" />
+    <Project Path="src/Modules/Modules.Content.Infrastructure/Modules.Content.Infrastructure.csproj" />
+    <Project Path="src/Modules/Modules.Content.Presentation/Modules.Content.Presentation.csproj" />
     <Project Path="src/Modules/Modules.FileStorage.Application/Modules.FileStorage.Application.csproj" />
     <Project Path="src/Modules/Modules.FileStorage.Contracts/Modules.FileStorage.Contracts.csproj" />
     <Project Path="src/Modules/Modules.FileStorage.Domain/Modules.FileStorage.Domain.csproj" />

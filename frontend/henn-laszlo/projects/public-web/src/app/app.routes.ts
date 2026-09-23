@@ -40,6 +40,48 @@ export const routes: Routes = [
           ).then(component => component.InvitationGallery),
         title: 'Meghívók | Henn László András',
       },
+      {
+        path: 'kiallitasok',
+        data: {
+          contentPageKey: 'exhibitions',
+        },
+        loadComponent: () =>
+          import(
+            './features/content/pages/content-page/content-page'
+          ).then(
+            (component) => component.ContentPage,
+          ),
+      },
+      {
+        path: 'tagsagok-es-dijak',
+        data: {
+          contentPageKey: 'memberships-and-awards',
+        },
+        loadComponent: () =>
+          import(
+            './features/content/pages/content-page/content-page'
+          ).then(
+            (component) => component.ContentPage,
+          ),
+      },
+      {
+        path: 'irasok',
+        loadComponent: () =>
+          import(
+            './features/content/pages/writings-page/writings-page'
+          ).then(
+            (component) => component.WritingsPage,
+          ),
+      },
+      {
+        path: 'irasok/:slug',
+        loadComponent: () =>
+          import(
+            './features/content/pages/article-details/article-details'
+          ).then(
+            (component) => component.ArticleDetails,
+          ),
+      },
     ],
   },
   {

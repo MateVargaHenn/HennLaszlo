@@ -1,0 +1,100 @@
+<main class="min-h-screen bg-stone-950 text-stone-100">
+  <section class="mx-auto max-w-4xl px-5 py-20 sm:py-24">
+    <a
+      routerLink="/irasok"
+      class="inline-flex items-center gap-2 text-sm text-stone-400 transition-colors hover:text-cyan-300"
+    >
+      <span aria-hidden="true">←</span>
+      Vissza az írásokhoz
+    </a>
+
+@if (articleStore.isNotFound()) {
+  <div
+    class="mt-12 rounded-xl border border-stone-800 bg-stone-900 p-6"
+  >
+    <h1 class="font-serif text-2xl">
+      Az írás nem érhető el
+    </h1>
+
+    <p class="mt-3 text-stone-400">
+      A keresett írás nem található, vagy jelenleg nincs
+      publikálva.
+    </p>
+
+    <a
+      routerLink="/irasok"
+      class="mt-5 inline-flex text-sm font-semibold text-cyan-300 hover:text-cyan-100"
+    >
+      Vissza az írásokhoz
+    </a>
+  </div>
+}
+@else if (articleStore.error()) {
+  <div
+    class="mt-12 rounded-xl border border-stone-800 bg-stone-900 p-6"
+  >
+    <h1 class="font-serif text-2xl">
+      Az írás nem tölthető be
+    </h1>
+
+    <p class="mt-3 text-stone-400">
+      Átmeneti hiba történt a betöltés során.
+    </p>
+
+    <button
+      type="button"
+      class="mt-5 rounded-md border border-stone-700 px-4 py-2 text-sm hover:bg-stone-800"
+      (click)="articleStore.reload()"
+    >
+      Újrapróbálom
+    </button>
+  </div>
+}
+@else if (articleStore.isLoading()) {
+  <p
+    class="mt-12 text-stone-400"
+    role="status"
+  >
+    Az írás betöltése…
+  </p>
+}
+@else if (articleStore.article(); as article) {
+      <article class="mt-12">
+        <header class="border-b border-stone-800 pb-10">
+          <p
+            class="text-sm uppercase tracking-[0.25em] text-cyan-300"
+          >
+            Henn László András
+          </p>
+
+          <h1
+            class="mt-4 font-serif text-4xl leading-tight sm:text-5xl lg:text-6xl"
+          >
+            {{ article.titleHu }}
+          </h1>
+
+          @if (article.titleEn) {
+            <p
+              class="mt-4 font-serif text-xl text-stone-500"
+            >
+              {{ article.titleEn }}
+            </p>
+          }
+
+          @if (article.summaryHu) {
+            <p
+              class="mt-6 max-w-3xl text-lg leading-8 text-stone-400"
+            >
+              {{ article.summaryHu }}
+            </p>
+          }
+        </header>
+
+        <section
+          class="article-content"
+          [innerHTML]="article.contentHu"
+        ></section>
+      </article>
+    }
+  </section>
+</main>

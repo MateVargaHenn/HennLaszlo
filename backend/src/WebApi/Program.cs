@@ -8,6 +8,9 @@ using Modules.FileStorage.Presentation;
 using Modules.Invitation.Infrastructure;
 using Modules.Invitation.Application;
 using Modules.Invitation.Presentation;
+using Modules.Content.Infrastructure;
+using Modules.Content.Application;
+using Modules.Content.Presentation;
 using BuildingBlocks.Application;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +49,10 @@ builder.Services.AddFileStorageInfrastructure(
 
 builder.Services.AddFileStorageApplication(
     mediatrLicenseKey);
+
+builder.Services.AddContentInfrastructure(
+    builder.Configuration);
+builder.Services.AddContentApplication();
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
@@ -91,6 +98,7 @@ app.UseCors(frontendCorsPolicy);
 app.MapArtworkEndpoints();
 app.MapFileStorageEndpoints();
 app.MapInvitationEndpoints();
+app.MapContentEndpoints();
 
 app.Run();
 
