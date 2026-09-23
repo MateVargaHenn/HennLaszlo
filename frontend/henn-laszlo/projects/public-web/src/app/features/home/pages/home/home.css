@@ -5,7 +5,7 @@
 .hero {
   display: flex;
   align-items: center;
-  min-height: calc(100svh - 12rem);
+  min-height: 100svh;
   padding: clamp(4rem, 10vw, 9rem) 1.5rem;
 }
 
@@ -157,6 +157,99 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.medistation {
+  position: relative;
+  isolation: isolate;
+  height: clamp(30rem, 56.25vw, 45rem);
+  overflow: hidden;
+  background: #0c0a09;
+  color: #fafaf9;
+}
+
+.medistation__video {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: min(100%, 1280px);
+  height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+.medistation__overlay {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(12, 10, 9, 0.9),
+      rgba(12, 10, 9, 0.15) 65%
+    ),
+    linear-gradient(
+      to right,
+      rgba(12, 10, 9, 0.92),
+      rgba(12, 10, 9, 0.28) 38%,
+      rgba(12, 10, 9, 0.28) 68%,
+      rgba(12, 10, 9, 0.9)
+    );
+}
+
+.medistation__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  height: 100%;
+  width: min(100% - 2.5rem, 80rem);
+  margin-inline: auto;
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.medistation__eyebrow {
+  margin: 0 0 0.75rem;
+  color: #d6d3d1;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+}
+
+.medistation__title {
+  max-width: 12ch;
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 400;
+  line-height: 0.98;
+  text-wrap: balance;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 640px) {
+  .medistation {
+    min-height: 30rem;
+  }
+
+  .medistation__content {
+    width: min(100% - 2rem, 80rem);
+    padding-block: 3rem;
+  }
+
+  .medistation__video {
+    object-position: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .medistation__video {
+    display: none;
+  }
 }
 
 @media (max-width: 800px) {

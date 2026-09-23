@@ -4,7 +4,7 @@
       <p class="hero__eyebrow">Henn László András</p>
 
       <h1 id="hero-title" class="hero__title">
-        Festőművész
+        Galyasi Miklós Nívódíjas Festőművész, Grafikus
       </h1>
 
       <p class="hero__description">
@@ -50,6 +50,37 @@
       }
     </div>
   </div>
+</section>
+
+<section
+  class="medistation"
+  aria-label="Archív felvétel Henn László András művészetéről"
+>
+  <video
+    class="medistation__video"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster="/video/medistacio-poster.webp"
+    aria-hidden="true"
+  >
+    <source
+      src="/video/medistacio-background.webm"
+      type="video/webm"
+    />
+
+    <source
+      src="/video/medistacio-background.mp4"
+      type="video/mp4"
+    />
+  </video>
+
+  <div
+    class="medistation__overlay"
+    aria-hidden="true"
+  ></div>
 </section>
 
 @if (selectedArtworks().length > 0) {
