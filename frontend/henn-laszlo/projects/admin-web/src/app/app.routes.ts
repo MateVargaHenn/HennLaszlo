@@ -55,6 +55,53 @@ export const routes: Routes = [
     title: 'Meghívó szerkesztése | Henn László Admin',
   },
   {
+    path: 'content',
+    loadComponent: () =>
+      import(
+        './features/content/pages/admin-content-page-list/admin-content-page-list'
+      ).then(
+        (component) =>
+          component.AdminContentPageList,
+      ),
+  },
+  {
+    path: 'content/:key/edit',
+    loadComponent: () =>
+      import(
+        './features/content/pages/admin-edit-content-page/admin-edit-content-page'
+      ).then(
+        (component) =>
+          component.AdminEditContentPage,
+      ),
+  },
+  {
+    path: 'content/articles',
+    loadComponent: () =>
+      import(
+        './features/content/pages/article-list/article-list'
+      ).then(
+        (component) => component.ArticleList,
+      ),
+  },
+  {
+    path: 'content/articles/new',
+    loadComponent: () =>
+      import(
+        './features/content/pages/article-editor/article-editor'
+      ).then(
+        (component) => component.ArticleEditor,
+      ),
+  },
+  {
+    path: 'content/articles/:articleId/edit',
+    loadComponent: () =>
+      import(
+        './features/content/pages/article-editor/article-editor'
+      ).then(
+        (component) => component.ArticleEditor,
+      ),
+  },
+  {
     path: '**',
     redirectTo: 'artworks',
   },

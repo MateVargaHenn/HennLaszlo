@@ -1,0 +1,45 @@
+<main class="min-h-screen bg-stone-950 text-stone-100">
+  <section class="mx-auto max-w-5xl px-5 py-20 sm:py-24">
+    <header class="border-b border-stone-800 pb-10">
+      <p
+        class="text-sm uppercase tracking-[0.25em] text-cyan-300"
+      >
+        Henn László András
+      </p>
+
+      @if (
+        contentPageStore.contentPage();
+        as contentPage
+      ) {
+        <h1
+          class="mt-4 font-serif text-4xl sm:text-5xl lg:text-6xl"
+        >
+          {{ contentPage.titleHu }}
+        </h1>
+
+        @if (contentPage.titleEn) {
+          <p class="mt-3 font-serif text-xl text-stone-500">
+            {{ contentPage.titleEn }}
+          </p>
+        }
+      }
+      @else {
+        <h1
+          class="mt-4 font-serif text-4xl sm:text-5xl lg:text-6xl"
+        >
+          Írások
+        </h1>
+      }
+    </header>
+
+    @if (
+      contentPageStore.contentPage();
+      as contentPage
+    ) {
+      <section
+        class="writings-introduction"
+        [innerHTML]="contentPage.contentHu"
+      ></section>
+    }
+  </section>
+</main>

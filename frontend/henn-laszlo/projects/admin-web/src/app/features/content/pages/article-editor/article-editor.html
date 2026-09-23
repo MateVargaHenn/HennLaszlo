@@ -1,0 +1,367 @@
+<main class="min-h-screen bg-stone-100 px-4 py-8 sm:px-6 lg:px-8">
+  <section class="mx-auto max-w-7xl">
+    <a
+      routerLink="/content/articles"
+      class="text-sm font-medium text-stone-600 hover:text-stone-950"
+    >
+      ← Vissza az írásokhoz
+    </a>
+
+    <header class="mt-5">
+      <h1 class="text-3xl font-semibold text-stone-950">
+        {{ isEditMode ? 'Írás szerkesztése' : 'Új írás' }}
+      </h1>
+
+      <p class="mt-1 text-sm text-stone-600">
+        Az írás mentés után még nem lesz automatikusan publikálva.
+      </p>
+    </header>
+
+    @if (isEditMode && store.isLoading()) {
+      <div
+        class="mt-8 rounded-xl border border-stone-200 bg-white p-6 text-stone-600 shadow-sm"
+        role="status"
+      >
+        Az írás betöltése…
+      </div>
+    }
+    @else if (isEditMode && store.loadError()) {
+      <div
+        class="mt-8 rounded-xl border border-red-200 bg-red-50 p-6"
+      >
+        <p class="font-medium text-red-900">
+          Az írás nem tölthető be.
+        </p>
+
+        <a
+          routerLink="/content/articles"
+          class="mt-4 inline-flex text-sm font-semibold text-red-800 underline"
+        >
+          Vissza az írásokhoz
+        </a>
+      </div>
+    }
+    @else {
+      <form
+        class="mt-8"
+        [formGroup]="form"
+        (ngSubmit)="save()"
+      >
+        @if (store.mutationError()) {
+          <div
+            class="mb-6 rounded-xl border border-red-200 bg-red-50 p-5 text-sm text-red-800"
+            role="alert"
+          >
+            A művelet nem sikerült. Ellenőrizd a megadott adatokat,
+            majd próbáld újra.
+          </div>
+        }
+
+        @if (
+          isEditMode &&
+          store.article();
+          as article
+        ) {
+          <section
+            class="mb-6 flex flex-col gap-5 rounded-xl border border-stone-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <h2 class="text-lg font-semibold text-stone-950">
+                Publikáció
+              </h2>
+
+              <div class="mt-2">
+                @if (article.isPublished) {
+                  <span
+                    class="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800"
+                  >
+                    Publikálva
+                  </span>
+                }
+                @else {
+                  <span
+                    class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800"
+                  >
+                    Vázlat
+                  </span>
+                }
+              </div>
+
+              <p class="mt-2 text-sm text-stone-600">
+                @if (article.isPublished) {
+                  Az írás jelenleg elérhető a publikus weboldalon.
+                }
+                @else {
+                  Az írást csak az adminfelületen lehet megtekinteni.
+                }
+              </p>
+            </div>
+
+            <div
+              class="flex flex-col gap-3 sm:flex-row sm:items-center"
+            >
+              @if (article.isPublished) {
+                <button
+                  type="button"
+                  [disabled]="store.isSaving()"
+                  class="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-900 transition-colors hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-60"
+                  (click)="unpublish()"
+                >
+                  Publikálás visszavonása
+                </button>
+              }
+              @else {
+                <button
+                  type="button"
+                  [disabled]="store.isSaving()"
+                  class="rounded-lg border border-red-300 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-800 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
+                  (click)="deleteArticle()"
+                >
+                  Törlés
+                </button>
+
+                <button
+                  type="button"
+                  [disabled]="store.isSaving()"
+                  class="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
+                  (click)="publish()"
+                >
+                  Publikálás
+                </button>
+              }
+            </div>
+          </section>
+        }
+
+        <section
+          class="rounded-xl border border-stone-200 bg-white p-6 shadow-sm"
+        >
+          <h2 class="text-lg font-semibold text-stone-950">
+            Alapadatok
+          </h2>
+
+          <div class="mt-6">
+            <label
+              for="slug"
+              class="block text-sm font-medium text-stone-800"
+            >
+              Slug
+              <span class="text-red-700">*</span>
+            </label>
+
+            <input
+              id="slug"
+              type="text"
+              formControlName="slug"
+              maxlength="200"
+              placeholder="pelda-megnyitobeszed-2002"
+              class="mt-2 block w-full rounded-lg border border-stone-300 px-4 py-3 text-stone-950 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-100 disabled:cursor-not-allowed disabled:bg-stone-100 disabled:text-stone-500"
+            >
+
+            <p class="mt-2 text-xs text-stone-500">
+              Csak kisbetű, szám és kötőjel használható.
+              Létrehozás után nem módosítható.
+            </p>
+
+            @if (
+              form.controls.slug.touched &&
+              form.controls.slug.invalid
+            ) {
+              <p class="mt-2 text-sm text-red-700">
+                Adj meg érvényes slugot, például:
+                fodor-jozsef-megnyitobeszede-2002
+              </p>
+            }
+          </div>
+
+          <div class="mt-6 grid gap-6 lg:grid-cols-2">
+            <div>
+              <label
+                for="titleHu"
+                class="block text-sm font-medium text-stone-800"
+              >
+                Magyar cím
+                <span class="text-red-700">*</span>
+              </label>
+
+              <input
+                id="titleHu"
+                type="text"
+                formControlName="titleHu"
+                maxlength="250"
+                class="mt-2 block w-full rounded-lg border border-stone-300 px-4 py-3 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-100"
+              >
+
+              @if (
+                form.controls.titleHu.touched &&
+                form.controls.titleHu.invalid
+              ) {
+                <p class="mt-2 text-sm text-red-700">
+                  A magyar cím megadása kötelező.
+                </p>
+              }
+            </div>
+
+            <div>
+              <label
+                for="titleEn"
+                class="block text-sm font-medium text-stone-800"
+              >
+                Angol cím
+                <span class="font-normal text-stone-500">
+                  – opcionális
+                </span>
+              </label>
+
+              <input
+                id="titleEn"
+                type="text"
+                formControlName="titleEn"
+                maxlength="250"
+                class="mt-2 block w-full rounded-lg border border-stone-300 px-4 py-3 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-100"
+              >
+            </div>
+          </div>
+
+          <div class="mt-6 grid gap-6 lg:grid-cols-2">
+            <div>
+              <label
+                for="summaryHu"
+                class="block text-sm font-medium text-stone-800"
+              >
+                Magyar összefoglaló
+                <span class="font-normal text-stone-500">
+                  – opcionális
+                </span>
+              </label>
+
+              <textarea
+                id="summaryHu"
+                formControlName="summaryHu"
+                maxlength="1000"
+                rows="4"
+                class="mt-2 block w-full resize-y rounded-lg border border-stone-300 px-4 py-3 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-100"
+              ></textarea>
+            </div>
+
+            <div>
+              <label
+                for="summaryEn"
+                class="block text-sm font-medium text-stone-800"
+              >
+                Angol összefoglaló
+                <span class="font-normal text-stone-500">
+                  – opcionális
+                </span>
+              </label>
+
+              <textarea
+                id="summaryEn"
+                formControlName="summaryEn"
+                maxlength="1000"
+                rows="4"
+                class="mt-2 block w-full resize-y rounded-lg border border-stone-300 px-4 py-3 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-100"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="mt-6 max-w-48">
+            <label
+              for="displayOrder"
+              class="block text-sm font-medium text-stone-800"
+            >
+              Megjelenési sorrend
+            </label>
+
+            <input
+              id="displayOrder"
+              type="number"
+              min="0"
+              formControlName="displayOrder"
+              class="mt-2 block w-full rounded-lg border border-stone-300 px-4 py-3 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-100"
+            >
+          </div>
+        </section>
+
+        <section
+          class="mt-6 rounded-xl border border-stone-200 bg-white p-6 shadow-sm"
+        >
+          <h2 class="text-lg font-semibold text-stone-950">
+            Az írás tartalma
+          </h2>
+
+          <p class="mt-1 text-sm text-stone-600">
+            A szöveg az eszköztár segítségével formázható.
+          </p>
+
+          <div class="mt-6 grid gap-6 lg:grid-cols-2">
+            <div>
+              <p class="mb-2 text-sm font-medium text-stone-800">
+                Magyar tartalom
+                <span class="text-red-700">*</span>
+              </p>
+
+              <editor
+                [apiKey]="tinyMceApiKey"
+                [init]="editorConfig"
+                formControlName="contentHu"
+              />
+
+              @if (
+                form.controls.contentHu.touched &&
+                form.controls.contentHu.invalid
+              ) {
+                <p class="mt-2 text-sm text-red-700">
+                  A magyar tartalom megadása kötelező.
+                </p>
+              }
+            </div>
+
+            <div>
+              <p class="mb-2 text-sm font-medium text-stone-800">
+                Angol tartalom
+                <span class="font-normal text-stone-500">
+                  – opcionális
+                </span>
+              </p>
+
+              <editor
+                [apiKey]="tinyMceApiKey"
+                [init]="editorConfig"
+                formControlName="contentEn"
+              />
+            </div>
+          </div>
+        </section>
+
+        <footer
+          class="mt-6 flex flex-col-reverse gap-3 rounded-xl border border-stone-200 bg-white p-5 shadow-sm sm:flex-row sm:justify-end"
+        >
+          <a
+            routerLink="/content/articles"
+            class="inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm font-semibold text-stone-700 hover:bg-stone-100"
+          >
+            Mégse
+          </a>
+
+          <button
+            type="submit"
+            [disabled]="store.isSaving()"
+            class="inline-flex items-center justify-center rounded-lg bg-stone-950 px-5 py-3 text-sm font-semibold text-white hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            @if (store.isSaving()) {
+              Mentés…
+            }
+            @else {
+              {{
+                isEditMode
+                  ? 'Módosítások mentése'
+                  : 'Írás létrehozása'
+              }}
+            }
+          </button>
+        </footer>
+      </form>
+    }
+  </section>
+</main>

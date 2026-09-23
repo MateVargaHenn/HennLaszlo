@@ -224,3 +224,137 @@ Accept: application/json
 
 DELETE {{WebApi_HostAddress}}/api/admin/invitations/03f88412-2117-4114-a9a2-40035c937a8e
 Accept: application/json
+
+### Kiállítások oldal létrehozása vagy frissítése
+
+PUT {{WebApi_HostAddress}}/api/admin/content-pages/exhibitions
+Content-Type: application/json
+Accept: application/json
+
+{
+  "titleHu": "Kiállítások",
+  "titleEn": "Exhibitions",
+  "contentHu": "## Egyéni kiállítások\n\n- 2025 Berlin, Art at Berlin\n- 2022 Edinburgh, Contemporary Art Studios\n\n## Csoportos kiállítások\n\n- 2024 Szeged\n- 2023 Budapest",
+  "contentEn": "## Solo exhibitions\n\n- 2025 Berlin, Art at Berlin\n- 2022 Edinburgh, Contemporary Art Studios\n\n## Group exhibitions\n\n- 2024 Szeged\n- 2023 Budapest"
+}
+
+
+### Admin tartalmi oldal lekérése kulcs alapján
+
+GET {{WebApi_HostAddress}}/api/admin/content-pages/exhibitions
+Accept: application/json
+
+### Admin tartalmi oldal publikálása
+
+PUT {{WebApi_HostAddress}}/api/admin/content-pages/exhibitions/publish
+Accept: application/json
+
+### Publikálás visszavonása
+
+PUT {{WebApi_HostAddress}}/api/admin/content-pages/exhibitions/unpublish
+Accept: application/json
+
+### Publikus tartalmi oldal lekérése kulcs alapján
+
+GET {{WebApi_HostAddress}}/api/content-pages/exhibitions
+Accept: application/json
+
+### Admin tartalmi oldalak listája
+
+GET {{WebApi_HostAddress}}/api/admin/content-pages
+Accept: application/json
+
+### Tagságok és díjak létrehozása
+
+PUT {{WebApi_HostAddress}}/api/admin/content-pages/memberships-and-awards
+Content-Type: application/json
+
+{
+  "titleHu": "Tagságok és díjak",
+  "titleEn": "Memberships and awards",
+  "contentHu": "A tartalom szerkesztés alatt.",
+  "contentEn": "Content is being edited."
+}
+
+### Írások létrehozása
+
+PUT {{WebApi_HostAddress}}/api/admin/content-pages/writings
+Content-Type: application/json
+
+{
+  "titleHu": "Írások",
+  "titleEn": "Writings",
+  "contentHu": "A tartalom szerkesztés alatt.",
+  "contentEn": "Content is being edited."
+}
+
+### Írás létrehozása
+
+POST {{WebApi_HostAddress}}/api/admin/articles
+Content-Type: application/json
+Accept: application/json
+
+{
+  "slug": "fodor-jozsef-megnyito-beszede-2002",
+  "titleHu": "Fodor József megnyitóbeszéde",
+  "titleEn": null,
+  "summaryHu": "2002. március 13., Hódmezővásárhely – megnyitóbeszéd",
+  "summaryEn": null,
+  "contentHu": "<h2>Kapuk, angyalok, városok</h2><p>Ez egy rövid próbatartalom.</p><blockquote>A szín a lélek skálája.</blockquote>",
+  "contentEn": null,
+  "displayOrder": 0
+}
+
+@articleId = f35ffda3-de73-472e-a474-aa933a216c56
+
+### Írás publikálása
+
+PUT {{WebApi_HostAddress}}/api/admin/articles/{{articleId}}/publish
+Accept: application/json
+
+### Publikálás visszavonása
+
+PUT {{WebApi_HostAddress}}/api/admin/articles/{{articleId}}/unpublish
+Accept: application/json
+
+### Publikus írások listája
+
+GET {{WebApi_HostAddress}}/api/articles
+Accept: application/json
+
+### Publikus írás lekérése slug alapján
+
+GET {{WebApi_HostAddress}}/api/articles/fodor-jozsef-megnyito-beszede-2002
+Accept: application/json
+
+### Admin írások listája
+
+GET {{WebApi_HostAddress}}/api/admin/articles
+Accept: application/json
+
+
+@articleId = f35ffda3-de73-472e-a474-aa933a216c56
+
+### Írás admin részletei
+
+GET {{WebApi_HostAddress}}/api/admin/articles/{{articleId}}
+Accept: application/json
+
+
+@articleId = f35ffda3-de73-472e-a474-aa933a216c56
+
+### Írás módosítása
+
+PUT {{WebApi_HostAddress}}/api/admin/articles/{{articleId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "titleHu": "Fodor József megnyitóbeszéde",
+  "titleEn": "Opening speech by József Fodor",
+  "summaryHu": "2002. március 13., Hódmezővásárhely – megnyitóbeszéd",
+  "summaryEn": "13 March 2002, Hódmezővásárhely – opening speech",
+  "contentHu": "<h2>Kapuk, angyalok, városok</h2><p>A módosított próbatartalom.</p><blockquote>A szín a lélek skálája.</blockquote>",
+  "contentEn": null,
+  "displayOrder": 1
+}

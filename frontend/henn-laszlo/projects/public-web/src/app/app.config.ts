@@ -7,7 +7,9 @@ import { provideArtworkDataAccess } from 'artwork-data-access';
 import {
   provideInvitationDataAccess,
 } from 'invitation-data-access';
-
+import {
+  provideContentDataAccess,
+} from 'content-data-access';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -22,6 +24,10 @@ export const appConfig: ApplicationConfig = {
     }),
 
     provideInvitationDataAccess({
+      apiBaseUrl: environment.apiBaseUrl,
+    }),
+
+    provideContentDataAccess({
       apiBaseUrl: environment.apiBaseUrl,
     }),
   ],
