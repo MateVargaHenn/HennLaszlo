@@ -1,1 +1,28 @@
-<router-outlet></router-outlet>
+@if (authService.isAuthenticated()) {
+  <header class="admin-session">
+    <span>
+      Bejelentkezve:
+      {{ authService.session()?.username }}
+    </span>
+
+    <button
+      type="button"
+      [disabled]="isLoggingOut()"
+      (click)="logout()"
+    >
+      @if (isLoggingOut()) {
+        Kijelentkezés…
+      } @else {
+        Kijelentkezés
+      }
+    </button>
+
+    @if (logoutError()) {
+      <p role="alert">
+        {{ logoutError() }}
+      </p>
+    }
+  </header>
+}
+
+<router-outlet />

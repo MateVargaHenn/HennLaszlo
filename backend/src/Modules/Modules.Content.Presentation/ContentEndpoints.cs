@@ -21,20 +21,29 @@ namespace Modules.Content.Presentation;
 public static class ContentEndpoints
 {
     public static IEndpointRouteBuilder
-        MapContentEndpoints(
+        MapPublicContentEndpoints(
+            this IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapGetPublishedContentPageByKey();
+        endpoints.MapGetPublishedArticles();
+        endpoints.MapGetPublishedArticleBySlug();
+
+        return endpoints;
+    }
+
+    public static IEndpointRouteBuilder
+        MapAdminContentEndpoints(
             this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapUpsertContentPage();
         endpoints.MapGetAdminContentPages();
-		endpoints.MapGetAdminContentPageByKey();
+        endpoints.MapGetAdminContentPageByKey();
         endpoints.MapPublishContentPage();
         endpoints.MapUnpublishContentPage();
-        endpoints.MapGetPublishedContentPageByKey();
+
         endpoints.MapCreateArticle();
         endpoints.MapPublishArticle();
         endpoints.MapUnpublishArticle();
-        endpoints.MapGetPublishedArticles();
-        endpoints.MapGetPublishedArticleBySlug();
         endpoints.MapGetAdminArticles();
         endpoints.MapGetAdminArticleById();
         endpoints.MapUpdateArticle();

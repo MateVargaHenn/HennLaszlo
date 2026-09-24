@@ -15,16 +15,25 @@ namespace Modules.Invitation.Presentation;
 
 public static class InvitationEndpoints
 {
-    public static IEndpointRouteBuilder MapInvitationEndpoints(
-        this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder
+        MapPublicInvitationEndpoints(
+            this IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapGetInvitations();
+        endpoints.MapGetInvitationImage();
+
+        return endpoints;
+    }
+
+    public static IEndpointRouteBuilder
+        MapAdminInvitationEndpoints(
+            this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapCreateInvitation();
         endpoints.MapAttachInvitationImage();
         endpoints.MapPublishInvitation();
         endpoints.MapUnpublishInvitation();
-        endpoints.MapGetInvitations();
-        endpoints.MapGetInvitationImage();
-        endpoints.MapGetAdminInvitations(); 
+        endpoints.MapGetAdminInvitations();
         endpoints.MapGetAdminInvitationImage();
         endpoints.MapGetAdminInvitationById();
         endpoints.MapUpdateInvitation();

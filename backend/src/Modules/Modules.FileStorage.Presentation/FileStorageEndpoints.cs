@@ -6,7 +6,7 @@ namespace Modules.FileStorage.Presentation;
 
 public static class FileStorageEndpoints
 {
-    public static IEndpointRouteBuilder MapFileStorageEndpoints(
+    public static IEndpointRouteBuilder MapAdminFileStorageEndpoints(
         this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapUploadFile();

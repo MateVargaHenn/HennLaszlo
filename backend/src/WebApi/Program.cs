@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using WebApi.ExceptionHandling;
 using Modules.Artwork.Infrastructure;
 using Modules.Artwork.Application;
@@ -12,12 +13,50 @@ using Modules.Content.Infrastructure;
 using Modules.Content.Application;
 using Modules.Content.Presentation;
 using BuildingBlocks.Application;
+using WebApi.Authentication;
 
-var builder = WebApplication.CreateBuilder(args);
+if (args.Contains(
+        "--hash-admin-password",
+        StringComparer.Ordinal))
+{
+    AdminPasswordHashGenerator.Run();
+    return;
+}
+
+var builder =
+    WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<ForwardedHeadersOptions>(
+    options =>
+    {
+        options.ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor |
+            ForwardedHeaders.XForwardedProto;
+
+        options.ForwardLimit = 1;
+    });
+
+    builder.Services
+    .AddOptions<AdminAuthenticationOptions>()
+    .BindConfiguration(
+        AdminAuthenticationOptions.SectionName)
+    .Validate(
+        options =>
+            !string.IsNullOrWhiteSpace(
+                options.Username),
+        "Az admin felhasználónév nincs beállítva.")
+    .Validate(
+        options =>
+            !string.IsNullOrWhiteSpace(
+                options.PasswordHash),
+        "Az admin jelszó hash nincs beállítva.")
+    .ValidateOnStart();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddAdminAuthentication(
+    builder.Environment);
 
 string connectionString =
     builder.Configuration.GetConnectionString("Database")
@@ -81,6 +120,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseForwardedHeaders();
 app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
@@ -95,10 +135,28 @@ if (!app.Environment.IsDevelopment())
 
 app.UseCors(frontendCorsPolicy);
 
-app.MapArtworkEndpoints();
-app.MapFileStorageEndpoints();
-app.MapInvitationEndpoints();
-app.MapContentEndpoints();
+app.UseRateLimiter();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapAdminAuthenticationEndpoints();
+
+app.MapPublicArtworkEndpoints();
+app.MapPublicInvitationEndpoints();
+app.MapPublicContentEndpoints();
+
+RouteGroupBuilder adminEndpoints =
+    app.MapGroup(string.Empty)
+        .RequireAuthorization(
+            AuthenticationExtensions
+                .AdminAuthorizationPolicy)
+        .ValidateAntiforgery();
+
+adminEndpoints.MapAdminArtworkEndpoints();
+adminEndpoints.MapAdminInvitationEndpoints();
+adminEndpoints.MapAdminFileStorageEndpoints();
+adminEndpoints.MapAdminContentEndpoints();
 
 app.Run();
 
