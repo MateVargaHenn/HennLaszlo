@@ -489,3 +489,6 @@ test.jpg
 
 # disable .vscode
 .vscode/
+
+# Source media files
+/frontend/henn-laszlo/projects/public-web/public/gif/
