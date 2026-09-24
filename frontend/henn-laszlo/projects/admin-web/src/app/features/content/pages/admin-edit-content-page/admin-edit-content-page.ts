@@ -163,7 +163,8 @@ export class AdminEditContentPage {
   private isContentPageKey(
     value: string | null,
   ): value is ContentPageKey {
-    return value === 'exhibitions' ||
+    return value === 'about' ||
+      value === 'exhibitions' ||
       value === 'memberships-and-awards' ||
       value === 'writings';
   }

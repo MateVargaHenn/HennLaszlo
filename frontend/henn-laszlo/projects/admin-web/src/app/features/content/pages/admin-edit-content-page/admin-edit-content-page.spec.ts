@@ -13,11 +13,17 @@ import { of } from 'rxjs';
 import {
   AdminEditContentPage,
 } from './admin-edit-content-page';
+import { vi } from 'vitest';
 
 describe('AdminEditContentPage', () => {
   let component: AdminEditContentPage;
   let fixture:
     ComponentFixture<AdminEditContentPage>;
+
+    const getAdminContentPage =
+  vi.fn(() => of(null));
+
+  getAdminContentPage.mockClear();
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -30,8 +36,7 @@ describe('AdminEditContentPage', () => {
             getAdminContentPages: () =>
               of([]),
 
-            getAdminContentPage: () =>
-              of(null),
+            getAdminContentPage,
           },
         },
       ],
@@ -45,7 +50,7 @@ describe('AdminEditContentPage', () => {
       'paramMap',
       {
         value: convertToParamMap({
-          key: 'exhibitions',
+          key: 'about',
         }),
       },
     );
@@ -62,4 +67,9 @@ describe('AdminEditContentPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  it('should load the about content page', () => {
+  expect(
+    getAdminContentPage,
+  ).toHaveBeenCalledWith('about');
+});
 });
