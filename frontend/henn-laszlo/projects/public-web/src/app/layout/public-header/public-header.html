@@ -8,7 +8,7 @@
     </a>
 
     <nav
-      class="hidden items-center gap-8 lg:flex"
+      class="hidden items-center gap-8 xl:flex"
       aria-label="Fő navigáció">
         <a
         routerLink="/"
@@ -59,11 +59,18 @@
       >
         Írások
       </a>
+      <a
+        routerLink="/kapcsolat"
+        routerLinkActive="text-stone-950"
+        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
+      >
+        Kapcsolat
+      </a>
     </nav>
 
     <button
       type="button"
-      class="rounded-md px-3 py-2 text-sm uppercase tracking-wider text-stone-700 lg:hidden"
+      class="rounded-md px-3 py-2 text-sm uppercase tracking-wider text-stone-700 xl:hidden"
       [attr.aria-expanded]="isMenuOpen()"
       aria-controls="mobile-navigation"
       (click)="toggleMenu()">
@@ -74,7 +81,7 @@
   @if (isMenuOpen()) {
     <nav
       id="mobile-navigation"
-      class="border-t border-stone-200 px-5 py-5 lg:hidden"
+      class="border-t border-stone-200 px-5 py-5 xl:hidden"
       aria-label="Mobil navigáció">
       <a
         routerLink="/"
@@ -131,6 +138,14 @@
         (click)="closeMenu()"
       >
         Írások
+      </a>
+      <a
+        routerLink="/kapcsolat"
+        routerLinkActive="font-semibold"
+        class="block py-2 text-stone-700"
+        (click)="closeMenu()"
+      >
+        Kapcsolat
       </a>
     </nav>
   }

@@ -29,6 +29,18 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'kapcsolat',
+        data: {
+          contentPageKey: 'contact',
+        },
+        loadComponent: () =>
+          import(
+            './features/content/pages/content-page/content-page'
+          ).then(
+            component => component.ContentPage,
+          ),
+      },
+      {
         path: 'muvek',
         loadComponent: () =>
           import(

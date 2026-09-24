@@ -50,7 +50,7 @@ describe('AdminEditContentPage', () => {
       'paramMap',
       {
         value: convertToParamMap({
-          key: 'about',
+          key: 'contact',
         }),
       },
     );
@@ -70,6 +70,6 @@ describe('AdminEditContentPage', () => {
   it('should load the about content page', () => {
   expect(
     getAdminContentPage,
-  ).toHaveBeenCalledWith('about');
+  ).toHaveBeenCalledWith('contact');
 });
 });

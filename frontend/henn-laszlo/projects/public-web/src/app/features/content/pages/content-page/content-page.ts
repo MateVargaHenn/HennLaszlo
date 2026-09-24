@@ -56,6 +56,12 @@ export class ContentPage {
         'Ismerje meg Henn László András festőművész és grafikus életútját, művészi pályáját és alkotói szemléletét.',
       canonicalPath: '/bemutatkozas',
     },
+    contact: {
+      title: 'Kapcsolat',
+      description:
+        'Henn László András festőművész és grafikus elérhetőségei és kapcsolatfelvételi adatai.',
+      canonicalPath: '/kapcsolat',
+    },
     exhibitions: {
       title: 'Kiállítások',
       description:
@@ -125,6 +131,7 @@ export class ContentPage {
     value: unknown,
   ): value is ContentPageKey {
     return value === 'about' ||
+      value === 'contact' ||
       value === 'exhibitions' ||
       value === 'memberships-and-awards' ||
       value === 'writings';

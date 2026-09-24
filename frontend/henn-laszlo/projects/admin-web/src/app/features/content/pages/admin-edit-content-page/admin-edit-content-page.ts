@@ -164,6 +164,7 @@ export class AdminEditContentPage {
     value: string | null,
   ): value is ContentPageKey {
     return value === 'about' ||
+      value === 'contact' ||
       value === 'exhibitions' ||
       value === 'memberships-and-awards' ||
       value === 'writings';

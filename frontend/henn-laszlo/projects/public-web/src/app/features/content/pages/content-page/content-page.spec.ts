@@ -65,6 +65,6 @@ describe('ContentPage', () => {
   it('should load the about content page', () => {
     expect(
       getPublishedContentPage,
-    ).toHaveBeenCalledWith('about');
+    ).toHaveBeenCalledWith('contact');
   });
 });

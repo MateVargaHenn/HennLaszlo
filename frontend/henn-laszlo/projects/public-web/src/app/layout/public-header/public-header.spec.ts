@@ -58,6 +58,7 @@ describe('PublicHeader', () => {
       'Kiállítások',
       'Tagságok és díjak',
       'Írások',
+      'Kapcsolat',
     ]);
   });
 });
