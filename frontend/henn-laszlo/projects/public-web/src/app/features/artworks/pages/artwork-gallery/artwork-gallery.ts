@@ -5,10 +5,13 @@ import {
 } from '@angular/core';
 import { PublishedArtworksStore } from 'artwork-data-access';
 import { ArtworkCard } from '../../components/artwork-card/artwork-card';
+import {
+  RevealOnScroll,
+} from '../../../../shared/directives/reveal-on-scroll';
 
 @Component({
   selector: 'app-artwork-gallery',
-  imports: [ArtworkCard],
+  imports: [ArtworkCard, RevealOnScroll],
   templateUrl: './artwork-gallery.html',
   styleUrl: './artwork-gallery.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,6 +1,6 @@
 <main class="min-h-screen bg-stone-950 text-stone-100">
   <section class="mx-auto max-w-5xl px-5 py-20 sm:py-24">
-    <header class="border-b border-stone-800 pb-10">
+    <header class="border-b border-stone-800 pb-10" appRevealOnScroll>
       <p
         class="text-sm uppercase tracking-[0.25em] text-cyan-300"
       >
@@ -38,6 +38,8 @@
     ) {
       <section
         class="writings-introduction"
+        appRevealOnScroll
+        style="--reveal-delay: 100ms"
         [innerHTML]="contentPage.contentHu"
       ></section>
     }

@@ -14,10 +14,13 @@ import type {
 import {
   ImageLightbox,
 } from '../../../../shared/components/image-lightbox/image-lightbox';
+import {
+  RevealOnScroll,
+} from '../../../../shared/directives/reveal-on-scroll';
 
 @Component({
   selector: 'app-invitation-gallery',
-  imports: [ImageLightbox],
+  imports: [ImageLightbox, RevealOnScroll],
   providers: [PublishedInvitationsStore],
   templateUrl: './invitation-gallery.html',
   styleUrl: './invitation-gallery.css',

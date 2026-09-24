@@ -1,5 +1,5 @@
 <main class="min-h-screen bg-stone-950 text-stone-100">
-  <section class="mx-auto max-w-4xl px-5 py-20 sm:py-24">
+  <section class="mx-auto max-w-4xl px-5 py-20 sm:py-24" appRevealOnScroll style="--reveal-delay: 120ms">
     <a
       routerLink="/irasok"
       class="inline-flex items-center gap-2 text-sm text-stone-400 transition-colors hover:text-cyan-300"
@@ -92,6 +92,8 @@
 
         <section
           class="article-content"
+          appRevealOnScroll
+          style="--reveal-delay: 100ms"
           [innerHTML]="article.contentHu"
         ></section>
       </article>

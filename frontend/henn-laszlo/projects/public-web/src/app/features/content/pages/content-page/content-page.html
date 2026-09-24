@@ -57,7 +57,7 @@
       </p>
     }
     @else if (store.contentPage(); as contentPage) {
-      <header class="mb-12 border-b border-stone-800 pb-8">
+      <header class="mb-12 border-b border-stone-800 pb-8" appRevealOnScroll>
         <p
           class="text-sm uppercase tracking-[0.25em] text-cyan-300"
         >
@@ -79,6 +79,8 @@
 
       <article
         class="content-rich-text"
+        appRevealOnScroll
+        style="--reveal-delay: 100ms"
         [innerHTML]="contentPage.contentHu"
       ></article>
     }

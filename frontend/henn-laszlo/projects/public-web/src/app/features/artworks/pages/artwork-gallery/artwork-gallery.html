@@ -1,6 +1,6 @@
 <main class="min-h-screen bg-stone-50 text-stone-900">
   <section class="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:py-20">
-    <header class="mb-12 max-w-2xl">
+    <header class="mb-12 max-w-2xl" appRevealOnScroll>
       <p class="mb-3 text-sm uppercase tracking-[0.24em] text-stone-500">
         Henn László András
       </p>
@@ -44,6 +44,10 @@
       let index = $index
     ) {
       <app-artwork-card
+        appRevealOnScroll
+        [style.--reveal-delay]="
+          (index % 3) * 90 + 'ms'
+        "
         [artwork]="artwork"
         [imageUrl]="store.getImageUrl(artwork.id)"
         [priority]="index < 2"

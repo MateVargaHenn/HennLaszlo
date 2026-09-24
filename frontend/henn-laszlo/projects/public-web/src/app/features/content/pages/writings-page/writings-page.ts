@@ -13,8 +13,13 @@ import {
   SeoService,
 } from '../../../../core/seo/seo.service';
 
+import {
+  RevealOnScroll,
+} from '../../../../shared/directives/reveal-on-scroll';
+
 @Component({
   selector: 'app-writings-page',
+  imports: [RevealOnScroll],
   templateUrl: './writings-page.html',
   styleUrl: './writings-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -7,10 +7,11 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ArtworkDetailsStore } from 'artwork-data-access';
+import { RevealOnScroll } from '../../../../shared/directives/reveal-on-scroll';
 
 @Component({
   selector: 'app-artwork-details',
-  imports: [RouterLink],
+  imports: [RouterLink,RevealOnScroll],
   providers: [ArtworkDetailsStore],
   templateUrl: './artwork-details.html',
   styleUrl: './artwork-details.css',

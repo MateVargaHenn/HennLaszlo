@@ -26,10 +26,15 @@ import {
   SeoService,
 } from '../../../../core/seo/seo.service';
 
+import {
+  RevealOnScroll,
+} from '../../../../shared/directives/reveal-on-scroll';
+
 @Component({
   selector: 'app-article-details',
   imports: [
     RouterLink,
+    RevealOnScroll,
   ],
   templateUrl: './article-details.html',
   styleUrl: './article-details.css',
