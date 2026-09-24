@@ -3,29 +3,7 @@
   background: #0c0a09;
 }
 
-.invitation-card {
-  opacity: 0;
-  animation: invitation-enter 550ms ease-out forwards;
-}
-
-@keyframes invitation-enter {
-  from {
-    opacity: 0;
-    transform: translateY(1.5rem);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .invitation-card {
-    opacity: 1;
-    animation: none;
-  }
-
   .invitation-card img {
     transition: none;
   }

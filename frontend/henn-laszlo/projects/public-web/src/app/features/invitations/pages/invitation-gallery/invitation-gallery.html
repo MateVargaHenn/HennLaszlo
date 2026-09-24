@@ -1,6 +1,6 @@
 <main class="min-h-screen bg-stone-950 text-stone-100">
   <section class="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:py-24">
-    <header class="mb-14 max-w-2xl">
+    <header class="mb-14 max-w-2xl" appRevealOnScroll>
       <p class="mb-4 text-xs uppercase tracking-[0.32em] text-teal-300">
         Henn László András
       </p>
@@ -47,10 +47,13 @@
           track invitation.id;
           let index = $index
         ) {
-          <figure
-            class="invitation-card group mb-6 break-inside-avoid"
-            [style.animation-delay.ms]="index * 70"
-          >
+            <figure
+              class="invitation-card group mb-6 break-inside-avoid"
+              appRevealOnScroll
+              [style.--reveal-delay]="
+                (index % 3) * 90 + 'ms'
+              "
+            >
             <div class="overflow-hidden bg-stone-900">
               <button
                 type="button"

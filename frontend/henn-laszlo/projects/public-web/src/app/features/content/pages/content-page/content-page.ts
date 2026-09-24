@@ -18,6 +18,10 @@ import {
   SeoService,
 } from '../../../../core/seo/seo.service';
 
+import {
+  RevealOnScroll,
+} from '../../../../shared/directives/reveal-on-scroll';
+
 interface ContentPageSeoData {
   readonly title: string;
   readonly description: string;
@@ -28,6 +32,7 @@ interface ContentPageSeoData {
   selector: 'app-content-page',
   imports: [
     RouterLink,
+    RevealOnScroll,
   ],
   templateUrl: './content-page.html',
   styleUrl: './content-page.css',

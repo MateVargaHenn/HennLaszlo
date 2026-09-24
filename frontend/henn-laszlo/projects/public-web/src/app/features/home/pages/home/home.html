@@ -1,6 +1,6 @@
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__inner">
-    <div class="hero__content">
+    <div class="hero__content" appRevealOnScroll>
       <p class="hero__eyebrow">Henn László András</p>
 
       <h1 id="hero-title" class="hero__title">
@@ -21,6 +21,7 @@
     <div
       class="hero__artwork"
       [attr.aria-busy]="artworkStore.isLoading()"
+      appRevealOnScroll
     >
       @if (featuredArtworks().length > 0) {
         @for (artwork of featuredArtworks(); track artwork.id) {
@@ -55,6 +56,7 @@
 <section
   class="medistation"
   aria-label="Archív felvétel Henn László András művészetéről"
+  appRevealOnScroll
 >
   <video
     class="medistation__video"
@@ -89,7 +91,7 @@
     aria-labelledby="selected-artworks-title"
   >
     <div class="selected-artworks__inner">
-      <header class="selected-artworks__header">
+      <header class="selected-artworks__header" appRevealOnScroll>
         <div>
           <p class="selected-artworks__eyebrow">
             Válogatás
@@ -115,9 +117,12 @@
       <div class="selected-artworks__grid">
         @for (
           artwork of selectedArtworks();
-          track artwork.id
+          track artwork.id;
+          let index = $index;
         ) {
           <app-artwork-card
+            appRevealOnScroll
+            [style.--reveal-delay]="index * 90 + 'ms'"
             [artwork]="artwork"
             [imageUrl]="artworkStore.getImageUrl(artwork.id)"
           />

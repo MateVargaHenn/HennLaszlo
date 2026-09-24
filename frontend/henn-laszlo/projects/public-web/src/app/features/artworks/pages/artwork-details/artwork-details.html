@@ -27,7 +27,7 @@
     }
     @else if (store.artwork(); as artwork) {
       <article class="artwork">
-        <figure class="artwork__figure">
+        <figure class="artwork__figure" appRevealOnScroll style="--reveal-delay: 120ms">
           <img
             class="artwork__image"
             [src]="store.getImageUrl(artwork.id)"
@@ -37,7 +37,7 @@
           />
         </figure>
 
-        <div class="artwork__content">
+        <div class="artwork__content" appRevealOnScroll>
           <p class="artwork__eyebrow">
             Henn László András
           </p>
