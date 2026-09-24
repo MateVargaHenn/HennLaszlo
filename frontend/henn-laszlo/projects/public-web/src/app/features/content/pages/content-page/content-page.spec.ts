@@ -44,7 +44,7 @@ describe('ContentPage', () => {
       {
         configurable: true,
         value: {
-          contentPageKey: 'about',
+          contentPageKey: 'contact',
         },
       },
     );

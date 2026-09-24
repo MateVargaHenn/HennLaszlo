@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/admin/
+
+Sitemap: https://hennlaszlo.hu/sitemap.xml
