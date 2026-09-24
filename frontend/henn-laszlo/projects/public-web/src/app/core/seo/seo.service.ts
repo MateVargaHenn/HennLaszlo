@@ -1,6 +1,4 @@
-import {
-  DOCUMENT,
-} from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
   inject,
   Injectable,
@@ -10,12 +8,15 @@ import {
   Title,
 } from '@angular/platform-browser';
 
-export interface SeoPageData {
+interface SeoPageMetadata {
   readonly title: string;
   readonly description: string;
   readonly canonicalPath: string;
   readonly type?: 'website' | 'article';
-  readonly robots?: 'index, follow' | 'noindex, follow';
+  readonly robots?: string;
+  readonly imagePath?: string;
+  readonly imageAlt?: string;
+  readonly includeSiteName?: boolean;
 }
 
 @Injectable({
@@ -32,94 +33,162 @@ export class SeoService {
   private readonly siteUrl =
     'https://hennlaszlo.hu';
 
-  updatePage(data: SeoPageData): void {
-    const documentTitle =
-      `${data.title} | ${this.siteName}`;
+  private readonly defaultImagePath =
+    '/video/medistacio-poster.webp';
 
-    const canonicalUrl = new URL(
-      data.canonicalPath,
-      this.siteUrl,
-    ).toString();
+  private readonly defaultImageAlt =
+    'Henn László András festőművész és grafikus';
+
+  updatePage(metadata: SeoPageMetadata): void {
+    const documentTitle =
+      metadata.includeSiteName === false
+        ? metadata.title
+        : `${metadata.title} | ${this.siteName}`;
+
+    const canonicalUrl =
+      this.resolveUrl(metadata.canonicalPath);
+
+    const imageUrl =
+      this.resolveUrl(
+        metadata.imagePath ??
+        this.defaultImagePath,
+      );
+
+    const imageAlt =
+      metadata.imageAlt ??
+      this.defaultImageAlt;
 
     this.title.setTitle(documentTitle);
 
-    this.meta.updateTag({
-      name: 'description',
-      content: data.description,
-    });
+    this.updateName(
+      'description',
+      metadata.description,
+    );
 
-    this.meta.updateTag({
-    name: 'robots',
-    content: data.robots ?? 'index, follow',
-    });
+    this.updateName(
+      'robots',
+      metadata.robots ?? 'index, follow',
+    );
 
-    this.meta.updateTag({
-      property: 'og:title',
-      content: documentTitle,
-    });
+    this.updateProperty(
+      'og:title',
+      documentTitle,
+    );
 
-    this.meta.updateTag({
-      property: 'og:description',
-      content: data.description,
-    });
+    this.updateProperty(
+      'og:description',
+      metadata.description,
+    );
 
-    this.meta.updateTag({
-      property: 'og:type',
-      content: data.type ?? 'website',
-    });
+    this.updateProperty(
+      'og:type',
+      metadata.type ?? 'website',
+    );
 
-    this.meta.updateTag({
-      property: 'og:url',
-      content: canonicalUrl,
-    });
+    this.updateProperty(
+      'og:url',
+      canonicalUrl,
+    );
 
-    this.meta.updateTag({
-      property: 'og:site_name',
-      content: this.siteName,
-    });
+    this.updateProperty(
+      'og:site_name',
+      this.siteName,
+    );
 
-    this.meta.updateTag({
-      property: 'og:locale',
-      content: 'hu_HU',
-    });
+    this.updateProperty(
+      'og:locale',
+      'hu_HU',
+    );
 
-    this.meta.updateTag({
-      name: 'twitter:card',
-      content: 'summary',
-    });
+    this.updateProperty(
+      'og:image',
+      imageUrl,
+    );
 
-    this.meta.updateTag({
-      name: 'twitter:title',
-      content: documentTitle,
-    });
+    this.updateProperty(
+      'og:image:secure_url',
+      imageUrl,
+    );
 
-    this.meta.updateTag({
-      name: 'twitter:description',
-      content: data.description,
-    });
+    this.updateProperty(
+      'og:image:alt',
+      imageAlt,
+    );
+
+    this.updateName(
+      'twitter:card',
+      'summary_large_image',
+    );
+
+    this.updateName(
+      'twitter:title',
+      documentTitle,
+    );
+
+    this.updateName(
+      'twitter:description',
+      metadata.description,
+    );
+
+    this.updateName(
+      'twitter:image',
+      imageUrl,
+    );
+
+    this.updateName(
+      'twitter:image:alt',
+      imageAlt,
+    );
 
     this.updateCanonicalUrl(canonicalUrl);
+  }
+
+  private updateName(
+    name: string,
+    content: string,
+  ): void {
+    this.meta.updateTag({
+      name,
+      content,
+    });
+  }
+
+  private updateProperty(
+    property: string,
+    content: string,
+  ): void {
+    this.meta.updateTag({
+      property,
+      content,
+    });
   }
 
   private updateCanonicalUrl(
     canonicalUrl: string,
   ): void {
-    let canonicalElement =
+    let canonicalLink =
       this.document.head.querySelector<HTMLLinkElement>(
         'link[rel="canonical"]',
       );
 
-    if (!canonicalElement) {
-      canonicalElement =
+    if (!canonicalLink) {
+      canonicalLink =
         this.document.createElement('link');
 
-      canonicalElement.rel = 'canonical';
+      canonicalLink.rel = 'canonical';
 
       this.document.head.appendChild(
-        canonicalElement,
+        canonicalLink,
       );
     }
 
-    canonicalElement.href = canonicalUrl;
+    canonicalLink.href = canonicalUrl;
+  }
+
+  private resolveUrl(pathOrUrl: string): string {
+    return new URL(
+      pathOrUrl,
+      `${this.siteUrl}/`,
+    ).toString();
   }
 }

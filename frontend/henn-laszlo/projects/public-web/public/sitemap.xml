@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+>
+  <url>
+    <loc>https://hennlaszlo.hu/</loc>
+  </url>
+
+  <url>
+    <loc>https://hennlaszlo.hu/bemutatkozas</loc>
+  </url>
+
+  <url>
+    <loc>https://hennlaszlo.hu/muvek</loc>
+  </url>
+
+  <url>
+    <loc>https://hennlaszlo.hu/meghivok</loc>
+  </url>
+
+  <url>
+    <loc>https://hennlaszlo.hu/kiallitasok</loc>
+  </url>
+
+  <url>
+    <loc>https://hennlaszlo.hu/tagsagok-es-dijak</loc>
+  </url>
+
+  <url>
+    <loc>https://hennlaszlo.hu/irasok</loc>
+  </url>
+
+  <url>
+    <loc>https://hennlaszlo.hu/kapcsolat</loc>
+  </url>
+</urlset>
