@@ -71,6 +71,7 @@
       aria-label="Mobil navigáció">
       <a
         routerLink="/"
+        [routerLinkActiveOptions]="{ exact: true }"
         routerLinkActive="font-semibold"
         class="block py-2 text-stone-700"
         (click)="closeMenu()">
@@ -89,6 +90,32 @@
         class="block py-2 text-stone-700"
         (click)="closeMenu()">
         Meghívók
+      </a>
+      <a
+        routerLink="/kiallitasok"
+        routerLinkActive="font-semibold"
+        class="block py-2 text-stone-700"
+        (click)="closeMenu()"
+      >
+        Kiállítások
+      </a>
+
+      <a
+        routerLink="/tagsagok-es-dijak"
+        routerLinkActive="font-semibold"
+        class="block py-2 text-stone-700"
+        (click)="closeMenu()"
+      >
+        Tagságok és díjak
+      </a>
+
+      <a
+        routerLink="/irasok"
+        routerLinkActive="font-semibold"
+        class="block py-2 text-stone-700"
+        (click)="closeMenu()"
+      >
+        Írások
       </a>
     </nav>
   }
