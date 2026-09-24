@@ -52,6 +52,7 @@ describe('PublicHeader', () => {
 
     expect(labels).toEqual([
       'Kezdőlap',
+      'Bemutatkozás',
       'Művek',
       'Meghívók',
       'Kiállítások',

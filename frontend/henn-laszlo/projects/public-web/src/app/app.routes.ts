@@ -17,6 +17,18 @@ export const routes: Routes = [
         title: 'Henn László András | Festőművész',
       },
       {
+        path: 'bemutatkozas',
+        data: {
+          contentPageKey: 'about',
+        },
+        loadComponent: () =>
+          import(
+            './features/content/pages/content-page/content-page'
+          ).then(
+            component => component.ContentPage,
+          ),
+      },
+      {
         path: 'muvek',
         loadComponent: () =>
           import(

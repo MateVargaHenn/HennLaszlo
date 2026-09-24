@@ -8,7 +8,7 @@
     </a>
 
     <nav
-      class="hidden items-center gap-8 md:flex"
+      class="hidden items-center gap-8 lg:flex"
       aria-label="Fő navigáció">
         <a
         routerLink="/"
@@ -17,6 +17,13 @@
         class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
         >
         Kezdőlap
+      </a>
+      <a
+        routerLink="/bemutatkozas"
+        routerLinkActive="text-stone-950"
+        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
+      >
+        Bemutatkozás
       </a>
       <a
         routerLink="/muvek"
@@ -56,7 +63,7 @@
 
     <button
       type="button"
-      class="rounded-md px-3 py-2 text-sm uppercase tracking-wider text-stone-700 md:hidden"
+      class="rounded-md px-3 py-2 text-sm uppercase tracking-wider text-stone-700 lg:hidden"
       [attr.aria-expanded]="isMenuOpen()"
       aria-controls="mobile-navigation"
       (click)="toggleMenu()">
@@ -67,7 +74,7 @@
   @if (isMenuOpen()) {
     <nav
       id="mobile-navigation"
-      class="border-t border-stone-200 px-5 py-5 md:hidden"
+      class="border-t border-stone-200 px-5 py-5 lg:hidden"
       aria-label="Mobil navigáció">
       <a
         routerLink="/"
@@ -76,6 +83,14 @@
         class="block py-2 text-stone-700"
         (click)="closeMenu()">
         Kezdőlap
+      </a>
+      <a
+        routerLink="/bemutatkozas"
+        routerLinkActive="font-semibold"
+        class="block py-2 text-stone-700"
+        (click)="closeMenu()"
+      >
+        Bemutatkozás
       </a>
       <a
         routerLink="/muvek"

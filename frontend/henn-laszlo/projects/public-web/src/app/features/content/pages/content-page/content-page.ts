@@ -50,6 +50,12 @@ export class ContentPage {
     ContentPageKey,
     ContentPageSeoData
   > = {
+    about: {
+      title: 'Bemutatkozás',
+      description:
+        'Ismerje meg Henn László András festőművész és grafikus életútját, művészi pályáját és alkotói szemléletét.',
+      canonicalPath: '/bemutatkozas',
+    },
     exhibitions: {
       title: 'Kiállítások',
       description:
@@ -118,7 +124,8 @@ export class ContentPage {
   private isContentPageKey(
     value: unknown,
   ): value is ContentPageKey {
-    return value === 'exhibitions' ||
+    return value === 'about' ||
+      value === 'exhibitions' ||
       value === 'memberships-and-awards' ||
       value === 'writings';
   }
