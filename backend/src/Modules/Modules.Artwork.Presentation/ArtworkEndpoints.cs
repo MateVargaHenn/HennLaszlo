@@ -16,16 +16,25 @@ namespace Modules.Artwork.Presentation;
 
 public static class ArtworkEndpoints
 {
-    public static IEndpointRouteBuilder MapArtworkEndpoints(
-        this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder
+        MapPublicArtworkEndpoints(
+            this IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapGetArtworks();
+        endpoints.MapGetArtworkImage();
+        endpoints.MapGetArtworkById();
+
+        return endpoints;
+    }
+
+    public static IEndpointRouteBuilder
+        MapAdminArtworkEndpoints(
+            this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapCreateArtwork();
-        endpoints.MapGetArtworks();
         endpoints.MapAttachArtworkImage();
         endpoints.MapPublishArtwork();
         endpoints.MapUnpublishArtwork();
-        endpoints.MapGetArtworkImage();
-        endpoints.MapGetArtworkById();
         endpoints.MapGetAdminArtworks();
         endpoints.MapGetAdminArtworkImage();
         endpoints.MapDeleteArtwork();
