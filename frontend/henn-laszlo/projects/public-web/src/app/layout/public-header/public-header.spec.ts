@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PublicHeader } from './public-header';
+import {
+  provideRouter,
+} from '@angular/router';
 
 describe('PublicHeader', () => {
   let component: PublicHeader;
@@ -19,3 +22,9 @@ describe('PublicHeader', () => {
     expect(component).toBeTruthy();
   });
 });
+await TestBed.configureTestingModule({
+  imports: [PublicHeader],
+  providers: [
+    provideRouter([]),
+  ],
+}).compileComponents();

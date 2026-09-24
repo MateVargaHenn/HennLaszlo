@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PublicLayout } from './public-layout';
+import {
+  provideRouter,
+} from '@angular/router';
 
 describe('PublicLayout', () => {
   let component: PublicLayout;
@@ -19,3 +22,9 @@ describe('PublicLayout', () => {
     expect(component).toBeTruthy();
   });
 });
+await TestBed.configureTestingModule({
+  imports: [PublicLayout],
+  providers: [
+    provideRouter([]),
+  ],
+}).compileComponents();
