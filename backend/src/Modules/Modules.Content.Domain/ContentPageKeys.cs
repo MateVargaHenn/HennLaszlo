@@ -14,6 +14,9 @@ public static class ContentPageKeys
     public const string Writings =
         "writings";
 
+    public const string Contact =
+        "contact";
+
     public static bool IsSupported(
         string key)
     {
@@ -21,6 +24,7 @@ public static class ContentPageKeys
             About or
             Exhibitions or
             MembershipsAndAwards or
-            Writings;
+            Writings or
+            Contact;
     }
 }

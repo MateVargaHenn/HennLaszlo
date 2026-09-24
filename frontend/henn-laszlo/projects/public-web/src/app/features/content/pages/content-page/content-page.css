@@ -112,3 +112,105 @@ app-content-page .content-rich-text th {
   background: #1c1917;
   color: #fafaf9;
 }
+
+app-content-page .content-rich-text .contact-card {
+  position: relative;
+  max-width: 44rem;
+  overflow: hidden;
+  border: 1px solid #44403c;
+  border-radius: 1rem;
+  background:
+    linear-gradient(
+      135deg,
+      #1c1917 0%,
+      #0c0a09 100%
+    );
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 20%);
+}
+
+app-content-page .content-rich-text .contact-card::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5rem;
+  height: 0.2rem;
+  background: #67e8f9;
+  content: "";
+}
+
+app-content-page .content-rich-text .contact-card__eyebrow {
+  margin: 0;
+  color: #67e8f9;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+app-content-page .content-rich-text .contact-card h2 {
+  margin: 0.5rem 0 0.75rem;
+}
+
+app-content-page .content-rich-text .contact-card__intro {
+  max-width: 38rem;
+  margin-bottom: 1.75rem;
+  color: #a8a29e;
+  text-align: left !important;
+  hyphens: none;
+}
+
+
+app-content-page .content-rich-text .contact-card__address {
+  margin: 0;
+  font-style: normal;
+}
+
+app-content-page .content-rich-text .contact-card__link {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  border: 1px solid #155e75;
+  border-radius: 0.75rem;
+  background: rgb(8 145 178 / 8%);
+  padding: 0.9rem 1.2rem;
+  line-height: 1.4;
+  text-decoration: none;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    transform 150ms ease;
+}
+
+app-content-page .content-rich-text .contact-card__link:hover {
+  border-color: #67e8f9;
+  background: rgb(8 145 178 / 15%);
+  transform: translateY(-2px);
+}
+
+app-content-page .content-rich-text .contact-card__link:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 3px;
+}
+
+app-content-page .content-rich-text .contact-card__link-label {
+  color: #a8a29e;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+app-content-page .content-rich-text .contact-card__link strong {
+  overflow-wrap: anywhere;
+  color: #cffafe;
+  font-size: clamp(1rem, 4vw, 1.25rem);
+}
+
+app-content-page .content-rich-text .contact-card__link > *,
+app-content-page .content-rich-text .contact-card__link p {
+  margin: 0;
+}
