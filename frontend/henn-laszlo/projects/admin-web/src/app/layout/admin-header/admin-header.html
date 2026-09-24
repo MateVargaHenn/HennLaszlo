@@ -1,0 +1,84 @@
+@if (authService.isAuthenticated()) {
+  <header class="admin-header">
+    <div class="admin-header__inner">
+      <a
+        class="admin-header__brand"
+        routerLink="/artworks"
+      >
+        Adminisztráció
+      </a>
+
+      <nav
+        class="admin-navigation"
+        aria-label="Adminisztráció"
+      >
+        <a
+          class="admin-navigation__link"
+          routerLink="/artworks"
+          routerLinkActive="admin-navigation__link--active"
+          ariaCurrentWhenActive="page"
+        >
+          Művek
+        </a>
+
+        <a
+          class="admin-navigation__link"
+          routerLink="/invitations"
+          routerLinkActive="admin-navigation__link--active"
+          ariaCurrentWhenActive="page"
+        >
+          Meghívók
+        </a>
+
+        <a
+          class="admin-navigation__link"
+          routerLink="/content"
+          routerLinkActive="admin-navigation__link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          ariaCurrentWhenActive="page"
+        >
+          Szöveges oldalak
+        </a>
+
+        <a
+          class="admin-navigation__link"
+          routerLink="/content/articles"
+          routerLinkActive="admin-navigation__link--active"
+          ariaCurrentWhenActive="page"
+        >
+          Írások
+        </a>
+      </nav>
+
+      <div class="admin-session">
+        <span>
+          Bejelentkezve:
+          <strong>
+            {{ authService.session()?.username }}
+          </strong>
+        </span>
+
+        <button
+          type="button"
+          [disabled]="isLoggingOut()"
+          (click)="logout()"
+        >
+          @if (isLoggingOut()) {
+            Kijelentkezés…
+          } @else {
+            Kijelentkezés
+          }
+        </button>
+      </div>
+    </div>
+
+    @if (logoutError()) {
+      <p
+        class="admin-header__error"
+        role="alert"
+      >
+        {{ logoutError() }}
+      </p>
+    }
+  </header>
+}
