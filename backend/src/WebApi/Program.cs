@@ -12,6 +12,8 @@ using Modules.Invitation.Presentation;
 using Modules.Content.Infrastructure;
 using Modules.Content.Application;
 using Modules.Content.Presentation;
+using Modules.Argus.Infrastructure;
+using Modules.Argus.Presentation;
 using BuildingBlocks.Application;
 using WebApi.Authentication;
 
@@ -93,6 +95,10 @@ builder.Services.AddContentInfrastructure(
     builder.Configuration);
 builder.Services.AddContentApplication();
 
+builder.Services
+    .AddArgusInfrastructure()
+    .AddArgusPresentation();
+
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
@@ -145,6 +151,7 @@ app.MapAdminAuthenticationEndpoints();
 app.MapPublicArtworkEndpoints();
 app.MapPublicInvitationEndpoints();
 app.MapPublicContentEndpoints();
+app.MapArgusEndpoints();
 
 RouteGroupBuilder adminEndpoints =
     app.MapGroup(string.Empty)

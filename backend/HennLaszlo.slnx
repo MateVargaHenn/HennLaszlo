@@ -6,6 +6,10 @@
     <Project Path="src/BuildingBlocks/BuildingBlocks.Application/BuildingBlocks.Application.csproj" />
   </Folder>
   <Folder Name="/src/Modules/">
+    <Project Path="src/Modules/Modules.Argus.Application/Modules.Argus.Application.csproj" />
+    <Project Path="src/Modules/Modules.Argus.Domain/Modules.Argus.Domain.csproj" />
+    <Project Path="src/Modules/Modules.Argus.Infrastructure/Modules.Argus.Infrastructure.csproj" />
+    <Project Path="src/Modules/Modules.Argus.Presentation/Modules.Argus.Presentation.csproj" />
     <Project Path="src/Modules/Modules.Artwork.Application/Modules.Artwork.Application.csproj" />
     <Project Path="src/Modules/Modules.Artwork.Domain/Modules.Artwork.Domain.csproj" />
     <Project Path="src/Modules/Modules.Artwork.Infrastructure/Modules.Artwork.Infrastructure.csproj" />
@@ -23,5 +27,8 @@
     <Project Path="src/Modules/Modules.Invitation.Domain/Modules.Invitation.Domain.csproj" />
     <Project Path="src/Modules/Modules.Invitation.Infrastructure/Modules.Invitation.Infrastructure.csproj" />
     <Project Path="src/Modules/Modules.Invitation.Presentation/Modules.Invitation.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Modules.Argus.UnitTests/Modules.Argus.UnitTests.csproj" />
   </Folder>
 </Solution>
