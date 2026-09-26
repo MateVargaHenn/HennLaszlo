@@ -1,0 +1,399 @@
+{
+  "subject": {
+    "id": "henn-laszlo-andras",
+    "canonicalName": "Henn László András",
+    "aliases": [
+      "Henn László András",
+      "Henn László",
+      "László András",
+      "Henn"
+    ],
+    "references": [
+      "a művész",
+      "a festő",
+      "a festőművész",
+      "ő",
+      "neki"
+    ],
+    "roles": [
+      "festőművész",
+      "grafikus",
+      "alkotó"
+    ]
+  },
+  "entities": [
+    {
+      "id": "szeged",
+      "type": "place",
+      "canonicalName": "Szeged",
+      "aliases": [
+        "Szeged",
+        "Szegeden",
+        "szegedi"
+      ]
+    },
+    {
+      "id": "budapest",
+      "type": "place",
+      "canonicalName": "Budapest",
+      "aliases": [
+        "Budapest",
+        "Budapesten",
+        "budapesti"
+      ]
+    },
+    {
+      "id": "tomorkeny",
+      "type": "institution",
+      "canonicalName": "Tömörkény István Gimnázium és Művészeti Szakközépiskola",
+      "aliases": [
+        "Tömörkény",
+        "Tömörkény István Gimnázium",
+        "Tömörkény István Gimnázium és Művészeti Szakközépiskola"
+      ]
+    },
+    {
+      "id": "dekoratorkepzo",
+      "type": "institution",
+      "canonicalName": "Dekoratőrképző Szakiskola",
+      "aliases": [
+        "Dekoratőrképző",
+        "Dekoratőrképző Szakiskola"
+      ]
+    },
+    {
+      "id": "galyasi-miklos",
+      "type": "person",
+      "canonicalName": "Galyasi Miklós",
+      "aliases": [
+        "Galyasi Miklós",
+        "Galyasi"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "id": "teachers",
+      "answer": "Tanárai, illetve mesterei voltak többek között Kalmár Márton, Károlyi Zsigmond, Lóránt János, Magos Gyula, Sándor Miklós, Szalay Ferenc, Tolvaly Ernő és Zoltánfy István.",
+      "sourceTitle": null,
+      "sourcePath": null,
+      "questions": [
+        "Kik voltak Henn László András tanárai?",
+        "Kik voltak a tanárai?",
+        "Ki tanította Henn László Andrást?",
+        "Kik voltak Henn László András mesterei?",
+        "Ki volt a mestere?"
+      ],
+      "keywords": [
+        "tanár",
+        "tanárai",
+        "mester",
+        "mesterei",
+        "oktató"
+      ]
+    },
+    {
+      "id": "birthday",
+      "answer": "1959 október 14-én született, Szegeden.",
+      "sourceTitle": null,
+      "sourcePath": null,
+      "questions": [
+        "Mikor született Henn László András?",
+        "Hol született Henn László András?",
+        "Mikor látta meg a napvilágot Henn László András?",
+        "Hol jött világra Henn László András?",
+        "Mi Henn László András születési helye és ideje?"
+      ],
+      "keywords": [
+        "születés",
+        "született",
+        "születési hely",
+        "születési idő",
+        "világra jött",
+        "napvilágot látott",
+        "1959",
+        "Szeged"
+      ],
+      "concepts": [
+        "világra jött",
+        "napvilágot látott",
+        "születési hely",
+        "születési idő"
+      ],
+      "relatedEntityIds": [
+        "henn-laszlo-andras",
+        "szeged"
+      ],
+      "negativeExamples": [
+        "Mikor volt az első kiállítása?",
+        "Mikor tanult Budapesten?"
+      ]
+    },
+    {
+      "id": "work",
+      "answer": "Munkáiban keresi a mai és az archaikus kultúra kapcsolódási pontjait, jelképeit, valamint jelen és múlt egységét. Egy-egy képe kialakulása – még ha a lírai expresszionizmus jegyeit hordozza is – hosszabb előkészület eredménye. Sokat tanulmányozta a mozgókép és a művészi pillanatkép kompozíciós különbségeit és kapcsolatait, amelyek képein is nyomon követhetők.",
+      "sourceTitle": null,
+      "sourcePath": null,
+      "questions": [
+        "Mi jellemzi Henn László András művészetét?",
+        "Milyen témák jelennek meg Henn László András képein?",
+        "Milyen stílusban alkot Henn László András?",
+        "Hogyan készülnek Henn László András képei?",
+        "Mi inspirálja Henn László András munkáit?"
+      ],
+      "keywords": [
+        "művészet",
+        "festészet",
+        "stílus",
+        "lírai expresszionizmus",
+        "archaikus kultúra",
+        "jelkép",
+        "kompozíció",
+        "mozgókép",
+        "pillanatkép",
+        "inspiráció"
+      ]
+    },
+    {
+      "id": "artistic_work",
+      "answer": "Szegeden, a lakóhelye szerinti műhelyben fest.",
+      "sourceTitle": null,
+      "sourcePath": null,
+      "questions": [
+        "Hol dolgozik Henn László András?",
+        "Hol fest Henn László András?",
+        "Melyik városban található Henn László András műhelye?",
+        "Hol található Henn László András műhelye?"
+      ],
+      "keywords": [
+        "műhely",
+        "Szeged",
+        "dolgozik",
+        "fest",
+        "alkot"
+      ]
+    },
+    {
+      "id": "greeting",
+      "answer": "Üdvözlöm!",
+      "sourceTitle": null,
+      "sourcePath": null,
+      "questions": [
+        "Üdvözlöm!",
+        "Jó napot kívánok!",
+        "Szia!",
+        "Helló!"
+      ],
+      "keywords": [
+        "üdvözlöm",
+        "jó napot",
+        "szia",
+        "helló",
+        "köszönés"
+      ]
+    },
+    {
+      "id": "capabilities",
+      "answer": "Természetesen! Henn László András életéről, művészetéről, kiállításairól és elérhetőségéről kérdezhet.",
+      "sourceTitle": null,
+      "sourcePath": null,
+      "questions": [
+        "Tud segíteni?",
+        "Tudsz segíteni?",
+        "Tudna segíteni?",
+        "Tudna nekem segíteni?",
+        "Segítene?",
+        "Miben tud segíteni?",
+        "Miben tudna segíteni?",
+        "Miről kérdezhetem?",
+        "Mit tud Argus?",
+        "Milyen kérdésekre tud válaszolni?"
+      ],
+      "keywords": [
+        "segíteni",
+        "segítene",
+        "segítség",
+        "kérdezhetem",
+        "kérdezhetek",
+        "válaszolni",
+        "Argus"
+      ]
+    },
+    {
+      "id": "identity",
+      "answer": "Henn László András festőművész és grafikus, Galyasi Miklós nívódíjas alkotó.",
+      "sourceTitle": "Bemutatkozás",
+      "sourcePath": "/bemutatkozas",
+      "questions": [
+        "Ki Henn László András?",
+        "Mivel foglalkozik Henn László András?",
+        "Milyen művész Henn László András?",
+        "Ki az a Henn László?"
+      ],
+      "keywords": [
+        "Henn László András",
+        "festőművész",
+        "grafikus",
+        "alkotó"
+      ]
+    },
+    {
+      "id": "positive-feedback",
+      "answer": "Örülök neki! Mit szeretne még tudni Henn László Andrásról?",
+      "sourceTitle": null,
+      "sourcePath": null,
+      "questions": [
+        "Na, az jó!",
+        "Ez jó!",
+        "Ez szuper!",
+        "Szuper!",
+        "Remek!",
+        "Rendben!",
+        "Értem!"
+      ],
+      "keywords": [
+        "jó",
+        "szuper",
+        "remek",
+        "rendben",
+        "értem",
+        "örülök"
+      ]
+    },
+    {
+      "id": "studies",
+      "answer": "Henn László András 1974 és 1978 között a szegedi Tömörkény István Gimnázium és Művészeti Szakközépiskola grafika szakán tanult. Ezt követően 1978 és 1980 között Budapesten, a Dekoratőrképző Szakiskolában folytatta tanulmányait.",
+      "sourceTitle": "Bemutatkozás",
+      "sourcePath": "/bemutatkozas",
+      "questions": [
+        "Hol tanult Henn László András?",
+        "Milyen iskolába járt Henn László?",
+        "Hol végezte művészeti tanulmányait?",
+        "Mely iskolákban tanult Henn László András?",
+        "Mikor tanult a Tömörkény István Gimnáziumban?"
+      ],
+      "keywords": [
+        "tanulmányok",
+        "iskola",
+        "Tömörkény",
+        "Szeged",
+        "grafika",
+        "Dekoratőrképző",
+        "Budapest"
+      ],
+      "concepts": [
+        "iskolai tanulmányok",
+        "művészeti képzés",
+        "hol képezte magát",
+        "milyen iskolába járt"
+      ],
+      "relatedEntityIds": [
+        "henn-laszlo-andras",
+        "szeged",
+        "budapest",
+        "tomorkeny",
+        "dekoratorkepzo"
+      ],
+      "negativeExamples": [
+        "Kik voltak a tanárai?",
+        "Hol található a műhelye?"
+      ]
+    },
+    {
+      "id": "first-exhibition",
+      "answer": "Henn László András első önálló kiállítása 1987-ben volt.",
+      "sourceTitle": "Kiállítások",
+      "sourcePath": "/kiallitasok",
+      "questions": [
+        "Mikor volt az első önálló kiállítása?",
+        "Melyik évben volt Henn László első kiállítása?",
+        "Mikor állított ki először?",
+        "Mikor rendezte első kiállítását?"
+      ],
+      "keywords": [
+        "első kiállítás",
+        "önálló kiállítás",
+        "kiállítás",
+        "1987"
+      ]
+    },
+    {
+      "id": "award",
+      "answer": "Henn László András díjai: UNICA Arany Diploma Svájc (1991), Freecard pályázat és kiállítási díj (2002), Szeged Város Művészeti Alkotói Támogatása (2005), a „Csak tiszta forrásból” című rendezvénysorozat Kiállítási Díja, Budapest (2006), Szegedért Alapítvány Művészeti Alkotói Támogatása (2010), Szeged Város Művészeti Alkotói Támogatása (2010), a XXXVII. Országos Nyári Tárlat díja (2013), a XV. Országos Táblaképfestészeti Biennálé különdíja (2014), valamint a 69. Vásárhelyi Őszi Tárlat Galyasi Miklós nívódíja (2023).",
+      "sourceTitle": "Tagságok és díjak",
+      "sourcePath": "/tagsagok-es-dijak",
+      "questions": [
+        "Milyen díjat kapott Henn László?",
+        "Milyen kitüntetése van Henn Lászlónak?",
+        "Kapott művészeti díjat?",
+        "Milyen díjas festőművész?",
+        "Milyen elismeréseket kapott Henn László András?"
+      ],
+      "keywords": [
+        "Galyasi Miklós",
+        "nívódíj",
+        "díj",
+        "díjak",
+        "kitüntetés",
+        "elismerés",
+        "UNICA",
+        "biennálé",
+        "tárlat"
+      ]
+    },
+    {
+      "id": "artworks",
+      "answer": "Henn László András válogatott alkotásai a Művek oldalon tekinthetők meg.",
+      "sourceTitle": "Művek",
+      "sourcePath": "/muvek",
+      "questions": [
+        "Hol nézhetem meg a műveit?",
+        "Hol találhatók Henn László festményei?",
+        "Meg lehet nézni az alkotásait?",
+        "Milyen művei vannak?"
+      ],
+      "keywords": [
+        "művek",
+        "festmények",
+        "alkotások",
+        "galéria"
+      ]
+    },
+    {
+      "id": "contact",
+      "answer": "Henn László András a hennlaa@gmail.com e-mail-címen érhető el.",
+      "sourceTitle": "Kapcsolat",
+      "sourcePath": "/kapcsolat",
+      "questions": [
+        "Hogyan lehet kapcsolatba lépni Henn Lászlóval?",
+        "Mi Henn László e-mail-címe?",
+        "Hol érhető el Henn László?",
+        "Hogyan írhatok neki?",
+        "Hogyan lehet kapcsolatba lépni a művésszel?"
+      ],
+      "keywords": [
+        "kapcsolat",
+        "kapcsolatba",
+        "elérhetőség",
+        "e-mail",
+        "email",
+        "művész",
+        "művésszel",
+        "hennlaa@gmail.com"
+      ],
+      "concepts": [
+        "kapcsolatfelvétel",
+        "elérni a művészt",
+        "üzenetet küldeni",
+        "levelet írni"
+      ],
+      "relatedEntityIds": [
+        "henn-laszlo-andras"
+      ],
+      "negativeExamples": [
+        "Hol található a műhelye?",
+        "Hol nézhetem meg a műveit?"
+      ]
+    }
+  ]
+}
