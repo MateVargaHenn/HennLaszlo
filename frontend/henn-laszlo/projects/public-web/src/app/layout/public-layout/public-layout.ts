@@ -6,6 +6,8 @@ import { RouterOutlet } from '@angular/router';
 
 import { PublicFooter } from '../public-footer/public-footer';
 import { PublicHeader } from '../public-header/public-header';
+import { ArgusChatbot } from
+  '../../features/argus/components/argus-chatbot/argus-chatbot';
 
 @Component({
   selector: 'app-public-layout',
@@ -13,6 +15,7 @@ import { PublicHeader } from '../public-header/public-header';
     RouterOutlet,
     PublicHeader,
     PublicFooter,
+    ArgusChatbot,
   ],
   templateUrl: './public-layout.html',
   styleUrl: './public-layout.css',

@@ -1,0 +1,189 @@
+<div class="argus">
+  @if (isOpen()) {
+    <section
+      id="argus-dialog"
+      class="argus-panel"
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby="argus-title"
+    >
+      <header class="argus-header">
+        <div>
+          <p class="argus-eyebrow">
+            Digitális tárlatvezető
+          </p>
+
+          <h2 id="argus-title">
+            Argus
+          </h2>
+        </div>
+
+        <button
+          type="button"
+          class="argus-close"
+          aria-label="Argus bezárása"
+          (click)="close()"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </header>
+
+      <div
+        #messageList
+        class="argus-messages"
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions"
+      >
+        @for (
+          message of messages();
+          track message.id
+        ) {
+          <article
+            class="argus-message"
+            [class.argus-message--user]="
+              message.role === 'user'
+            "
+            [class.argus-message--error]="
+              message.isError
+            "
+          >
+            <span class="argus-message__author">
+              @if (message.role === 'user') {
+                Ön
+              } @else {
+                Argus
+              }
+            </span>
+
+            <p>{{ message.text }}</p>
+
+            @if (message.source) {
+              <a
+                class="argus-message__source"
+                [routerLink]="message.source.path"
+                (click)="close()"
+              >
+                Forrás:
+                {{ message.source.title }}
+              </a>
+            }
+          </article>
+        }
+
+        @if (showSuggestedQuestions()) {
+          <div
+            class="argus-suggestions"
+            aria-label="Javasolt kérdések"
+          >
+            <p class="argus-suggestions__label">
+              Ezek közül is kérdezhet:
+            </p>
+
+            <div class="argus-suggestions__list">
+              @for (
+                suggestedQuestion of
+                  suggestedQuestions;
+                track suggestedQuestion
+              ) {
+                <button
+                  #suggestionButton
+                  type="button"
+                  class="argus-suggestion"
+                  [disabled]="isSending()"
+                  (pointerdown)="
+                    prepareSuggestedQuestion(
+                      suggestedQuestion
+                    )
+                  "
+                  (click)="
+                    askSuggestedQuestion(
+                      suggestedQuestion
+                    )
+                  "
+                >
+                  {{ suggestedQuestion }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        @if (isSending()) {
+          <p
+            class="argus-thinking"
+            role="status"
+          >
+            Argus válaszol…
+          </p>
+        }
+      </div>
+
+        <form
+        class="argus-form"
+        (submit)="submit($event)"
+        >
+        <label for="argus-question">
+          Kérdés Argusnak
+        </label>
+
+        <div class="argus-form__row">
+          <input
+            #questionInput
+            id="argus-question"
+            type="text"
+            maxlength="300"
+            autocomplete="off"
+            placeholder="Mit szeretne tudni?"
+            [formControl]="question"
+          >
+
+          <button
+            type="submit"
+            [disabled]="
+              question.invalid ||
+              isSending()
+            "
+          >
+            Küldés
+          </button>
+        </div>
+
+        @if (
+          question.touched &&
+          question.hasError('required')
+        ) {
+          <p
+            class="argus-form__error"
+            role="alert"
+          >
+            Írjon be egy kérdést.
+          </p>
+        }
+
+        <p class="argus-disclaimer">
+          Argus korlátozott tudásbázisból
+          válaszol.
+        </p>
+      </form>
+    </section>
+  }
+
+  <button
+    #launcher
+    type="button"
+    class="argus-launcher"
+    aria-controls="argus-dialog"
+    [attr.aria-expanded]="isOpen()"
+    (click)="toggle()"
+  >
+    <span
+      class="argus-launcher__mark"
+      aria-hidden="true"
+    >
+      A
+    </span>
+
+    <span>Kérdezd Argust</span>
+  </button>
+</div>

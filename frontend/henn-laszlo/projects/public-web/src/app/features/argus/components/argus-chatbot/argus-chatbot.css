@@ -1,0 +1,365 @@
+:host {
+  position: relative;
+  z-index: 1000;
+}
+
+.argus {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: 1000;
+  display: grid;
+  justify-items: end;
+  gap: 0.75rem;
+}
+
+.argus-panel {
+  display: grid;
+  width: min(25rem, calc(100vw - 2rem));
+  max-height: min(38rem, calc(100dvh - 7rem));
+  overflow: hidden;
+  border: 1px solid #44403c;
+  border-radius: 1rem;
+  background:
+    linear-gradient(
+      145deg,
+      #171717,
+      #0c0a09
+    );
+  color: #f5f5f4;
+  box-shadow:
+    0 1.5rem 4rem rgb(0 0 0 / 45%);
+  animation:
+    argus-open 180ms ease-out;
+}
+
+.argus-header {
+  display: flex;
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid #292524;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.argus-header h2,
+.argus-header p {
+  margin: 0;
+}
+
+.argus-header h2 {
+  font-family: Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 500;
+}
+
+.argus-eyebrow {
+  color: #67e8f9;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.argus-close {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid #44403c;
+  border-radius: 999px;
+  background: transparent;
+  color: #d6d3d1;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.argus-close:hover {
+  border-color: #67e8f9;
+  color: #67e8f9;
+}
+
+.argus-messages {
+  display: flex;
+  min-height: 13rem;
+  padding: 1rem;
+  overflow-y: auto;
+  flex-direction: column;
+  gap: 0.85rem;
+  overscroll-behavior: contain;
+}
+
+.argus-message {
+  max-width: 88%;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #44403c;
+  border-radius: 0.85rem 0.85rem 0.85rem 0.2rem;
+  align-self: flex-start;
+  background: #1c1917;
+}
+
+.argus-message--user {
+  border-color: #155e75;
+  border-radius: 0.85rem 0.85rem 0.2rem 0.85rem;
+  align-self: flex-end;
+  background: #083344;
+}
+
+.argus-message--error {
+  border-color: #991b1b;
+  background: #450a0a;
+}
+
+.argus-message p {
+  margin: 0.25rem 0 0;
+  color: #e7e5e4;
+  line-height: 1.55;
+}
+
+.argus-message__author {
+  color: #67e8f9;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.argus-message__source {
+  display: inline-block;
+  margin-top: 0.6rem;
+  color: #67e8f9;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.argus-thinking {
+  margin: 0;
+  color: #a8a29e;
+  font-size: 0.85rem;
+}
+
+.argus-form {
+  padding: 1rem;
+  border-top: 1px solid #292524;
+  background: #0c0a09;
+}
+
+.argus-form > label {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: #d6d3d1;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.argus-form__row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.argus-form input {
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #57534e;
+  border-radius: 0.5rem;
+  flex: 1;
+  background: #1c1917;
+  color: #fafaf9;
+  font: inherit;
+}
+
+.argus-form input::placeholder {
+  color: #78716c;
+}
+
+.argus-form button {
+  padding-inline: 1rem;
+  border: 1px solid #22d3ee;
+  border-radius: 0.5rem;
+  background: #22d3ee;
+  color: #082f49;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.argus-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.argus-form__error {
+  margin: 0.45rem 0 0;
+  color: #fca5a5;
+  font-size: 0.78rem;
+}
+
+.argus-disclaimer {
+  margin: 0.6rem 0 0;
+  color: #78716c;
+  font-size: 0.7rem;
+}
+
+.argus-launcher {
+  display: flex;
+  min-height: 3.4rem;
+  padding: 0.6rem 1rem 0.6rem 0.65rem;
+  border: 1px solid #155e75;
+  border-radius: 999px;
+  align-items: center;
+  gap: 0.65rem;
+  background: #0c0a09;
+  color: #f5f5f4;
+  font: inherit;
+  font-weight: 700;
+  box-shadow:
+    0 0.75rem 2rem rgb(0 0 0 / 35%);
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    transform 150ms ease;
+}
+
+.argus-launcher:hover {
+  border-color: #67e8f9;
+  transform: translateY(-2px);
+}
+
+.argus-launcher__mark {
+  display: grid;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  place-items: center;
+  background: #22d3ee;
+  color: #082f49;
+  font-family: Georgia, serif;
+  font-size: 1.15rem;
+}
+
+.argus button:focus-visible,
+.argus input:focus-visible,
+.argus a:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 3px;
+}
+
+.argus-messages {
+  scrollbar-width: thin;
+  scrollbar-color: #0e7490 #171412;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+
+/* Chrome, Edge és Safari */
+.argus-messages::-webkit-scrollbar {
+  width: 0.55rem;
+}
+
+.argus-messages::-webkit-scrollbar-track {
+  background: #171412;
+  border-left: 1px solid #292524;
+}
+
+.argus-messages::-webkit-scrollbar-thumb {
+  border: 2px solid #171412;
+  border-radius: 999px;
+  background: #0e7490;
+}
+
+.argus-messages::-webkit-scrollbar-thumb:hover {
+  background: #22d3ee;
+}
+
+.argus-messages::-webkit-scrollbar-corner {
+  background: #171412;
+}
+
+.argus-suggestions {
+  align-self: stretch;
+}
+
+.argus-suggestions__label {
+  margin: 0 0 0.55rem;
+  color: #a8a29e;
+  font-size: 0.75rem;
+}
+
+.argus-suggestions__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.argus-suggestion {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #155e75;
+  border-radius: 999px;
+  background: #0f2529;
+  color: #cffafe;
+  font: inherit;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.argus-suggestion:hover:not(:disabled) {
+  border-color: #67e8f9;
+  background: #164e63;
+  color: #ffffff;
+}
+
+.argus-suggestion:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+@keyframes argus-open {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0)
+      scale(1);
+  }
+}
+
+@media (max-width: 35rem) {
+  .argus {
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+  }
+
+  .argus-panel {
+    width: 100%;
+    max-height: calc(100dvh - 6.5rem);
+  }
+
+  .argus-message {
+    max-width: 94%;
+  }
+  .argus-suggestion {
+    width: 100%;
+    border-radius: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .argus-panel {
+    animation: none;
+  }
+
+  .argus-launcher {
+    transition: none;
+  }
+}

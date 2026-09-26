@@ -3,6 +3,7 @@ import { PublicLayout } from './public-layout';
 import {
   provideRouter,
 } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PublicLayout', () => {
   let component: PublicLayout;
@@ -26,5 +27,6 @@ await TestBed.configureTestingModule({
   imports: [PublicLayout],
   providers: [
     provideRouter([]),
+    provideHttpClient(),
   ],
 }).compileComponents();
