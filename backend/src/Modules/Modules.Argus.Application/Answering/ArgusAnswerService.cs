@@ -28,7 +28,7 @@ public sealed class ArgusAnswerService(
     private const int MinimumStemLength = 5;
     private const double NegativeMatchThreshold =
     0.8;
-    
+
     private static readonly char[] IntentSeparators =
     ['.', '!', '?', ';'];
 
@@ -350,7 +350,7 @@ public sealed class ArgusAnswerService(
                 knownTokens));
     }
 
-    
+
 
     private static void AddKnownTokens(
     HashSet<string> knownTokens,

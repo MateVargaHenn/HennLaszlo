@@ -79,7 +79,7 @@ internal sealed class JsonArgusKnowledgeBase
 
 		return entries.AsReadOnly();
 	}
-	
+
     private static void Validate(
     IReadOnlyCollection<ArgusKnowledgeEntry>
             entries)
