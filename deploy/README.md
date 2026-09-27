@@ -1,9 +1,8 @@
 # Private preview on the existing VPS
 
 The public `hennlaszlo.hu` virtual host remains untouched. The Compose gateway
-binds only `127.0.0.1:18080`; PostgreSQL and the application ports have no
-public host binding. RabbitMQ management (`15672`) and Seq (`15341`) also bind
-only to loopback. RabbitMQ is started for the planned messaging integration;
+binds only `127.0.0.1:18080`; PostgreSQL, RabbitMQ, Seq, and application ports
+have no host binding. Check that `18080` is free before first start. RabbitMQ is started for the planned messaging integration;
 the current API does not yet publish or consume messages.
 
 ## One-time VPS preparation
@@ -42,5 +41,5 @@ Changes pushed to `development` run CI only. The deployment does not publish
 or replace the main domain.
 
 Access: `https://preview.hennlaszlo.hu/` (only after DNS, TLS, and the workflow
-succeed). Admin: `/admin/`. Seq and RabbitMQ management can be reached only
-through an SSH tunnel to their loopback ports.
+succeed). Admin: `/admin/`. Seq and RabbitMQ management stay on the private
+Compose network; their web consoles are not exposed through the VPS host.
