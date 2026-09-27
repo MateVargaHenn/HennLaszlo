@@ -16,6 +16,12 @@ using Modules.Argus.Infrastructure;
 using Modules.Argus.Presentation;
 using BuildingBlocks.Application;
 using WebApi.Authentication;
+using Microsoft.EntityFrameworkCore;
+using Modules.Artwork.Infrastructure.Database;
+using Modules.FileStorage.Infrastructure.Database;
+using Modules.Invitation.Infrastructure.Database;
+using Modules.Content.Infrastructure.Database;
+using Serilog;
 
 if (args.Contains(
         "--hash-admin-password",
@@ -27,6 +33,19 @@ if (args.Contains(
 
 var builder =
     WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, logger) =>
+{
+    logger.MinimumLevel.Information()
+        .Enrich.FromLogContext()
+        .WriteTo.Console();
+
+    string? seqUrl = context.Configuration["Seq:ServerUrl"];
+    if (!string.IsNullOrWhiteSpace(seqUrl))
+    {
+        logger.WriteTo.Seq(seqUrl);
+    }
+});
 
 builder.Services.Configure<ForwardedHeadersOptions>(
     options =>
@@ -65,11 +84,6 @@ string connectionString =
     ?? throw new InvalidOperationException(
         "A 'Database' connection string nincs beállítva.");
 
-string mediatrLicenseKey =
-    builder.Configuration["MEDIATR_LICENSE_KEY"]
-    ?? throw new InvalidOperationException(
-        "A MediatR licenckulcs nincs beállítva.");
-
 string storageRootPath =
     builder.Configuration["FileStorage:RootPath"]
     ?? Path.Combine(
@@ -78,7 +92,7 @@ string storageRootPath =
         
 builder.Services.AddApplicationBuildingBlocks();
 
-builder.Services.AddArtworkApplication(mediatrLicenseKey);
+builder.Services.AddArtworkApplication();
 builder.Services.AddInvitationApplication();
 
 builder.Services.AddArtworkInfrastructure(connectionString);
@@ -88,8 +102,7 @@ builder.Services.AddFileStorageInfrastructure(
     connectionString, 
     storageRootPath);
 
-builder.Services.AddFileStorageApplication(
-    mediatrLicenseKey);
+builder.Services.AddFileStorageApplication();
 
 builder.Services.AddContentInfrastructure(
     builder.Configuration);
@@ -126,6 +139,19 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// One API instance owns migrations; Compose starts it only after PostgreSQL is healthy.
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    await scope.ServiceProvider.GetRequiredService<ArtworkDbContext>()
+        .Database.MigrateAsync();
+    await scope.ServiceProvider.GetRequiredService<FileStorageDbContext>()
+        .Database.MigrateAsync();
+    await scope.ServiceProvider.GetRequiredService<InvitationDbContext>()
+        .Database.MigrateAsync();
+    await scope.ServiceProvider.GetRequiredService<ContentDbContext>()
+        .Database.MigrateAsync();
+}
+
 app.UseForwardedHeaders();
 app.UseExceptionHandler();
 
@@ -147,6 +173,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAdminAuthenticationEndpoints();
+app.MapGet("/health/ready", () => Results.Ok(new { status = "ready" }));
 
 app.MapPublicArtworkEndpoints();
 app.MapPublicInvitationEndpoints();
@@ -166,4 +193,3 @@ adminEndpoints.MapAdminFileStorageEndpoints();
 adminEndpoints.MapAdminContentEndpoints();
 
 app.Run();
-

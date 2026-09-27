@@ -7,8 +7,7 @@ namespace Modules.FileStorage.Application;
 public static class DependencyInjection
 {
     public static IServiceCollection AddFileStorageApplication(
-        this IServiceCollection services,
-        string mediatrLicenseKey)
+        this IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(
             typeof(DependencyInjection).Assembly,
@@ -16,8 +15,6 @@ public static class DependencyInjection
 
         services.AddMediatR(configuration =>
         {
-            configuration.LicenseKey = mediatrLicenseKey;
-
             configuration.RegisterServicesFromAssembly(
                 typeof(DependencyInjection).Assembly);
         });
