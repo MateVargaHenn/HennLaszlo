@@ -28,6 +28,8 @@ jobs:
           cache-dependency-path: frontend/henn-laszlo/package-lock.json
       - name: .NET tests
         run: dotnet test backend/HennLaszlo.slnx -c Release
+      - name: .NET publish
+        run: dotnet publish backend/src/WebApi/WebApi.csproj -c Release -o /tmp/henn-api
       - name: Angular builds
         working-directory: frontend/henn-laszlo
         run: npm ci && npm run build:apps
