@@ -24,8 +24,6 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:?set RABBITMQ_DEFAULT_PASS}
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
-    ports:
-      - "127.0.0.1:15672:15672"
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 10s
@@ -40,8 +38,6 @@ services:
       SEQ_PASSWORD: ${SEQ_PASSWORD:?set SEQ_PASSWORD}
     volumes:
       - seq-data:/data
-    ports:
-      - "127.0.0.1:15341:80"
 
   backend:
     build:
