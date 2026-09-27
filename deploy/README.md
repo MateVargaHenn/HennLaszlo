@@ -13,9 +13,12 @@ yet publish or consume messages.
 
 1. Verify that the VPS serves HTTP with Nginx, `18443` and `18080` are free,
    and that no existing Nginx block has `server_name 194.182.85.127`. Keep the
-   existing domain configurations unchanged. Install Certbot 5.4 or newer and
-   ensure its renewal timer runs. Clone this repository at
-   `/var/www/hennlaszlo-preview`.
+   existing domain configurations unchanged. Clone this repository at
+   `/var/www/hennlaszlo-preview`. Install Certbot 5.4 or newer. On this shared
+   VPS, keep the existing apt Certbot for other domains and call the new Snap
+   version as `/snap/bin/certbot`. Disable only the Snap renewal service with
+   `sudo snap stop --disable certbot.renew`; the dedicated timer below handles
+   the IP certificate. Do not remove or disable the apt Certbot timer.
 2. Copy `.env.example` to `.env` there. Set unique nonempty PostgreSQL,
    RabbitMQ, Seq, and admin values; leave `PREVIEW_HOST=194.182.85.127`.
    Restrict `.env` to the deploy user (`chmod 600 .env`). Generate
@@ -29,27 +32,28 @@ yet publish or consume messages.
    Do not commit passwords or hashes. The API applies four EF Core migrations
    at startup; use one API instance during migrations. Back up its PostgreSQL
    and file-storage volumes before future updates.
-4. Create the challenge root and install only the IP-specific config:
+4. Create an ACME challenge root outside the checkout so the Nginx worker can
+   read it even though the checkout itself is mode `750`. Install only the
+   IP-specific HTTP config:
 
    ```bash
-   sudo mkdir -p /var/www/hennlaszlo-preview/deploy/acme/.well-known/acme-challenge
+   sudo install -d -m 755 /var/lib/hennlaszlo-preview-acme/.well-known/acme-challenge
    sudo cp deploy/ip-challenge.nginx.conf.example /etc/nginx/sites-available/hennlaszlo-ip-challenge.conf
    sudo ln -s /etc/nginx/sites-available/hennlaszlo-ip-challenge.conf /etc/nginx/sites-enabled/hennlaszlo-ip-challenge.conf
    sudo nginx -t && sudo systemctl reload nginx
    ```
 
-   Test the challenge path with a temporary file before requesting a cert.
-   Certbot's IP webroot support requires version 5.4+ and a short-lived
-   certificate. First use `--staging` to verify the flow, then request a
-   trusted certificate without it:
+   Test the challenge path with a temporary file at
+   `http://194.182.85.127/.well-known/acme-challenge/<name>` before requesting
+   a certificate. Keep the IP certificate and its account separate from all
+   existing certificates. First test with `--dry-run`, then repeat without it
+   to request the trusted certificate:
 
    ```bash
-   sudo certbot certonly --preferred-profile shortlived --webroot --webroot-path /var/www/hennlaszlo-preview/deploy/acme --ip-address 194.182.85.127
+   sudo /snap/bin/certbot --config-dir /etc/letsencrypt-hennlaszlo --work-dir /var/lib/letsencrypt-hennlaszlo --logs-dir /var/log/letsencrypt-hennlaszlo certonly --dry-run --preferred-profile shortlived --cert-name hennlaszlo-preview --webroot --webroot-path /var/lib/hennlaszlo-preview-acme --ip-address 194.182.85.127
+   sudo /snap/bin/certbot --config-dir /etc/letsencrypt-hennlaszlo --work-dir /var/lib/letsencrypt-hennlaszlo --logs-dir /var/log/letsencrypt-hennlaszlo certonly --preferred-profile shortlived --cert-name hennlaszlo-preview --webroot --webroot-path /var/lib/hennlaszlo-preview-acme --ip-address 194.182.85.127
    ```
 
-   Configure Certbot's deploy hook to run `systemctl reload nginx` after
-   renewal. IP certificates last about six days, so confirm the automatic
-   renewal timer and test `certbot renew --dry-run`.
 5. Install the HTTPS block after the certificate exists:
 
    ```bash
@@ -60,7 +64,20 @@ yet publish or consume messages.
 
    Allow inbound TCP `18443` in the VPS firewall. The gateway's port `18080`
    remains loopback-only. Confirm the hostname check in the Angular SSR build
-   permits the IP host.
+   permits the IP host. Install the dedicated renewal timer; the IP certificate
+   is short lived and must renew automatically:
+
+   ```bash
+   sudo cp deploy/hennlaszlo-preview-certbot.service.example /etc/systemd/system/hennlaszlo-preview-certbot.service
+   sudo cp deploy/hennlaszlo-preview-certbot.timer.example /etc/systemd/system/hennlaszlo-preview-certbot.timer
+   sudo systemctl daemon-reload
+   sudo systemctl enable --now hennlaszlo-preview-certbot.timer
+   sudo /snap/bin/certbot --config-dir /etc/letsencrypt-hennlaszlo --work-dir /var/lib/letsencrypt-hennlaszlo --logs-dir /var/log/letsencrypt-hennlaszlo renew --dry-run
+   ```
+
+   Check `systemctl list-timers hennlaszlo-preview-certbot.timer` and confirm
+   the renewal test succeeds. The service reloads Nginx only after successful
+   renewal. The apt Certbot and its existing certificates stay separate.
 6. In GitHub's `private-preview` environment, set secrets `VPS_HOST`,
    `VPS_USER`, `VPS_SSH_KEY`, `VPS_KNOWN_HOSTS`, `PREVIEW_USER`, and
    `PREVIEW_PASSWORD`. Verify the SSH host fingerprint out of band.
