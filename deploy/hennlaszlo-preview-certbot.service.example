@@ -1,0 +1,6 @@
+[Unit]
+Description=Renew Henn Laszlo private preview IP certificate
+
+[Service]
+Type=oneshot
+ExecStart=/snap/bin/certbot --config-dir /etc/letsencrypt-hennlaszlo --work-dir /var/lib/letsencrypt-hennlaszlo --logs-dir /var/log/letsencrypt-hennlaszlo renew --quiet --deploy-hook "/usr/bin/systemctl reload nginx"
