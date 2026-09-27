@@ -32,12 +32,11 @@
   line-height: 0.95;
 }
 
-.hero__eyebrow {
-  margin: 0 0 1.5rem;
+.hero__subtitle {
+  margin: 1.5rem 0 0;
   color: #815c4d;
-  font-size: 0.75rem;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
+  font-size: clamp(1rem, 1.7vw, 1.25rem);
+  line-height: 1.4;
 }
 
 .hero__description {
