@@ -5,7 +5,7 @@ server {
     server_name 194.182.85.127;
 
     location ^~ /.well-known/acme-challenge/ {
-        root /var/www/hennlaszlo-preview/deploy/acme;
+        root /var/lib/hennlaszlo-preview-acme;
         default_type text/plain;
     }
 
