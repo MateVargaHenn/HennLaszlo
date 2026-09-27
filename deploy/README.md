@@ -1,45 +1,76 @@
-# Private preview on the existing VPS
+# Private IP preview on the shared VPS
 
-The public `hennlaszlo.hu` virtual host remains untouched. The Compose gateway
-binds only `127.0.0.1:18080`; PostgreSQL, RabbitMQ, Seq, and application ports
-have no host binding. Check that `18080` is free before first start. RabbitMQ is started for the planned messaging integration;
-the current API does not yet publish or consume messages.
+The Compose gateway binds only `127.0.0.1:18080`; PostgreSQL, RabbitMQ, Seq,
+and application ports have no host binding. The public HTTPS endpoint uses its
+own port, `18443`, leaving existing sites on ports 80 and 443 intact. The IP
+HTTP virtual host serves ACME challenges only; all other paths return 404.
+The preview is protected by HTTP Basic Auth and sends `X-Robots-Tag: noindex`.
+An IP address can still be found by scanners; access control is the password.
+RabbitMQ is ready for planned messaging integration; the current API does not
+yet publish or consume messages.
 
 ## One-time VPS preparation
 
-1. Point `preview.hennlaszlo.hu` at the VPS. Create a separate TLS certificate
-   and install `deploy/host-nginx.conf.example` as a new Nginx virtual host.
-   Confirm `nginx -t` before reloading. Do not alter the existing domain.
-2. Clone this repository at `/var/www/hennlaszlo-preview` on the VPS. Copy
-   `.env.example` to `.env` and set unique nonempty PostgreSQL, RabbitMQ,
-   Seq and admin values. Set `PREVIEW_HOST` to the exact TLS hostname. Keep
-   `.env` out of Git and restrict it to the deploy user (`chmod 600 .env`).
-3. Generate `deploy/preview.htpasswd` with a strong preview password, e.g.
-   `htpasswd -cB deploy/preview.htpasswd matyi`, and restrict file access.
-   This outer password protects the whole site, including its API and admin UI.
-   The admin UI has its own account as well.
-4. To generate `ADMIN_PASSWORD_HASH`, first give it a temporary nonempty value
-   in `.env`, build the API (`docker compose build backend`) and run
-   `docker compose run --rm --no-deps backend --hash-admin-password`. Paste
-   the resulting ASP.NET Identity hash into `.env`, then remove the temporary
-   value. Do not commit the hash or passwords.
-5. Back up the PostgreSQL and file-storage volumes before future updates.
-   The API applies its four EF Core migrations during startup. Use a single
-   API instance while migrations run.
-6. In GitHub's `private-preview` environment set secrets `VPS_HOST`,
+1. Verify that the VPS serves HTTP with Nginx, `18443` and `18080` are free,
+   and that no existing Nginx block has `server_name 194.182.85.127`. Keep the
+   existing domain configurations unchanged. Install Certbot 5.4 or newer and
+   ensure its renewal timer runs. Clone this repository at
+   `/var/www/hennlaszlo-preview`.
+2. Copy `.env.example` to `.env` there. Set unique nonempty PostgreSQL,
+   RabbitMQ, Seq, and admin values; leave `PREVIEW_HOST=194.182.85.127`.
+   Restrict `.env` to the deploy user (`chmod 600 .env`). Generate
+   `deploy/preview.htpasswd` using `htpasswd -cB deploy/preview.htpasswd matyi`
+   with a strong password. This protects the whole preview, including the API
+   and admin UI.
+3. Generate the admin hash: give `ADMIN_PASSWORD_HASH` a temporary nonempty
+   value, run `docker compose build backend`, then
+   `docker compose run --rm --no-deps backend --hash-admin-password`. Put the
+   resulting ASP.NET Identity hash in `.env`, then remove the temporary value.
+   Do not commit passwords or hashes. The API applies four EF Core migrations
+   at startup; use one API instance during migrations. Back up its PostgreSQL
+   and file-storage volumes before future updates.
+4. Create the challenge root and install only the IP-specific config:
+
+   ```bash
+   sudo mkdir -p /var/www/hennlaszlo-preview/deploy/acme/.well-known/acme-challenge
+   sudo cp deploy/ip-challenge.nginx.conf.example /etc/nginx/sites-available/hennlaszlo-ip-challenge.conf
+   sudo ln -s /etc/nginx/sites-available/hennlaszlo-ip-challenge.conf /etc/nginx/sites-enabled/hennlaszlo-ip-challenge.conf
+   sudo nginx -t && sudo systemctl reload nginx
+   ```
+
+   Test the challenge path with a temporary file before requesting a cert.
+   Certbot's IP webroot support requires version 5.4+ and a short-lived
+   certificate. First use `--staging` to verify the flow, then request a
+   trusted certificate without it:
+
+   ```bash
+   sudo certbot certonly --preferred-profile shortlived --webroot --webroot-path /var/www/hennlaszlo-preview/deploy/acme --ip-address 194.182.85.127
+   ```
+
+   Configure Certbot's deploy hook to run `systemctl reload nginx` after
+   renewal. IP certificates last about six days, so confirm the automatic
+   renewal timer and test `certbot renew --dry-run`.
+5. Install the HTTPS block after the certificate exists:
+
+   ```bash
+   sudo cp deploy/host-nginx.conf.example /etc/nginx/sites-available/hennlaszlo-ip-preview.conf
+   sudo ln -s /etc/nginx/sites-available/hennlaszlo-ip-preview.conf /etc/nginx/sites-enabled/hennlaszlo-ip-preview.conf
+   sudo nginx -t && sudo systemctl reload nginx
+   ```
+
+   Allow inbound TCP `18443` in the VPS firewall. The gateway's port `18080`
+   remains loopback-only. Confirm the hostname check in the Angular SSR build
+   permits the IP host.
+6. In GitHub's `private-preview` environment, set secrets `VPS_HOST`,
    `VPS_USER`, `VPS_SSH_KEY`, `VPS_KNOWN_HOSTS`, `PREVIEW_USER`, and
-   `PREVIEW_PASSWORD`. Pin the actual SSH host key in `VPS_KNOWN_HOSTS` after
-   verifying its fingerprint out of band. Set environment variable
-   `PREVIEW_HOST=preview.hennlaszlo.hu`. The `PREVIEW_USER` and password must
-   match `deploy/preview.htpasswd`.
+   `PREVIEW_PASSWORD`. Verify the SSH host fingerprint out of band.
+   Set the environment variable `PREVIEW_URL=https://194.182.85.127:18443`;
+   the preview credentials must match `deploy/preview.htpasswd`.
 
 The **Private preview** workflow validates Angular and .NET, builds all
-containers, then checks that anonymous requests receive 401 and authenticated
-SSR, API, and admin requests succeed. Run the workflow manually on
-`development` to deploy the validated commit; it checks the HTTPS URL too.
-Changes pushed to `development` run CI only. The deployment does not publish
-or replace the main domain.
+containers, checks anonymous 401 and authenticated SSR, API, and admin
+responses. Run it manually on `development` to deploy the validated commit and
+verify the live HTTPS URL. Pushes to `development` run CI only.
 
-Access: `https://preview.hennlaszlo.hu/` (only after DNS, TLS, and the workflow
-succeed). Admin: `/admin/`. Seq and RabbitMQ management stay on the private
-Compose network; their web consoles are not exposed through the VPS host.
+Access after deployment: `https://194.182.85.127:18443/`. Admin: `/admin/`.
+Seq and RabbitMQ management stay on the private Compose network.
