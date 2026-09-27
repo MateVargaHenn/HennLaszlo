@@ -53,7 +53,8 @@ export class RevealOnScroll {
           observer.disconnect();
         },
         {
-          threshold: 0.15,
+          // Long articles may never fit 15% of their height in the viewport.
+          threshold: 0,
           rootMargin: '0px 0px -8% 0px',
         },
       );
