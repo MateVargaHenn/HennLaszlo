@@ -159,15 +159,35 @@ app.UseForwardedHeaders();
 // service address only, rather than trusting forwarded headers from all peers.
 app.Use(async (context, next) =>
 {
+    if (context.Request.Path == "/api/admin/auth/csrf")
+    {
+        app.Logger.LogInformation(
+            "CSRF proxy check: remote={Remote}, proto={Proto}",
+            context.Connection.RemoteIpAddress,
+            context.Request.Headers["X-Forwarded-Proto"].ToString());
+    }
+
     if (context.Request.Headers["X-Forwarded-Proto"] == "https" &&
         context.Connection.RemoteIpAddress is IPAddress remoteAddress)
     {
+        if (remoteAddress.IsIPv4MappedToIPv6)
+        {
+            remoteAddress = remoteAddress.MapToIPv4();
+        }
+
         try
         {
             IPAddress[] gatewayAddresses =
                 await Dns.GetHostAddressesAsync(
                     "gateway",
                     context.RequestAborted);
+
+            if (context.Request.Path == "/api/admin/auth/csrf")
+            {
+                app.Logger.LogInformation(
+                    "CSRF gateway addresses: {Addresses}",
+                    string.Join(",", gatewayAddresses.Select(a => a.ToString())));
+            }
 
             if (gatewayAddresses.Contains(remoteAddress))
             {
