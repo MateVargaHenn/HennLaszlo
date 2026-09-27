@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.HttpOverrides;
+using System.Net;
+using System.Net.Sockets;
 using WebApi.ExceptionHandling;
 using Modules.Artwork.Infrastructure;
 using Modules.Artwork.Application;
@@ -153,6 +155,33 @@ using (IServiceScope scope = app.Services.CreateScope())
 }
 
 app.UseForwardedHeaders();
+// Docker assigns the gateway a new address on recreation. Trust its current
+// service address only, rather than trusting forwarded headers from all peers.
+app.Use(async (context, next) =>
+{
+    if (context.Request.Headers["X-Forwarded-Proto"] == "https" &&
+        context.Connection.RemoteIpAddress is IPAddress remoteAddress)
+    {
+        try
+        {
+            IPAddress[] gatewayAddresses =
+                await Dns.GetHostAddressesAsync(
+                    "gateway",
+                    context.RequestAborted);
+
+            if (gatewayAddresses.Contains(remoteAddress))
+            {
+                context.Request.Scheme = "https";
+            }
+        }
+        catch (SocketException)
+        {
+            // Keep the connection's actual HTTP scheme if the gateway is unavailable.
+        }
+    }
+
+    await next(context);
+});
 app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
