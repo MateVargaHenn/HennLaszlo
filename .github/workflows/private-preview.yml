@@ -54,6 +54,8 @@ jobs:
           curl -fsS -u tester:ci-only-password -H 'Host: 194.182.85.127' http://127.0.0.1:18080/api/artworks -o /tmp/artworks.json
           curl -fsS -u tester:ci-only-password -H 'Host: 194.182.85.127' http://127.0.0.1:18080/admin/ -o /tmp/admin.html
           grep -q '<base href="/admin/">' /tmp/admin.html
+          curl -fsS -D /tmp/csrf-headers -o /dev/null -u tester:ci-only-password -H 'Host: 194.182.85.127' -H 'X-Forwarded-Proto: https' http://127.0.0.1:18080/api/admin/auth/csrf
+          grep -Ei '^set-cookie: __Host-HennLaszlo.Antiforgery=' /tmp/csrf-headers | grep -Eqi '; secure(;|$)'
       - name: Logs on failure
         if: failure()
         run: docker compose logs --no-color --tail=100 || true
@@ -97,3 +99,5 @@ jobs:
           curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "$PREVIEW_URL/api/artworks" -o /tmp/artworks.json
           curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "$PREVIEW_URL/admin/" -o /tmp/admin.html
           grep -q '<base href="/admin/">' /tmp/admin.html
+          curl -fsS -D /tmp/csrf-headers -o /dev/null -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "$PREVIEW_URL/api/admin/auth/csrf"
+          grep -Ei '^set-cookie: __Host-HennLaszlo.Antiforgery=' /tmp/csrf-headers | grep -Eqi '; secure(;|$)'
