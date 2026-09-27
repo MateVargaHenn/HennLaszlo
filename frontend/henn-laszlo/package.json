@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:libs": "ng build artwork-data-access && ng build invitation-data-access && ng build content-data-access",
+    "build:apps": "npm run build:libs && ng build public-web --configuration production && ng build admin-web --configuration production --base-href /admin/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:public-web": "node dist/public-web/server/server.mjs"

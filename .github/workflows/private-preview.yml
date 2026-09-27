@@ -1,0 +1,97 @@
+name: Private preview
+
+on:
+  pull_request:
+  push:
+    branches: [development]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hennlaszlo-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/henn-laszlo/package-lock.json
+      - name: .NET tests
+        run: dotnet test backend/HennLaszlo.slnx -c Release
+      - name: Angular builds
+        working-directory: frontend/henn-laszlo
+        run: npm ci && npm run build:apps
+      - name: Prepare private integration environment
+        run: |
+          cp .env.example .env
+          cat >> .env <<'ENV'
+          POSTGRES_PASSWORD=ci-only-postgres-password
+          RABBITMQ_DEFAULT_PASS=ci-only-rabbit-password
+          SEQ_PASSWORD=ci-only-seq-password
+          ADMIN_PASSWORD_HASH=ci-only-placeholder
+          ENV
+          printf 'tester:%s\n' "$(printf 'ci-only-password' | openssl passwd -apr1 -stdin)" > deploy/preview.htpasswd
+          docker compose config -q
+      - name: Build and start all services
+        run: docker compose up --build -d --wait --wait-timeout 300
+      - name: Check private gateway, SSR, API, and admin
+        run: |
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: preview.hennlaszlo.hu' http://127.0.0.1:18080/)" = 401
+          curl -fsS -u tester:ci-only-password -H 'Host: preview.hennlaszlo.hu' http://127.0.0.1:18080/ -o /tmp/preview.html
+          grep -q '<app-root' /tmp/preview.html
+          curl -fsS -u tester:ci-only-password -H 'Host: preview.hennlaszlo.hu' http://127.0.0.1:18080/api/artworks -o /tmp/artworks.json
+          curl -fsS -u tester:ci-only-password -H 'Host: preview.hennlaszlo.hu' http://127.0.0.1:18080/admin/ -o /tmp/admin.html
+          grep -q '<base href="/admin/">' /tmp/admin.html
+      - name: Logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail=100 || true
+      - name: Stop integration environment
+        if: always()
+        run: docker compose down || true
+
+  deploy:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/development'
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: private-preview
+    steps:
+      - name: Configure pinned SSH host key
+        env:
+          KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+          PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          test -n "$KNOWN_HOSTS" && test -n "$PRIVATE_KEY"
+          mkdir -m 700 ~/.ssh
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          printf '%s\n' "$PRIVATE_KEY" > ~/.ssh/preview_key
+          chmod 600 ~/.ssh/known_hosts ~/.ssh/preview_key
+      - name: Deploy validated commit on VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          ssh -i ~/.ssh/preview_key -o StrictHostKeyChecking=yes "$VPS_USER@$VPS_HOST" \
+            "set -eu; cd /var/www/hennlaszlo-preview; test -s .env; test -s deploy/preview.htpasswd; git fetch --depth 1 origin $GITHUB_SHA; git checkout --detach $GITHUB_SHA; docker compose up --build -d --wait --wait-timeout 300"
+      - name: Verify HTTPS and private access
+        env:
+          PREVIEW_HOST: ${{ vars.PREVIEW_HOST }}
+          PREVIEW_USER: ${{ secrets.PREVIEW_USER }}
+          PREVIEW_PASSWORD: ${{ secrets.PREVIEW_PASSWORD }}
+        run: |
+          test -n "$PREVIEW_HOST" && test -n "$PREVIEW_USER" && test -n "$PREVIEW_PASSWORD"
+          test "$(curl -sS -o /dev/null -w '%{http_code}' "https://$PREVIEW_HOST/")" = 401
+          curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "https://$PREVIEW_HOST/" -o /tmp/preview.html
+          grep -q '<app-root' /tmp/preview.html
+          curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "https://$PREVIEW_HOST/api/artworks" -o /tmp/artworks.json
+          curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "https://$PREVIEW_HOST/admin/" -o /tmp/admin.html
+          grep -q '<base href="/admin/">' /tmp/admin.html
