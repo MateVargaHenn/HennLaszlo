@@ -1,0 +1,15 @@
+# Only an ACME challenge is served on the IP-address HTTP host. Exact
+# server_name matching keeps the other domains' Nginx blocks unchanged.
+server {
+    listen 80;
+    server_name 194.182.85.127;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/hennlaszlo-preview/deploy/acme;
+        default_type text/plain;
+    }
+
+    location / {
+        return 404;
+    }
+}

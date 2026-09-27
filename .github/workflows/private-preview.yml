@@ -48,11 +48,11 @@ jobs:
         run: docker compose up --build -d --wait --wait-timeout 300
       - name: Check private gateway, SSR, API, and admin
         run: |
-          test "$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: preview.hennlaszlo.hu' http://127.0.0.1:18080/)" = 401
-          curl -fsS -u tester:ci-only-password -H 'Host: preview.hennlaszlo.hu' http://127.0.0.1:18080/ -o /tmp/preview.html
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: 194.182.85.127' http://127.0.0.1:18080/)" = 401
+          curl -fsS -u tester:ci-only-password -H 'Host: 194.182.85.127' http://127.0.0.1:18080/ -o /tmp/preview.html
           grep -q '<app-root' /tmp/preview.html
-          curl -fsS -u tester:ci-only-password -H 'Host: preview.hennlaszlo.hu' http://127.0.0.1:18080/api/artworks -o /tmp/artworks.json
-          curl -fsS -u tester:ci-only-password -H 'Host: preview.hennlaszlo.hu' http://127.0.0.1:18080/admin/ -o /tmp/admin.html
+          curl -fsS -u tester:ci-only-password -H 'Host: 194.182.85.127' http://127.0.0.1:18080/api/artworks -o /tmp/artworks.json
+          curl -fsS -u tester:ci-only-password -H 'Host: 194.182.85.127' http://127.0.0.1:18080/admin/ -o /tmp/admin.html
           grep -q '<base href="/admin/">' /tmp/admin.html
       - name: Logs on failure
         if: failure()
@@ -86,14 +86,14 @@ jobs:
             "set -eu; cd /var/www/hennlaszlo-preview; test -f docker-compose.yml; test -s .env; test -s deploy/preview.htpasswd; if ss -ltn '( sport = :18080 )' | tail -n +2 | grep -q .; then test -n \"\$(docker compose ps -q gateway)\" || { echo 'Port 18080 belongs to another service'; exit 1; }; fi; git fetch --depth 1 origin $GITHUB_SHA; git checkout --detach $GITHUB_SHA; docker compose up --build -d --wait --wait-timeout 300"
       - name: Verify HTTPS and private access
         env:
-          PREVIEW_HOST: ${{ vars.PREVIEW_HOST }}
+          PREVIEW_URL: ${{ vars.PREVIEW_URL }}
           PREVIEW_USER: ${{ secrets.PREVIEW_USER }}
           PREVIEW_PASSWORD: ${{ secrets.PREVIEW_PASSWORD }}
         run: |
-          test -n "$PREVIEW_HOST" && test -n "$PREVIEW_USER" && test -n "$PREVIEW_PASSWORD"
-          test "$(curl -sS -o /dev/null -w '%{http_code}' "https://$PREVIEW_HOST/")" = 401
-          curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "https://$PREVIEW_HOST/" -o /tmp/preview.html
+          test "$PREVIEW_URL" = 'https://194.182.85.127:18443' && test -n "$PREVIEW_USER" && test -n "$PREVIEW_PASSWORD"
+          test "$(curl -sS -o /dev/null -w '%{http_code}' "$PREVIEW_URL/")" = 401
+          curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "$PREVIEW_URL/" -o /tmp/preview.html
           grep -q '<app-root' /tmp/preview.html
-          curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "https://$PREVIEW_HOST/api/artworks" -o /tmp/artworks.json
-          curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "https://$PREVIEW_HOST/admin/" -o /tmp/admin.html
+          curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "$PREVIEW_URL/api/artworks" -o /tmp/artworks.json
+          curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "$PREVIEW_URL/admin/" -o /tmp/admin.html
           grep -q '<base href="/admin/">' /tmp/admin.html
