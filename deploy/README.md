@@ -22,8 +22,11 @@ yet publish or consume messages.
 2. Copy `.env.example` to `.env` there. Set unique nonempty PostgreSQL,
    RabbitMQ, Seq, and admin values; leave `PREVIEW_HOST=194.182.85.127`.
    Restrict `.env` to the deploy user (`chmod 600 .env`). Generate
-   `deploy/preview.htpasswd` using `htpasswd -cB deploy/preview.htpasswd matyi`
-   with a strong password. This protects the whole preview, including the API
+   `deploy/preview.htpasswd` using `htpasswd -cm deploy/preview.htpasswd matyi`
+   with a unique, long random password (at least 24 characters). The gateway
+   uses the `apr1` format tested by CI; make the file readable by the container
+   with `chmod 644 deploy/preview.htpasswd`. This protects the whole preview,
+   including the API
    and admin UI.
 3. Generate the admin hash: give `ADMIN_PASSWORD_HASH` a temporary nonempty
    value, run `docker compose build backend`, then
