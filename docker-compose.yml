@@ -52,6 +52,7 @@ services:
       Seq__ServerUrl: http://seq:80
     volumes:
       - file-storage:/app/storage
+      - data-protection-keys:/home/app/.aspnet/DataProtection-Keys
     depends_on:
       postgres:
         condition: service_healthy
@@ -105,3 +106,4 @@ volumes:
   rabbitmq-data:
   seq-data:
   file-storage:
+  data-protection-keys:
