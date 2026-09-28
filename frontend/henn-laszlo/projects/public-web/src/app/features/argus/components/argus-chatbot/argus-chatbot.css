@@ -318,6 +318,29 @@
   cursor: wait;
   opacity: 0.5;
 }
+.argus-suggestions {
+  animation:
+    argus-suggestions-enter
+    180ms ease-out;
+}
+
+@keyframes argus-suggestions-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .argus-suggestions {
+    animation: none;
+  }
+}
 
 @keyframes argus-open {
   from {
