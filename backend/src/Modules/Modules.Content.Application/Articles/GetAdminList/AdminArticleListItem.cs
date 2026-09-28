@@ -6,5 +6,4 @@ public sealed record AdminArticleListItem(
     string TitleHu,
     string? TitleEn,
     bool IsPublished,
-    int DisplayOrder,
     DateTime UpdatedAtUtc);

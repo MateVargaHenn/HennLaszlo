@@ -47,8 +47,5 @@ internal sealed class CreateArticleCommandValidator
             .NotEmpty()
             .WithMessage(
                 "A magyar tartalom megadása kötelező.");
-
-        RuleFor(command => command.DisplayOrder)
-            .GreaterThanOrEqualTo(0);
     }
 }

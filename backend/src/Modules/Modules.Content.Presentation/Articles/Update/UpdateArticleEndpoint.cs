@@ -37,8 +37,7 @@ internal static class UpdateArticleEndpoint
                 request.SummaryHu,
                 request.SummaryEn,
                 request.ContentHu,
-                request.ContentEn,
-                request.DisplayOrder),
+                request.ContentEn),
             cancellationToken);
 
         return Results.NoContent();

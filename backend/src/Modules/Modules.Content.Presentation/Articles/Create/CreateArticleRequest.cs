@@ -7,5 +7,4 @@ internal sealed record CreateArticleRequest(
     string? SummaryHu,
     string? SummaryEn,
     string ContentHu,
-    string? ContentEn,
-    int DisplayOrder);
+    string? ContentEn);

@@ -35,7 +35,6 @@ internal sealed class GetAdminArticleByIdQueryHandler(
             article.ContentHu,
             article.ContentEn,
             article.IsPublished,
-            article.DisplayOrder,
             article.CreatedAtUtc,
             article.UpdatedAtUtc);
     }

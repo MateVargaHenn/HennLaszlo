@@ -10,6 +10,5 @@ public sealed record AdminArticleDetails(
     string ContentHu,
     string? ContentEn,
     bool IsPublished,
-    int DisplayOrder,
     DateTime CreatedAtUtc,
     DateTime UpdatedAtUtc);

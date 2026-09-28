@@ -47,8 +47,10 @@ internal sealed class ArticleRepository(
     {
         return await dbContext.Articles
             .AsNoTracking()
-            .OrderBy(article => article.DisplayOrder)
-            .ThenBy(article => article.TitleHu)
+            .OrderByDescending(article =>
+                article.CreatedAtUtc)
+            .ThenBy(article =>
+                article.TitleHu)
             .ToListAsync(cancellationToken);
     }
 
@@ -59,7 +61,10 @@ internal sealed class ArticleRepository(
         return await dbContext.Articles
             .AsNoTracking()
             .Where(article => article.IsPublished)
-            .OrderBy(article => article.DisplayOrder)
+            .OrderByDescending(article =>
+                article.CreatedAtUtc)
+            .ThenBy(article =>
+                article.TitleHu)
             .ThenBy(article => article.TitleHu)
             .ToListAsync(cancellationToken);
     }
