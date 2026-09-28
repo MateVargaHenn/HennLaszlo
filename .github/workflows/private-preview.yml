@@ -64,12 +64,7 @@ jobs:
         run: docker compose down || true
 
   deploy:
-    if: >
-    github.ref == 'refs/heads/development' &&
-    (
-      github.event_name == 'push' ||
-      github.event_name == 'workflow_dispatch'
-    )
+    if: github.ref == 'refs/heads/development' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     needs: validate
     runs-on: ubuntu-latest
     environment: private-preview
