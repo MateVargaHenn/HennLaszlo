@@ -1,75 +1,175 @@
 <header class="sticky top-0 z-50 border-b border-stone-200 bg-stone-50/95 backdrop-blur">
   <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8">
     <a
-  routerLink="/"
-  class="font-serif text-lg tracking-wide text-stone-900"
-  (click)="closeMenu()">
+      routerLink="/"
+      class="whitespace-nowrap font-serif text-lg tracking-wide text-stone-900"
+      (click)="closeMenu()"
+    >
       Henn László András
     </a>
 
     <nav
-      class="hidden items-center gap-8 xl:flex"
-      aria-label="Fő navigáció">
-        <a
+      class="hidden items-center gap-7 xl:flex"
+      aria-label="Fő navigáció"
+    >
+      <a
         routerLink="/"
         routerLinkActive="text-stone-950"
         [routerLinkActiveOptions]="{ exact: true }"
         class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
-        >
+        (click)="closeMenu()"
+      >
         Kezdőlap
       </a>
+
       <a
         routerLink="/bemutatkozas"
         routerLinkActive="text-stone-950"
         class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
+        (click)="closeMenu()"
       >
         Bemutatkozás
       </a>
+
       <a
         routerLink="/muvek"
         routerLinkActive="text-stone-950"
-        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950">
+        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
+        (click)="closeMenu()"
+      >
         Művek
       </a>
-      <a
-        routerLink="/meghivok"
-        routerLinkActive="text-stone-950"
-        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
+
+      <div
+        class="relative"
+        routerLinkActive
+        #careerActive="routerLinkActive"
       >
-        Meghívók
-      </a>
-      <a
-        routerLink="/videok"
-        routerLinkActive="text-stone-950"
-        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
+        <button
+          type="button"
+          class="flex items-center gap-1.5 text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950 cursor-pointer"
+          [class.text-stone-950]="careerActive.isActive"
+          [attr.aria-expanded]="openDesktopGroup() === 'career'"
+          aria-controls="desktop-career-navigation"
+          aria-haspopup="true"
+          (click)="toggleDesktopGroup('career')"
+        >
+          Pályakép
+
+          <svg
+            class="size-3 transition-transform"
+            [class.rotate-180]="openDesktopGroup() === 'career'"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m3 6 5 5 5-5"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+            />
+          </svg>
+        </button>
+
+        <div
+          id="desktop-career-navigation"
+          [hidden]="openDesktopGroup() !== 'career'"
+          class="absolute left-1/2 top-full mt-4 min-w-60 -translate-x-1/2 rounded-sm border border-stone-200 bg-stone-50 py-2 shadow-[0_18px_45px_rgba(28,25,23,0.14)]"
+        >
+          <a
+            routerLink="/kiallitasok"
+            routerLinkActive="bg-stone-100 text-stone-950"
+            class="block whitespace-nowrap px-5 py-3 text-sm uppercase tracking-[0.14em] text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-950"
+            (click)="closeMenu()"
+          >
+            Kiállítások
+          </a>
+
+          <a
+            routerLink="/tagsagok-es-dijak"
+            routerLinkActive="bg-stone-100 text-stone-950"
+            class="block whitespace-nowrap px-5 py-3 text-sm uppercase tracking-[0.14em] text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-950"
+            (click)="closeMenu()"
+          >
+            Tagságok és díjak
+          </a>
+        </div>
+      </div>
+
+      <div
+        class="relative"
+        routerLinkActive
+        #mediaActive="routerLinkActive"
       >
-        Videók
-      </a>
-      <a
-        routerLink="/kiallitasok"
-        routerLinkActive="text-stone-950"
-        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
-      >
-        Kiállítások
-      </a>
-      <a
-        routerLink="/tagsagok-es-dijak"
-        routerLinkActive="text-stone-950"
-        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
-      >
-        Tagságok és díjak
-      </a>
-      <a
-        routerLink="/irasok"
-        routerLinkActive="text-stone-950"
-        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
-      >
-        Írások
-      </a>
+        <button
+          type="button"
+          class="flex items-center gap-1.5 text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950 cursor-pointer"
+          [class.text-stone-950]="mediaActive.isActive"
+          [attr.aria-expanded]="openDesktopGroup() === 'media'"
+          aria-controls="desktop-media-navigation"
+          aria-haspopup="true"
+          (click)="toggleDesktopGroup('media')"
+        >
+          Média
+
+          <svg
+            class="size-3 transition-transform"
+            [class.rotate-180]="openDesktopGroup() === 'media'"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m3 6 5 5 5-5"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+            />
+          </svg>
+        </button>
+
+        <div
+          id="desktop-media-navigation"
+          [hidden]="openDesktopGroup() !== 'media'"
+          class="absolute left-1/2 top-full mt-4 min-w-52 -translate-x-1/2 rounded-sm border border-stone-200 bg-stone-50 py-2 shadow-[0_18px_45px_rgba(28,25,23,0.14)]"
+        >
+          <a
+            routerLink="/meghivok"
+            routerLinkActive="bg-stone-100 text-stone-950"
+            class="block whitespace-nowrap px-5 py-3 text-sm uppercase tracking-[0.14em] text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-950"
+            (click)="closeMenu()"
+          >
+            Meghívók
+          </a>
+
+          <a
+            routerLink="/videok"
+            routerLinkActive="bg-stone-100 text-stone-950"
+            class="block whitespace-nowrap px-5 py-3 text-sm uppercase tracking-[0.14em] text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-950"
+            (click)="closeMenu()"
+          >
+            Videók
+          </a>
+
+          <a
+            routerLink="/irasok"
+            routerLinkActive="bg-stone-100 text-stone-950"
+            class="block whitespace-nowrap px-5 py-3 text-sm uppercase tracking-[0.14em] text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-950"
+            (click)="closeMenu()"
+          >
+            Írások
+          </a>
+        </div>
+      </div>
+
       <a
         routerLink="/kapcsolat"
         routerLinkActive="text-stone-950"
         class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
+        (click)="closeMenu()"
       >
         Kapcsolat
       </a>
@@ -80,7 +180,8 @@
       class="rounded-md px-3 py-2 text-sm uppercase tracking-wider text-stone-700 xl:hidden"
       [attr.aria-expanded]="isMenuOpen()"
       aria-controls="mobile-navigation"
-      (click)="toggleMenu()">
+      (click)="toggleMenu()"
+    >
       {{ isMenuOpen() ? 'Bezárás' : 'Menü' }}
     </button>
   </div>
@@ -89,15 +190,18 @@
     <nav
       id="mobile-navigation"
       class="border-t border-stone-200 px-5 py-5 xl:hidden"
-      aria-label="Mobil navigáció">
+      aria-label="Mobil navigáció"
+    >
       <a
         routerLink="/"
         [routerLinkActiveOptions]="{ exact: true }"
         routerLinkActive="font-semibold"
         class="block py-2 text-stone-700"
-        (click)="closeMenu()">
+        (click)="closeMenu()"
+      >
         Kezdőlap
       </a>
+
       <a
         routerLink="/bemutatkozas"
         routerLinkActive="font-semibold"
@@ -106,32 +210,24 @@
       >
         Bemutatkozás
       </a>
+
       <a
         routerLink="/muvek"
         routerLinkActive="font-semibold"
         class="block py-2 text-stone-700"
-        (click)="closeMenu()">
-        Művek
-      </a>
-      <a
-        routerLink="/meghivok"
-        routerLinkActive="font-semibold"
-        class="block py-2 text-stone-700"
-        (click)="closeMenu()">
-        Meghívók
-      </a>
-      <a
-        routerLink="/videok"
-        routerLinkActive="font-semibold"
-        class="block py-2 text-stone-700"
         (click)="closeMenu()"
       >
-        Videók
+        Művek
       </a>
+
+      <p class="mb-1 mt-4 text-xs uppercase tracking-[0.16em] text-stone-400">
+        Pályakép
+      </p>
+
       <a
         routerLink="/kiallitasok"
         routerLinkActive="font-semibold"
-        class="block py-2 text-stone-700"
+        class="block py-2 pl-3 text-stone-700"
         (click)="closeMenu()"
       >
         Kiállítások
@@ -140,24 +236,47 @@
       <a
         routerLink="/tagsagok-es-dijak"
         routerLinkActive="font-semibold"
-        class="block py-2 text-stone-700"
+        class="block py-2 pl-3 text-stone-700"
         (click)="closeMenu()"
       >
         Tagságok és díjak
       </a>
 
+      <p class="mb-1 mt-4 text-xs uppercase tracking-[0.16em] text-stone-400">
+        Média
+      </p>
+
+      <a
+        routerLink="/meghivok"
+        routerLinkActive="font-semibold"
+        class="block py-2 pl-3 text-stone-700"
+        (click)="closeMenu()"
+      >
+        Meghívók
+      </a>
+
+      <a
+        routerLink="/videok"
+        routerLinkActive="font-semibold"
+        class="block py-2 pl-3 text-stone-700"
+        (click)="closeMenu()"
+      >
+        Videók
+      </a>
+
       <a
         routerLink="/irasok"
         routerLinkActive="font-semibold"
-        class="block py-2 text-stone-700"
+        class="block py-2 pl-3 text-stone-700"
         (click)="closeMenu()"
       >
         Írások
       </a>
+
       <a
         routerLink="/kapcsolat"
         routerLinkActive="font-semibold"
-        class="block py-2 text-stone-700"
+        class="mt-4 block py-2 text-stone-700"
         (click)="closeMenu()"
       >
         Kapcsolat
