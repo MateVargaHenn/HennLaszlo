@@ -112,14 +112,6 @@ export class ArticleEditor {
     contentEn: new FormControl('', {
       nonNullable: true,
     }),
-
-    displayOrder: new FormControl(0, {
-      nonNullable: true,
-      validators: [
-        Validators.required,
-        Validators.min(0),
-      ],
-    }),
   });
 
   protected readonly tinyMceApiKey =
@@ -159,8 +151,7 @@ export class ArticleEditor {
           summaryHu: article.summaryHu ?? '',
           summaryEn: article.summaryEn ?? '',
           contentHu: article.contentHu,
-          contentEn: article.contentEn ?? '',
-          displayOrder: article.displayOrder,
+          contentEn: article.contentEn ?? ''
         },
         {
           emitEvent: false,
@@ -195,8 +186,7 @@ export class ArticleEditor {
       contentHu: value.contentHu.trim(),
       contentEn: this.normalizeOptionalText(
         value.contentEn,
-      ),
-      displayOrder: value.displayOrder,
+      )
     };
 
     try {

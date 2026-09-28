@@ -66,6 +66,14 @@
       <div
         class="mt-8 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm"
       >
+        @if (copyError()) {
+          <p
+            class="mb-4 text-sm text-red-700"
+            role="alert"
+          >
+            {{ copyError() }}
+          </p>
+        }
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-stone-200">
             <thead class="bg-stone-50">
@@ -82,13 +90,6 @@
                   class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-stone-600"
                 >
                   Állapot
-                </th>
-
-                <th
-                  scope="col"
-                  class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wide text-stone-600"
-                >
-                  Sorrend
                 </th>
 
                 <th
@@ -121,9 +122,34 @@
                       </p>
                     }
 
-                    <p class="mt-1 font-mono text-xs text-stone-500">
-                      {{ article.slug }}
-                    </p>
+                    <div class="mt-2 flex flex-wrap items-center gap-2">
+                      <code class="font-mono text-xs text-stone-500">
+                        /irasok/{{ article.slug }}
+                      </code>
+
+                      <button
+                        type="button"
+                        class="article-copy-button rounded border border-stone-300 px-2 py-1 text-xs font-medium text-stone-700 transition-colors hover:border-stone-900 hover:text-stone-950"
+                        [attr.aria-label]="
+                          article.titleHu +
+                          ' hivatkozásának másolása'
+                        "
+                        (click)="
+                          copyArticleLink(
+                            article.id,
+                            article.slug
+                          )
+                        "
+                      >
+                        @if (
+                          copiedArticleId() === article.id
+                        ) {
+                          Kimásolva ✓
+                        } @else {
+                          Másolás
+                        }
+                      </button>
+                    </div>
                   </td>
 
                   <td class="whitespace-nowrap px-6 py-5">
@@ -141,12 +167,6 @@
                         Vázlat
                       </span>
                     }
-                  </td>
-
-                  <td
-                    class="whitespace-nowrap px-6 py-5 text-center text-sm text-stone-700"
-                  >
-                    {{ article.displayOrder }}
                   </td>
 
                   <td

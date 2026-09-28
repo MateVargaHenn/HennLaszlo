@@ -6,5 +6,4 @@ export interface CreateArticleRequest {
   readonly summaryEn: string | null;
   readonly contentHu: string;
   readonly contentEn: string | null;
-  readonly displayOrder: number;
 }

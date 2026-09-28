@@ -4,6 +4,5 @@ export interface AdminArticleListItem {
   readonly titleHu: string;
   readonly titleEn: string | null;
   readonly isPublished: boolean;
-  readonly displayOrder: number;
   readonly updatedAtUtc: string;
 }
