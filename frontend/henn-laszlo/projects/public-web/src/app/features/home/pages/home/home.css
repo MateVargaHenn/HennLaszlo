@@ -39,7 +39,7 @@
   line-height: 1.4;
 }
 
-.hero__signature {
+ .hero__signature {
   display: block;
   width: clamp(8rem, 15vw, 11rem);
   height: auto;
@@ -284,3 +284,5 @@
     animation: none;
   }
 }
+
+
