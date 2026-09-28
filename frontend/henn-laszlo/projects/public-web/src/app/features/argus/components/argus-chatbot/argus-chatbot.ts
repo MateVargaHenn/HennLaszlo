@@ -28,6 +28,7 @@ import {
   ArgusSource,
   isRateLimitError,
 } from '../../data-access/argus-api';
+import { ARGUS_VERSION } from '../../argus-version';
 
 interface ArgusMessage {
   readonly id: number;
@@ -76,8 +77,8 @@ export class ArgusChatbot {
   protected readonly isSending =
     signal(false);
 
-  private readonly previousEntryId =
-    signal<string | null>(null);
+protected readonly argusVersion =
+  ARGUS_VERSION;
 
   protected readonly suggestedQuestions = [
     'Ki Henn László András?',
