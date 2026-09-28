@@ -20,4 +20,9 @@ public interface IInvitationRepository
     Task<IReadOnlyList<Domain.Invitation>> GetAllAsync(
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<Domain.Invitation>>
+    GetOrderedForUpdateAsync(
+        CancellationToken cancellationToken =
+            default);
+
 }

@@ -45,20 +45,13 @@ internal sealed class ArticleConfiguration
         builder.Property(article => article.IsPublished)
             .IsRequired();
 
-        builder.Property(article => article.DisplayOrder)
-            .IsRequired();
-
         builder.Property(article => article.CreatedAtUtc)
             .IsRequired();
 
         builder.Property(article => article.UpdatedAtUtc)
             .IsRequired();
 
-        builder.HasIndex(
-            article => new
-            {
-                article.IsPublished,
-                article.DisplayOrder,
-            });
+        builder.HasIndex(article =>
+            article.IsPublished);
     }
 }

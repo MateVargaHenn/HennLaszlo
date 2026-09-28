@@ -36,5 +36,9 @@ internal abstract class ArtworkDetailsCommandValidator<TCommand>
         RuleFor(command => command.HeightCm)
             .GreaterThan(0)
             .When(command => command.HeightCm.HasValue);
+
+        RuleFor(command =>
+                command.DisplayOrder)
+            .GreaterThanOrEqualTo(0);
     }
 }

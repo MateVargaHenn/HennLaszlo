@@ -6,5 +6,4 @@ internal sealed record UpdateArticleRequest(
     string? SummaryHu,
     string? SummaryEn,
     string ContentHu,
-    string? ContentEn,
-    int DisplayOrder);
+    string? ContentEn);

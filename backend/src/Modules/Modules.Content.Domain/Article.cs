@@ -13,8 +13,7 @@ public sealed class Article
         string? summaryHu,
         string? summaryEn,
         string contentHu,
-        string? contentEn,
-        int displayOrder)
+        string? contentEn)
     {
         Slug = NormalizeSlug(slug);
         TitleHu = titleHu.Trim();
@@ -23,7 +22,6 @@ public sealed class Article
         SummaryEn = NormalizeOptionalText(summaryEn);
         ContentHu = contentHu.Trim();
         ContentEn = NormalizeOptionalText(contentEn);
-        DisplayOrder = displayOrder;
 
         CreatedAtUtc = DateTime.UtcNow;
         UpdatedAtUtc = CreatedAtUtc;
@@ -51,8 +49,6 @@ public sealed class Article
 
     public bool IsPublished { get; private set; }
 
-    public int DisplayOrder { get; private set; }
-
     public DateTime CreatedAtUtc { get; private set; }
 
     public DateTime UpdatedAtUtc { get; private set; }
@@ -64,16 +60,13 @@ public sealed class Article
         string? summaryHu,
         string? summaryEn,
         string contentHu,
-        string? contentEn,
-        int displayOrder)
+        string? contentEn)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
             titleHu);
 
         ArgumentException.ThrowIfNullOrWhiteSpace(
             contentHu);
-
-        ValidateDisplayOrder(displayOrder);
 
         return new Article(
             slug,
@@ -82,8 +75,7 @@ public sealed class Article
             summaryHu,
             summaryEn,
             contentHu,
-            contentEn,
-            displayOrder);
+            contentEn);
     }
 
     public void UpdateDetails(
@@ -92,8 +84,7 @@ public sealed class Article
         string? summaryHu,
         string? summaryEn,
         string contentHu,
-        string? contentEn,
-        int displayOrder)
+        string? contentEn)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
             titleHu);
@@ -101,15 +92,12 @@ public sealed class Article
         ArgumentException.ThrowIfNullOrWhiteSpace(
             contentHu);
 
-        ValidateDisplayOrder(displayOrder);
-
         TitleHu = titleHu.Trim();
         TitleEn = NormalizeOptionalText(titleEn);
         SummaryHu = NormalizeOptionalText(summaryHu);
         SummaryEn = NormalizeOptionalText(summaryEn);
         ContentHu = contentHu.Trim();
         ContentEn = NormalizeOptionalText(contentEn);
-        DisplayOrder = displayOrder;
         UpdatedAtUtc = DateTime.UtcNow;
     }
 
@@ -158,15 +146,5 @@ public sealed class Article
         return string.IsNullOrWhiteSpace(value)
             ? null
             : value.Trim();
-    }
-
-    private static void ValidateDisplayOrder(
-        int displayOrder)
-    {
-        if (displayOrder < 0)
-        {
-            throw new ArgumentOutOfRangeException(
-                nameof(displayOrder));
-        }
     }
 }

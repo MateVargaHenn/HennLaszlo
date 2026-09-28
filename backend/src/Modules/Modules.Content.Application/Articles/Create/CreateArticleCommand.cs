@@ -9,6 +9,5 @@ public sealed record CreateArticleCommand(
     string? SummaryHu,
     string? SummaryEn,
     string ContentHu,
-    string? ContentEn,
-    int DisplayOrder)
+    string? ContentEn)
     : IRequest<Guid>;

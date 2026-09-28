@@ -5,5 +5,4 @@ export interface UpdateArticleRequest {
   readonly summaryEn: string | null;
   readonly contentHu: string;
   readonly contentEn: string | null;
-  readonly displayOrder: number;
 }

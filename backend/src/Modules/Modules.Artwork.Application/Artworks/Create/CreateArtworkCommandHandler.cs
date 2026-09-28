@@ -1,5 +1,6 @@
 using MediatR;
 using Modules.Artwork.Application.Abstractions;
+using BuildingBlocks.Application.Ordering;
 
 namespace Modules.Artwork.Application.Artworks.Create;
 
@@ -25,9 +26,23 @@ internal sealed class CreateArtworkCommandHandler(
             request.IsFeatured,
             request.DisplayOrder);
 
+        IReadOnlyList<Domain.Artwork>
+            orderedArtworks =
+                await artworkRepository
+                    .GetOrderedForUpdateAsync(
+                        cancellationToken);
+
+        DisplayOrderManager.Place(
+            orderedArtworks,
+            artwork,
+            request.DisplayOrder,
+            static (item, position) =>
+                item.SetDisplayOrder(position));
+
         artworkRepository.Add(artwork);
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(
+            cancellationToken);
 
         return artwork.Id;
     }

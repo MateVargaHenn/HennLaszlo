@@ -8,7 +8,6 @@ export interface AdminArticleDetails {
   readonly contentHu: string;
   readonly contentEn: string | null;
   readonly isPublished: boolean;
-  readonly displayOrder: number;
   readonly createdAtUtc: string;
   readonly updatedAtUtc: string;
 }

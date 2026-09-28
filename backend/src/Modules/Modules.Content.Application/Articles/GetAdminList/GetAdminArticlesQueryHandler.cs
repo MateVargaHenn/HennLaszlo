@@ -27,7 +27,6 @@ internal sealed class GetAdminArticlesQueryHandler(
                         article.TitleHu,
                         article.TitleEn,
                         article.IsPublished,
-                        article.DisplayOrder,
                         article.UpdatedAtUtc))
             .ToList();
     }

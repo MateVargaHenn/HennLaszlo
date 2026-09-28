@@ -35,8 +35,7 @@ internal static class CreateArticleEndpoint
                 request.SummaryHu,
                 request.SummaryEn,
                 request.ContentHu,
-                request.ContentEn,
-                request.DisplayOrder),
+                request.ContentEn),
             cancellationToken);
 
         return Results.Ok(

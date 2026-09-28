@@ -104,7 +104,7 @@
                 <button
                   type="button"
                   [disabled]="store.isSaving()"
-                  class="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-900 transition-colors hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-60"
+                  class="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-900 transition-colors hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                   (click)="unpublish()"
                 >
                   Publikálás visszavonása
@@ -114,8 +114,8 @@
                 <button
                   type="button"
                   [disabled]="store.isSaving()"
-                  class="rounded-lg border border-red-300 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-800 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
-                  (click)="deleteArticle()"
+                  class="rounded-lg border border-red-300 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-800 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                  (click)="requestDeleteArticle()"
                 >
                   Törlés
                 </button>
@@ -123,7 +123,7 @@
                 <button
                   type="button"
                   [disabled]="store.isSaving()"
-                  class="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
+                  class="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                   (click)="publish()"
                 >
                   Publikálás
@@ -265,22 +265,6 @@
             </div>
           </div>
 
-          <div class="mt-6 max-w-48">
-            <label
-              for="displayOrder"
-              class="block text-sm font-medium text-stone-800"
-            >
-              Megjelenési sorrend
-            </label>
-
-            <input
-              id="displayOrder"
-              type="number"
-              min="0"
-              formControlName="displayOrder"
-              class="mt-2 block w-full rounded-lg border border-stone-300 px-4 py-3 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-100"
-            >
-          </div>
         </section>
 
         <section
@@ -365,3 +349,85 @@
     }
   </section>
 </main>
+
+@if (isDeleteConfirmationOpen()) {
+  @if (store.article(); as article) {
+    <div
+      class="fixed inset-0 z-50 grid place-items-center p-5"
+      (keydown.escape)="cancelDeleteArticle()"
+    >
+      <button
+        type="button"
+        class="absolute inset-0 bg-stone-950/60 backdrop-blur-sm"
+        aria-label="Törlés megszakítása"
+        [disabled]="store.isSaving()"
+        (click)="cancelDeleteArticle()"
+      ></button>
+
+      <section
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="delete-article-title"
+        aria-describedby="delete-article-description"
+        class="relative z-10 w-full max-w-md rounded-xl bg-white p-7 shadow-2xl"
+      >
+        <p class="text-sm uppercase tracking-[0.18em] text-red-700">
+          Vázlat törlése
+        </p>
+
+        <h2
+          id="delete-article-title"
+          class="mt-2 font-serif text-2xl text-stone-950"
+        >
+          Biztosan törlöd?
+        </h2>
+
+        <p
+          id="delete-article-description"
+          class="mt-4 leading-6 text-stone-600"
+        >
+          A(z)
+          <strong class="text-stone-900">
+            {{ article.titleHu }}
+          </strong>
+          című írás véglegesen törlődik. Ez a művelet
+          nem vonható vissza.
+        </p>
+
+        @if (store.mutationError()) {
+          <p
+            class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-800"
+            role="alert"
+          >
+            Az írás törlése nem sikerült.
+          </p>
+        }
+
+        <div class="mt-7 flex justify-end gap-3">
+          <button
+            type="button"
+            autofocus
+            class="rounded-md px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-100 disabled:opacity-50 cursor-pointer"
+            [disabled]="store.isSaving()"
+            (click)="cancelDeleteArticle()"
+          >
+            Mégse
+          </button>
+
+          <button
+            type="button"
+            class="rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800 disabled:cursor-wait disabled:opacity-50 cursor-pointer"
+            [disabled]="store.isSaving()"
+            (click)="confirmDeleteArticle()"
+          >
+            @if (store.isSaving()) {
+              Törlés…
+            } @else {
+              Végleges törlés
+            }
+          </button>
+        </div>
+      </section>
+    </div>
+  }
+}

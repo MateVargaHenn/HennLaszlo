@@ -3,6 +3,7 @@ import {
   Component,
   effect,
   inject,
+  signal,
 } from '@angular/core';
 import {
   FormControl,
@@ -61,6 +62,9 @@ export class ArticleEditor {
   protected readonly isEditMode =
     this.articleId !== null;
 
+  protected readonly isDeleteConfirmationOpen =
+    signal(false);
+
   protected readonly form = new FormGroup({
     slug: new FormControl('', {
       nonNullable: true,
@@ -112,14 +116,6 @@ export class ArticleEditor {
     contentEn: new FormControl('', {
       nonNullable: true,
     }),
-
-    displayOrder: new FormControl(0, {
-      nonNullable: true,
-      validators: [
-        Validators.required,
-        Validators.min(0),
-      ],
-    }),
   });
 
   protected readonly tinyMceApiKey =
@@ -159,8 +155,7 @@ export class ArticleEditor {
           summaryHu: article.summaryHu ?? '',
           summaryEn: article.summaryEn ?? '',
           contentHu: article.contentHu,
-          contentEn: article.contentEn ?? '',
-          displayOrder: article.displayOrder,
+          contentEn: article.contentEn ?? ''
         },
         {
           emitEvent: false,
@@ -195,8 +190,7 @@ export class ArticleEditor {
       contentHu: value.contentHu.trim(),
       contentEn: this.normalizeOptionalText(
         value.contentEn,
-      ),
-      displayOrder: value.displayOrder,
+      )
     };
 
     try {
@@ -278,7 +272,7 @@ export class ArticleEditor {
     }
   }
 
-  protected async deleteArticle(): Promise<void> {
+  protected requestDeleteArticle(): void {
     if (
       !this.articleId ||
       this.store.isSaving()
@@ -292,16 +286,40 @@ export class ArticleEditor {
       return;
     }
 
-    const confirmed = window.confirm(
-      `Biztosan törlöd ezt az írást?\n\n${article.titleHu}`,
-    );
+    this.isDeleteConfirmationOpen.set(true);
+  }
 
-    if (!confirmed) {
+  protected cancelDeleteArticle(): void {
+    if (this.store.isSaving()) {
+      return;
+    }
+
+    this.isDeleteConfirmationOpen.set(false);
+  }
+
+  protected async confirmDeleteArticle():
+    Promise<void> {
+    if (
+      !this.articleId ||
+      this.store.isSaving()
+    ) {
+      return;
+    }
+
+    const article = this.store.article();
+
+    if (!article || article.isPublished) {
       return;
     }
 
     try {
-      await this.store.delete(this.articleId);
+      await this.store.delete(
+        this.articleId,
+      );
+
+      this.isDeleteConfirmationOpen.set(
+        false,
+      );
 
       this.listStore.reload();
 
@@ -310,7 +328,7 @@ export class ArticleEditor {
       ]);
     }
     catch {
-      // A store eltárolja a megjelenítendő hibát.
+      // A store eltárolja a hibát.
     }
   }
 

@@ -16,8 +16,5 @@ internal sealed class UpdateArtworkCommandValidator
 
         RuleFor(command => command.DescriptionEn)
             .MaximumLength(5000);
-
-        RuleFor(command => command.DisplayOrder)
-            .GreaterThanOrEqualTo(0);
     }
 }

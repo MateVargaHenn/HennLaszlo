@@ -69,4 +69,20 @@ public class ArtworkRepository(
     {
         dbContext.Artworks.Remove(artwork);
     }
+
+    public async Task<
+        IReadOnlyList<Domain.Artwork>>
+        GetOrderedForUpdateAsync(
+            CancellationToken cancellationToken =
+                default)
+    {
+        return await dbContext.Artworks
+            .OrderBy(artwork =>
+                artwork.DisplayOrder)
+            .ThenByDescending(artwork =>
+                artwork.CreatedAtUtc)
+            .ThenBy(artwork =>
+                artwork.Id)
+            .ToListAsync(cancellationToken);
+    }
 }

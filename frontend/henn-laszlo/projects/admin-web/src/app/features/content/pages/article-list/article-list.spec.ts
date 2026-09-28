@@ -13,6 +13,21 @@ describe('ArticleList', () => {
   let fixture:
     ComponentFixture<ArticleList>;
 
+  const writeText =
+    vi.fn()
+      .mockResolvedValue(undefined);
+
+  Object.defineProperty(
+    navigator,
+    'clipboard',
+    {
+      configurable: true,
+      value: {
+        writeText,
+      },
+    },
+  );
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ArticleList],
@@ -21,9 +36,24 @@ describe('ArticleList', () => {
         {
           provide: ContentApi,
           useValue: {
-            getAdminArticles: () =>
-              of([]),
-          },
+              getAdminArticles: vi.fn()
+                .mockReturnValue(
+                  of([
+                    {
+                      id: 'article-1',
+                      slug:
+                        'fodor-jozsef-megnyitobeszede-2002',
+                      titleHu:
+                        'Fodor József megnyitóbeszéde',
+                      titleEn:
+                        'Opening speech by József Fodor',
+                      isPublished: true,
+                      updatedAtUtc:
+                        '2026-09-28T10:00:00Z',
+                    },
+                  ]),
+                ),
+            },
         },
       ],
     }).compileComponents();
@@ -33,11 +63,39 @@ describe('ArticleList', () => {
     );
 
     component = fixture.componentInstance;
-
-    await fixture.whenStable();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it(
+    'should copy the public article path',
+    async () => {
+      fixture.detectChanges();
+
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const copyButton =
+        fixture.nativeElement.querySelector(
+          '.article-copy-button',
+        ) as HTMLButtonElement;
+
+      expect(copyButton).not.toBeNull();
+
+      copyButton.click();
+
+      await Promise.resolve();
+      fixture.detectChanges();
+
+      expect(writeText)
+        .toHaveBeenCalledWith(
+          '/irasok/fodor-jozsef-megnyitobeszede-2002',
+        );
+
+      expect(copyButton.textContent)
+        .toContain('Kimásolva');
+    },
+  );
 });

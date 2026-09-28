@@ -20,8 +20,7 @@ internal sealed class CreateArticleCommandHandler(
                 request.SummaryHu,
                 request.SummaryEn,
                 request.ContentHu,
-                request.ContentEn,
-                request.DisplayOrder);
+                request.ContentEn);
 
         articleRepository.Add(article);
 
