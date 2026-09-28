@@ -96,11 +96,7 @@ export class ArgusChatbot {
   );
 
   protected readonly showSuggestedQuestions =
-    computed(() =>
-      !this.messages().some(
-        message => message.role === 'user',
-      ),
-    );
+    signal(true);
 
   protected readonly question =
     new FormControl(
@@ -198,7 +194,8 @@ protected askSuggestedQuestion(
   this.question.setValue(
     suggestedQuestion,
   );
-
+  
+  this.showSuggestedQuestions.set(false);
   this.sendCurrentQuestion();
 
   setTimeout(() => {
@@ -237,6 +234,11 @@ private sendCurrentQuestion(): void {
       finalize(() => {
         this.isSending.set(false);
         this.scrollToEnd();
+
+        setTimeout(() => {
+          this.showSuggestedQuestions.set(true);
+          this.scrollToEnd();
+        }, 4500);
       }),
       takeUntilDestroyed(
         this.destroyRef,
@@ -250,6 +252,7 @@ private sendCurrentQuestion(): void {
           source: response.source,
           isError: false,
         });
+        this.showSuggestedQuestions.set(false);
       },
       error: error => {
         this.addMessage({
