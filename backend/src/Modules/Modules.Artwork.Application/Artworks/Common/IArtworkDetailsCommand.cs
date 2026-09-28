@@ -15,4 +15,6 @@ public interface IArtworkDetailsCommand
     decimal? WidthCm { get; }
 
     decimal? HeightCm { get; }
+
+    int DisplayOrder { get; }
 }

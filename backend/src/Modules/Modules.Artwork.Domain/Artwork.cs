@@ -64,10 +64,10 @@ public sealed class Artwork
 
     public static Artwork Create(
             string titleHu,
-            string titleEn,
+            string? titleEn,
             int? year,
-            string techniqueHu,
-            string techniqueEn,
+            string? techniqueHu,
+            string? techniqueEn,
             decimal? widthCm,
             decimal? heightCm,
             string? descriptionHu,
@@ -116,8 +116,7 @@ public sealed class Artwork
     decimal? widthCm,
     decimal? heightCm,
     string? descriptionHu,
-    string? descriptionEn,
-	int displayOrder)
+    string? descriptionEn)
 	{
 		ArgumentException.ThrowIfNullOrWhiteSpace(titleHu);
 
@@ -133,7 +132,6 @@ public sealed class Artwork
 		HeightCm = heightCm;
 		DescriptionHu = NormalizeOptionalText(descriptionHu);
 		DescriptionEn = NormalizeOptionalText(descriptionEn);
-		DisplayOrder = displayOrder;
 	}
 
 	public void SetImage(Guid imageId)

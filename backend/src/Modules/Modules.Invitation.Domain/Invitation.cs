@@ -70,20 +70,17 @@ public sealed class Invitation
         string? titleEn,
         int? year,
         string? altTextHu,
-        string? altTextEn,
-        int displayOrder)
+        string? altTextEn)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(titleHu);
 
         ValidateYear(year);
-        ValidateDisplayOrder(displayOrder);
 
         TitleHu = titleHu.Trim();
         TitleEn = NormalizeOptionalText(titleEn);
         Year = year;
         AltTextHu = NormalizeOptionalText(altTextHu);
         AltTextEn = NormalizeOptionalText(altTextEn);
-        DisplayOrder = displayOrder;
     }
 
     public void SetImage(Guid imageId)
@@ -147,6 +144,14 @@ public sealed class Invitation
                 nameof(year),
                 $"Az év nem lehet későbbi, mint {maximumYear}.");
         }
+    }
+
+    public void SetDisplayOrder(
+        int displayOrder)
+    {
+        ValidateDisplayOrder(displayOrder);
+
+        DisplayOrder = displayOrder;
     }
 
     private static void ValidateDisplayOrder(int displayOrder)

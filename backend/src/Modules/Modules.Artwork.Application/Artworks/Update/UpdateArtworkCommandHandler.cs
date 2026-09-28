@@ -1,4 +1,5 @@
 using BuildingBlocks.Application.Exceptions;
+using BuildingBlocks.Application.Ordering;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
@@ -15,10 +16,16 @@ internal sealed class UpdateArtworkCommandHandler(
         UpdateArtworkCommand request,
         CancellationToken cancellationToken)
     {
+        IReadOnlyList<Domain.Artwork>
+            orderedArtworks =
+                await artworkRepository
+                    .GetOrderedForUpdateAsync(
+                        cancellationToken);
+
         Domain.Artwork? artwork =
-            await artworkRepository.GetByIdAsync(
-                request.ArtworkId,
-                cancellationToken);
+            orderedArtworks.SingleOrDefault(
+                item =>
+                    item.Id == request.ArtworkId);
 
         if (artwork is null)
         {
@@ -47,11 +54,14 @@ internal sealed class UpdateArtworkCommandHandler(
             request.WidthCm,
             request.HeightCm,
             request.DescriptionHu,
-            request.DescriptionEn,
-            request.DisplayOrder);
+            request.DescriptionEn);
 
-        artwork.SetDisplayOrder(
-            request.DisplayOrder);
+        DisplayOrderManager.Place(
+            orderedArtworks,
+            artwork,
+            request.DisplayOrder,
+            static (item, position) =>
+                item.SetDisplayOrder(position));
         
         if (request.IsFeatured)
         {

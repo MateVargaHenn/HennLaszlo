@@ -26,6 +26,22 @@ internal sealed class InvitationRepository(
             cancellationToken);
     }
 
+    public async Task<
+        IReadOnlyList<Domain.Invitation>>
+        GetOrderedForUpdateAsync(
+            CancellationToken cancellationToken =
+                default)
+    {
+        return await dbContext.Invitations
+            .OrderBy(invitation =>
+                invitation.DisplayOrder)
+            .ThenByDescending(invitation =>
+                invitation.CreatedAtUtc)
+            .ThenBy(invitation =>
+                invitation.Id)
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<Domain.Invitation?> GetPublishedByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default)

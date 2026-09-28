@@ -15,6 +15,11 @@ public interface IArtworkRepository
     Guid id,
     CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<Domain.Artwork>>
+    GetOrderedForUpdateAsync(
+        CancellationToken cancellationToken =
+            default);
+
     Task<IReadOnlyList<Domain.Artwork>> GetAllAsync(
     CancellationToken cancellationToken = default);
 

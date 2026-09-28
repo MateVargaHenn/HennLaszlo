@@ -1,3 +1,4 @@
+using BuildingBlocks.Application.Ordering;
 using MediatR;
 using Modules.Invitation.Application.Abstractions;
 
@@ -21,7 +22,20 @@ internal sealed class CreateInvitationCommandHandler(
                 request.AltTextEn,
                 request.DisplayOrder);
 
-        invitationRepository.Add(invitation);
+            IReadOnlyList<Domain.Invitation>
+                orderedInvitations =
+                    await invitationRepository
+                        .GetOrderedForUpdateAsync(
+                            cancellationToken);
+
+            DisplayOrderManager.Place(
+                orderedInvitations,
+                invitation,
+                request.DisplayOrder,
+                static (item, position) =>
+                    item.SetDisplayOrder(position));
+
+            invitationRepository.Add(invitation);
 
         await unitOfWork.SaveChangesAsync(
             cancellationToken);

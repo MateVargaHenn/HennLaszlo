@@ -1,4 +1,5 @@
 using BuildingBlocks.Application.Exceptions;
+using BuildingBlocks.Application.Ordering;
 using MediatR;
 using Modules.Invitation.Application.Abstractions;
 
@@ -13,10 +14,16 @@ internal sealed class UpdateInvitationCommandHandler(
         UpdateInvitationCommand request,
         CancellationToken cancellationToken)
     {
+        IReadOnlyList<Domain.Invitation>
+            orderedInvitations =
+                await invitationRepository
+                    .GetOrderedForUpdateAsync(
+                        cancellationToken);
+
         Domain.Invitation? invitation =
-            await invitationRepository.GetByIdAsync(
-                request.InvitationId,
-                cancellationToken);
+            orderedInvitations.SingleOrDefault(
+                item =>
+                    item.Id == request.InvitationId);
 
         if (invitation is null)
         {
@@ -29,8 +36,14 @@ internal sealed class UpdateInvitationCommandHandler(
             request.TitleEn,
             request.Year,
             request.AltTextHu,
-            request.AltTextEn,
-            request.DisplayOrder);
+            request.AltTextEn);
+
+        DisplayOrderManager.Place(
+            orderedInvitations,
+            invitation,
+            request.DisplayOrder,
+            static (item, position) =>
+                item.SetDisplayOrder(position));
 
         await unitOfWork.SaveChangesAsync(
             cancellationToken);

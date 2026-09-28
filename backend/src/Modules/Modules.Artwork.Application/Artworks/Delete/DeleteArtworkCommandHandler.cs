@@ -1,4 +1,5 @@
 using BuildingBlocks.Application.Exceptions;
+using BuildingBlocks.Application.Ordering;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
@@ -17,10 +18,22 @@ internal sealed class DeleteArtworkCommandHandler(
         DeleteArtworkCommand request,
         CancellationToken cancellationToken)
     {
+        IReadOnlyList<Domain.Artwork>
+            orderedArtworks =
+                await artworkRepository
+                    .GetOrderedForUpdateAsync(
+                        cancellationToken);
+
         Domain.Artwork? artwork =
-            await artworkRepository.GetByIdAsync(
-                request.ArtworkId,
-                cancellationToken);
+            orderedArtworks.SingleOrDefault(
+                item =>
+                    item.Id == request.ArtworkId);
+
+        if (artwork is null)
+        {
+            throw new NotFoundException(
+                "A mű nem található.");
+        }
 
         if (artwork is null)
         {
@@ -47,6 +60,12 @@ internal sealed class DeleteArtworkCommandHandler(
 		}
 
         artworkRepository.Remove(artwork);
+
+        DisplayOrderManager.Remove(
+            orderedArtworks,
+            artwork,
+            static (item, position) =>
+                item.SetDisplayOrder(position));
 
         await unitOfWork.SaveChangesAsync(
             cancellationToken);
