@@ -32,7 +32,7 @@ describe('PublicHeader', () => {
   it('should display every mobile navigation item', () => {
     const menuButton =
       fixture.nativeElement.querySelector(
-        'button',
+        '[aria-controls="mobile-navigation"]',
       ) as HTMLButtonElement;
 
     menuButton.click();
@@ -54,12 +54,36 @@ describe('PublicHeader', () => {
       'Kezdőlap',
       'Bemutatkozás',
       'Művek',
-      'Meghívók',
-      'Videók',
       'Kiállítások',
       'Tagságok és díjak',
+      'Meghívók',
+      'Videók',
       'Írások',
       'Kapcsolat',
     ]);
+  });
+
+  it('should toggle a desktop navigation group', () => {
+    const groupButton =
+      fixture.nativeElement.querySelector(
+        '[aria-controls="desktop-career-navigation"]',
+      ) as HTMLButtonElement;
+
+    const group =
+      fixture.nativeElement.querySelector(
+        '#desktop-career-navigation',
+      ) as HTMLDivElement;
+
+    expect(group.hidden).toBe(true);
+
+    groupButton.click();
+    fixture.detectChanges();
+
+    expect(group.hidden).toBe(false);
+    expect(
+      groupButton.getAttribute(
+        'aria-expanded',
+      ),
+    ).toBe('true');
   });
 });
