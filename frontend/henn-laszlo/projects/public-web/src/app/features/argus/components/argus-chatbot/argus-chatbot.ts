@@ -194,7 +194,8 @@ protected askSuggestedQuestion(
   this.question.setValue(
     suggestedQuestion,
   );
-
+  
+  this.showSuggestedQuestions.set(false);
   this.sendCurrentQuestion();
 
   setTimeout(() => {
