@@ -32,6 +32,15 @@
 
         <a
           class="admin-navigation__link"
+          routerLink="/videos"
+          routerLinkActive="admin-navigation__link--active"
+          ariaCurrentWhenActive="page"
+        >
+          Videók
+        </a>
+
+        <a
+          class="admin-navigation__link"
           routerLink="/content"
           routerLinkActive="admin-navigation__link--active"
           [routerLinkActiveOptions]="{ exact: true }"

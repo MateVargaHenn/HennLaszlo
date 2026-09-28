@@ -39,6 +39,13 @@
         Meghívók
       </a>
       <a
+        routerLink="/videok"
+        routerLinkActive="text-stone-950"
+        class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
+      >
+        Videók
+      </a>
+      <a
         routerLink="/kiallitasok"
         routerLinkActive="text-stone-950"
         class="text-sm uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
@@ -112,6 +119,14 @@
         class="block py-2 text-stone-700"
         (click)="closeMenu()">
         Meghívók
+      </a>
+      <a
+        routerLink="/videok"
+        routerLinkActive="font-semibold"
+        class="block py-2 text-stone-700"
+        (click)="closeMenu()"
+      >
+        Videók
       </a>
       <a
         routerLink="/kiallitasok"

@@ -1,0 +1,103 @@
+<main class="min-h-screen bg-stone-950 text-stone-100">
+  <section class="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:py-24">
+    <header class="mb-14 max-w-2xl" appRevealOnScroll>
+      <p class="mb-4 text-xs uppercase tracking-[0.32em] text-teal-300">Henn László András</p>
+
+      <h1 class="font-serif text-4xl leading-tight sm:text-6xl">Videók</h1>
+
+      <p class="mt-6 max-w-xl leading-7 text-stone-400">
+        Beszélgetések, kiállítások és Henn László András művészetéhez kapcsolódó mozgóképes anyagok.
+      </p>
+    </header>
+
+    @if (store.isLoading()) {
+      <p class="text-stone-400">A videók betöltése…</p>
+    } @else if (store.hasError()) {
+      <div class="border border-red-900 bg-red-950/40 p-6">
+        <p class="text-red-200">A videók most nem tölthetők be.</p>
+
+        <button
+          type="button"
+          class="mt-5 border border-stone-500 px-5 py-2 text-sm uppercase tracking-wider transition-colors hover:bg-stone-100 hover:text-stone-950"
+          (click)="store.reload()"
+        >
+          Újrapróbálom
+        </button>
+      </div>
+    } @else if (videos().length === 0) {
+      <p class="text-stone-400">Jelenleg nincs megjeleníthető videó.</p>
+    } @else {
+      <div class="grid gap-x-8 gap-y-14 lg:grid-cols-2">
+        @for (item of videos(); track item.video.id; let index = $index) {
+          <article
+            class="video-card"
+            appRevealOnScroll
+            [style.--reveal-delay]="(index % 2) * 100 + 'ms'"
+          >
+            @if (item.embedUrl; as embedUrl) {
+              <div class="aspect-video overflow-hidden bg-stone-900">
+                <iframe
+                  class="h-full w-full"
+                  [src]="embedUrl"
+                  [title]="item.video.titleHu"
+                  loading="lazy"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allow="
+                    accelerometer;
+                    autoplay;
+                    clipboard-write;
+                    encrypted-media;
+                    gyroscope;
+                    picture-in-picture;
+                    web-share;
+                  "
+                  allowfullscreen
+                ></iframe>
+              </div>
+            } @else {
+              <a
+                class="group grid aspect-video place-items-center border border-stone-800 bg-stone-900 px-8 text-center transition-colors hover:border-teal-400 hover:bg-stone-900/70"
+                [href]="item.video.videoUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>
+                  <span
+                    class="mx-auto grid h-16 w-16 place-items-center rounded-full border border-teal-400 text-2xl text-teal-300 transition-transform group-hover:scale-105"
+                    aria-hidden="true"
+                  >
+                    ▶
+                  </span>
+
+                  <span class="mt-5 block text-sm uppercase tracking-[0.18em] text-stone-300">
+                    Videó megnyitása új lapon
+                  </span>
+                </span>
+              </a>
+            }
+
+            <div class="border-t border-stone-800 pt-5">
+              <div class="flex items-start justify-between gap-5">
+                <h2 class="font-serif text-2xl leading-tight">
+                  {{ item.video.titleHu }}
+                </h2>
+
+                @if (item.video.year !== null) {
+                  <span class="shrink-0 text-sm text-stone-500">
+                    {{ item.video.year }}
+                  </span>
+                }
+              </div>
+
+              @if (item.video.descriptionHu) {
+                <p class="mt-4 max-w-2xl whitespace-pre-line leading-7 text-stone-400">
+                  {{ item.video.descriptionHu }}
+                </p>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+</main>

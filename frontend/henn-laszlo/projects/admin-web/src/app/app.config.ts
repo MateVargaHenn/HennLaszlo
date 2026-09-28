@@ -11,6 +11,9 @@ import {
 import {
   provideContentDataAccess,
 } from 'content-data-access';
+import {
+  provideVideoDataAccess,
+} from 'video-data-access';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -19,6 +22,8 @@ export const appConfig: ApplicationConfig = {
 }), provideInvitationDataAccess({
   apiBaseUrl: environment.apiBaseUrl,
 }), provideContentDataAccess({
+  apiBaseUrl: environment.apiBaseUrl,
+}), provideVideoDataAccess({
   apiBaseUrl: environment.apiBaseUrl,
 })],
 };

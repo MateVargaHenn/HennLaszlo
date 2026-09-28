@@ -1,11 +1,11 @@
 {
   "name": "henn-laszlo",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:libs": "ng build artwork-data-access && ng build invitation-data-access && ng build content-data-access",
+    "build:libs": "ng build artwork-data-access && ng build invitation-data-access && ng build content-data-access && ng build video-data-access",
     "build:apps": "npm run build:libs && ng build public-web --configuration production && ng build admin-web --configuration production --base-href /admin/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

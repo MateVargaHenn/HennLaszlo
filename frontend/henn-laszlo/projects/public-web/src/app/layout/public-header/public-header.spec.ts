@@ -55,6 +55,7 @@ describe('PublicHeader', () => {
       'Bemutatkozás',
       'Művek',
       'Meghívók',
+      'Videók',
       'Kiállítások',
       'Tagságok és díjak',
       'Írások',

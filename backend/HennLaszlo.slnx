@@ -27,6 +27,10 @@
     <Project Path="src/Modules/Modules.Invitation.Domain/Modules.Invitation.Domain.csproj" />
     <Project Path="src/Modules/Modules.Invitation.Infrastructure/Modules.Invitation.Infrastructure.csproj" />
     <Project Path="src/Modules/Modules.Invitation.Presentation/Modules.Invitation.Presentation.csproj" />
+    <Project Path="src/Modules/Modules.Video.Application/Modules.Video.Application.csproj" />
+    <Project Path="src/Modules/Modules.Video.Domain/Modules.Video.Domain.csproj" />
+    <Project Path="src/Modules/Modules.Video.Infrastructure/Modules.Video.Infrastructure.csproj" />
+    <Project Path="src/Modules/Modules.Video.Presentation/Modules.Video.Presentation.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Modules.Argus.UnitTests/Modules.Argus.UnitTests.csproj" />
