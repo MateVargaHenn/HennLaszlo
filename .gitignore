@@ -492,3 +492,6 @@ test.jpg
 
 # Source media files
 /frontend/henn-laszlo/projects/public-web/public/gif/
+
+# Ignore .env.backup
+.env.backup-*
