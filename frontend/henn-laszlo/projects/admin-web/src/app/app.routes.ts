@@ -74,6 +74,33 @@ export const routes: Routes = [
     title: 'Meghívó szerkesztése | Henn László Admin',
   },
   {
+    path: 'videos',
+    loadComponent: () =>
+      import(
+        './features/videos/pages/admin-video-list/admin-video-list'
+      ).then(component => component.AdminVideoList),
+    canActivate: [adminAuthGuard],
+    title: 'Videók kezelése | Henn László Admin',
+  },
+  {
+    path: 'videos/new',
+    loadComponent: () =>
+      import(
+        './features/videos/pages/admin-create-video/admin-create-video'
+      ).then(component => component.AdminCreateVideo),
+    canActivate: [adminAuthGuard],
+    title: 'Új videó | Henn László Admin',
+  },
+  {
+    path: 'videos/:videoId/edit',
+    loadComponent: () =>
+      import(
+        './features/videos/pages/admin-edit-video/admin-edit-video'
+      ).then(component => component.AdminEditVideo),
+    canActivate: [adminAuthGuard],
+    title: 'Videó szerkesztése | Henn László Admin',
+  },
+  {
     path: 'content',
     loadComponent: () =>
       import(

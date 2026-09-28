@@ -11,6 +11,9 @@ using Modules.FileStorage.Presentation;
 using Modules.Invitation.Infrastructure;
 using Modules.Invitation.Application;
 using Modules.Invitation.Presentation;
+using Modules.Video.Infrastructure;
+using Modules.Video.Application;
+using Modules.Video.Presentation;
 using Modules.Content.Infrastructure;
 using Modules.Content.Application;
 using Modules.Content.Presentation;
@@ -22,6 +25,7 @@ using Microsoft.EntityFrameworkCore;
 using Modules.Artwork.Infrastructure.Database;
 using Modules.FileStorage.Infrastructure.Database;
 using Modules.Invitation.Infrastructure.Database;
+using Modules.Video.Infrastructure.Database;
 using Modules.Content.Infrastructure.Database;
 using Serilog;
 
@@ -96,9 +100,11 @@ builder.Services.AddApplicationBuildingBlocks();
 
 builder.Services.AddArtworkApplication();
 builder.Services.AddInvitationApplication();
+builder.Services.AddVideoApplication();
 
 builder.Services.AddArtworkInfrastructure(connectionString);
 builder.Services.AddInvitationInfrastructure(builder.Configuration);
+builder.Services.AddVideoInfrastructure(builder.Configuration);
 
 builder.Services.AddFileStorageInfrastructure(
     connectionString, 
@@ -149,6 +155,8 @@ using (IServiceScope scope = app.Services.CreateScope())
     await scope.ServiceProvider.GetRequiredService<FileStorageDbContext>()
         .Database.MigrateAsync();
     await scope.ServiceProvider.GetRequiredService<InvitationDbContext>()
+        .Database.MigrateAsync();
+    await scope.ServiceProvider.GetRequiredService<VideoDbContext>()
         .Database.MigrateAsync();
     await scope.ServiceProvider.GetRequiredService<ContentDbContext>()
         .Database.MigrateAsync();
@@ -211,6 +219,7 @@ app.MapGet("/health/ready", () => Results.Ok(new { status = "ready" }));
 
 app.MapPublicArtworkEndpoints();
 app.MapPublicInvitationEndpoints();
+app.MapPublicVideoEndpoints();
 app.MapPublicContentEndpoints();
 app.MapArgusEndpoints();
 
@@ -223,6 +232,7 @@ RouteGroupBuilder adminEndpoints =
 
 adminEndpoints.MapAdminArtworkEndpoints();
 adminEndpoints.MapAdminInvitationEndpoints();
+adminEndpoints.MapAdminVideoEndpoints();
 adminEndpoints.MapAdminFileStorageEndpoints();
 adminEndpoints.MapAdminContentEndpoints();
 

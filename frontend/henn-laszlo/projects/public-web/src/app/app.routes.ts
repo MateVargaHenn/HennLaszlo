@@ -65,6 +65,14 @@ export const routes: Routes = [
         title: 'Meghívók | Henn László András',
       },
       {
+        path: 'videok',
+        loadComponent: () =>
+          import(
+            './features/videos/pages/video-gallery/video-gallery'
+          ).then(component => component.VideoGallery),
+        title: 'Videók | Henn László András',
+      },
+      {
         path: 'kiallitasok',
         data: {
           contentPageKey: 'exhibitions',

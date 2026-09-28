@@ -6,7 +6,8 @@
     "paths": {
       "artwork-data-access": ["./dist/artwork-data-access"],
       "content-data-access": ["./dist/content-data-access"],
-      "invitation-data-access": ["./dist/invitation-data-access"]
+      "invitation-data-access": ["./dist/invitation-data-access"],
+      "video-data-access": ["./dist/video-data-access"]
     },
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -57,6 +58,12 @@
     },
     {
       "path": "./projects/content-data-access/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/video-data-access/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/video-data-access/tsconfig.spec.json"
     }
   ]
 }
