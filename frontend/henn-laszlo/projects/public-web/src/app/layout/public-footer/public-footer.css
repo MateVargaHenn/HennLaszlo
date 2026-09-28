@@ -1,0 +1,9 @@
+.footer__signature {
+  width: 7rem;
+  aspect-ratio: 520 / 350;
+  background-color: #78716c;
+
+  mask: url('/images/henn-signature.svg') center / contain no-repeat;
+  -webkit-mask:
+    url('/images/henn-signature.svg') center / contain no-repeat;
+}
