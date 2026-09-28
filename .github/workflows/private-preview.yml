@@ -85,7 +85,7 @@ jobs:
           VPS_USER: ${{ secrets.VPS_USER }}
         run: |
           ssh -i ~/.ssh/preview_key -o StrictHostKeyChecking=yes "$VPS_USER@$VPS_HOST" \
-            "set -eu; cd /var/www/hennlaszlo-preview; test -f docker-compose.yml; test -s .env; test -s deploy/preview.htpasswd; if ss -ltn '( sport = :18080 )' | tail -n +2 | grep -q .; then test -n \"\$(docker compose ps -q gateway)\" || { echo 'Port 18080 belongs to another service'; exit 1; }; fi; git fetch --depth 1 origin $GITHUB_SHA; git checkout --detach $GITHUB_SHA; docker compose up --build -d --wait --wait-timeout 300"
+            "set -eu; cd /var/www/hennlaszlo-preview; test -f docker-compose.yml; test -s .env; test -s deploy/preview.htpasswd; if ss -ltn '( sport = :18080 )' | tail -n +2 | grep -q .; then test -n \"\$(docker compose ps -q gateway)\" || { echo 'Port 18080 belongs to another service'; exit 1; }; fi; git fetch --depth 1 origin $GITHUB_SHA; git checkout --detach $GITHUB_SHA; docker compose up --build -d --wait --wait-timeout 300; docker compose restart gateway"
       - name: Verify HTTPS and private access
         env:
           PREVIEW_URL: ${{ vars.PREVIEW_URL }}
