@@ -32,7 +32,7 @@ jobs:
         run: dotnet publish backend/src/WebApi/WebApi.csproj -c Release -o /tmp/henn-api
       - name: Angular builds
         working-directory: frontend/henn-laszlo
-        run: npm ci && npm run build:apps
+        run: npm ci --ignore-scripts && npm run build:apps
       - name: Prepare private integration environment
         run: |
           cp .env.example .env
