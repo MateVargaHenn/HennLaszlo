@@ -8,4 +8,6 @@ public sealed record PublishedArticleDetails(
     string? SummaryHu,
     string? SummaryEn,
     string ContentHu,
-    string? ContentEn);
+    string? ContentEn,
+    DateTime CreatedAtUtc,
+    DateTime UpdatedAtUtc);

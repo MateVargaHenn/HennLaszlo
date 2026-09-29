@@ -7,4 +7,6 @@ export interface VideoListItem {
   readonly descriptionEn: string | null;
   readonly videoUrl: string;
   readonly displayOrder: number;
+  readonly createdAtUtc: string;
+  readonly updatedAtUtc: string;
 }

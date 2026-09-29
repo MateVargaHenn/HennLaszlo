@@ -34,6 +34,8 @@ internal sealed class GetPublishedArticleBySlugQueryHandler(
             article.SummaryHu,
             article.SummaryEn,
             article.ContentHu,
-            article.ContentEn);
+            article.ContentEn,
+            article.CreatedAtUtc,
+            article.UpdatedAtUtc);
     }
 }

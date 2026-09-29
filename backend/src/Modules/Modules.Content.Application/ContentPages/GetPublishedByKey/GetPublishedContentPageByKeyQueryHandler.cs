@@ -31,6 +31,8 @@ internal sealed class GetPublishedContentPageByKeyQueryHandler(
             contentPage.TitleHu,
             contentPage.TitleEn,
             contentPage.ContentHu,
-            contentPage.ContentEn);
+            contentPage.ContentEn,
+            contentPage.CreatedAtUtc,
+            contentPage.UpdatedAtUtc);
     }
 }

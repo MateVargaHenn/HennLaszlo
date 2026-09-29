@@ -75,6 +75,7 @@ services:
       INTERNAL_API_ORIGIN: http://backend:8080
       NG_ALLOWED_HOSTS: ${PREVIEW_HOST:?set PREVIEW_HOST},localhost,127.0.0.1
       NG_TRUST_PROXY_HEADERS: X-FORWARDED-PROTO
+      PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:?set PUBLIC_SITE_URL}
     depends_on:
       backend:
         condition: service_healthy

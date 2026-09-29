@@ -10,4 +10,6 @@ public sealed record ArtworkListItem(
     decimal? WidthCm,
     decimal? HeightCm,
     bool IsFeatured,
-    int DisplayOrder);
+    int DisplayOrder,
+    DateTime CreatedAtUtc,
+    DateTime UpdatedAtUtc);

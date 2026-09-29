@@ -5,7 +5,7 @@ import { CONTENT_DATA_ACCESS_CONFIG } from '../config/content-data-access-config
 import { AdminContentPageDetails } from '../models/admin-content-page-details';
 import { AdminContentPageListItem } from '../models/admin-content-page-list-item';
 import { ContentPageKey } from '../models/content-page-key';
-import { PublishedContentPage } from '../models/published-content-page';
+import { PublishedContentPageDetails } from '../models/published-content-page-details';
 import { UpsertContentPageRequest } from '../models/upsert-content-page-request';
 import { UpsertContentPageResponse } from '../models/upsert-content-page-response';
 import { AdminArticleDetails } from '../models/admin-article-details';
@@ -32,8 +32,8 @@ export class ContentApi {
 
   getPublishedContentPage(
     key: ContentPageKey,
-  ): Observable<PublishedContentPage> {
-    return this.http.get<PublishedContentPage>(
+  ): Observable<PublishedContentPageDetails> {
+    return this.http.get<PublishedContentPageDetails>(
       `${this.apiBaseUrl}/api/content-pages/${key}`,
     );
   }

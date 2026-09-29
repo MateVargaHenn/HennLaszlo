@@ -16,6 +16,9 @@ import { ArgusChatbot } from
 import {
   SeoService,
 } from '../../core/seo/seo.service';
+import {
+  StructuredDataService,
+} from '../../core/seo/structured-data.service';
 
 @Component({
   selector: 'app-public-layout',
@@ -33,7 +36,11 @@ export class PublicLayout {
   private readonly websiteSettings =
     inject(PublicWebsiteSettingsStore);
 
-  private readonly seo = inject(SeoService);
+  private readonly seo =
+    inject(SeoService);
+
+  private readonly structuredData =
+    inject(StructuredDataService);
 
   constructor() {
     effect(() => {
@@ -46,6 +53,54 @@ export class PublicLayout {
         description:
           settings.defaultSeoDescription,
       });
+      const siteUrl =
+        this.seo.toAbsoluteUrl('/');
+
+      const personId =
+        `${siteUrl}#person`;
+
+      const websiteId =
+        `${siteUrl}#website`;
+
+      const sameAs = [
+        settings.facebookUrl,
+        settings.instagramUrl,
+        settings.youtubeUrl,
+      ].filter(
+        (url): url is string =>
+          Boolean(url),
+      );
+
+      this.structuredData.setGroup(
+        'site',
+        [
+          {
+            '@type': 'WebSite',
+            '@id': websiteId,
+            url: siteUrl,
+            name: settings.artistName,
+            description:
+              settings.defaultSeoDescription,
+            inLanguage: 'hu-HU',
+            about: {
+              '@id': personId,
+            },
+          },
+          {
+            '@type': 'Person',
+            '@id': personId,
+            name: settings.artistName,
+            url: siteUrl,
+            jobTitle:
+              'Festőművész és grafikus',
+            description:
+              settings.defaultSeoDescription,
+            ...(sameAs.length > 0
+              ? { sameAs }
+              : {}),
+          },
+        ],
+      );
     });
   }
 }

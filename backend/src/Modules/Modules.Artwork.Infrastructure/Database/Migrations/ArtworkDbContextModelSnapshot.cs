@@ -78,6 +78,9 @@ namespace Modules.Artwork.Infrastructure.Database.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
 
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<decimal?>("WidthCm")
                         .HasPrecision(8, 2)
                         .HasColumnType("numeric(8,2)");

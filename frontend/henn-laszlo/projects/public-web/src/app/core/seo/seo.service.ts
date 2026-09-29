@@ -7,6 +7,16 @@ import {
   Meta,
   Title,
 } from '@angular/platform-browser';
+import {
+  SEO_SITE_URL,
+} from './seo.config';
+import {
+  StructuredData,
+  StructuredDataService,
+} from './structured-data.service';
+import {
+  SeoBreadcrumb,
+} from '../../shared/interfaces/seo-breadcrumb.interface';
 
 interface SeoPageMetadata {
   readonly title?: string;
@@ -17,6 +27,11 @@ interface SeoPageMetadata {
   readonly imagePath?: string;
   readonly imageAlt?: string;
   readonly includeSiteName?: boolean;
+  readonly breadcrumbs?:
+  readonly SeoBreadcrumb[];
+  readonly structuredData?:
+  | StructuredData
+  | readonly StructuredData[];
 }
 
 interface WebsiteSeoDefaults {
@@ -32,6 +47,8 @@ export class SeoService {
   private readonly document = inject(DOCUMENT);
   private readonly meta = inject(Meta);
   private readonly title = inject(Title);
+  private readonly structuredData =
+  inject(StructuredDataService);
 
   private defaults: WebsiteSeoDefaults = {
     siteName: 'Henn László András',
@@ -47,10 +64,12 @@ export class SeoService {
     SeoPageMetadata | null = null;
 
   private readonly siteUrl =
-    'https://hennlaszlo.hu';
+    inject(SEO_SITE_URL)
+      .replace(/\/+$/, '');
 
   private readonly defaultImagePath =
     '/video/medistacio-poster.webp';
+
 
   configureDefaults(
     defaults: WebsiteSeoDefaults,
@@ -86,10 +105,12 @@ export class SeoService {
         : `${pageTitle} | ${this.defaults.siteName}`;
 
     const canonicalUrl =
-      this.resolveUrl(metadata.canonicalPath);
+        this.toAbsoluteUrl(
+          metadata.canonicalPath,
+        );
 
     const imageUrl =
-      this.resolveUrl(
+      this.toAbsoluteUrl(
         metadata.imagePath ??
         this.defaultImagePath,
       );
@@ -181,6 +202,23 @@ export class SeoService {
     );
 
     this.updateCanonicalUrl(canonicalUrl);
+
+        this.updateBreadcrumbs(
+      metadata,
+      pageTitle,
+      canonicalUrl,
+    );
+
+    if (metadata.structuredData) {
+      this.structuredData.setGroup(
+        'page',
+        metadata.structuredData,
+      );
+    } else {
+      this.structuredData.removeGroup(
+        'page',
+      );
+    }
   }
 
   private updateName(
@@ -225,10 +263,70 @@ export class SeoService {
     canonicalLink.href = canonicalUrl;
   }
 
-  private resolveUrl(pathOrUrl: string): string {
+  toAbsoluteUrl(
+    pathOrUrl: string,
+  ): string {
     return new URL(
       pathOrUrl,
       `${this.siteUrl}/`,
     ).toString();
+  }
+
+  private updateBreadcrumbs(
+    metadata: SeoPageMetadata,
+    pageTitle: string,
+    canonicalUrl: string,
+  ): void {
+    if (
+      metadata.canonicalPath === '/'
+    ) {
+      this.structuredData.removeGroup(
+        'breadcrumb',
+      );
+
+      return;
+    }
+
+    const breadcrumbs =
+      metadata.breadcrumbs ?? [
+        {
+          name: 'Kezdőlap',
+          path: '/',
+        },
+        {
+          name: pageTitle,
+          path:
+            metadata.canonicalPath,
+        },
+      ];
+
+    if (breadcrumbs.length < 2) {
+      this.structuredData.removeGroup(
+        'breadcrumb',
+      );
+
+      return;
+    }
+
+    this.structuredData.setGroup(
+      'breadcrumb',
+      {
+        '@type': 'BreadcrumbList',
+        '@id':
+          `${canonicalUrl}#breadcrumb`,
+        itemListElement:
+          breadcrumbs.map(
+            (breadcrumb, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              name: breadcrumb.name,
+              item:
+                this.toAbsoluteUrl(
+                  breadcrumb.path,
+                ),
+            }),
+          ),
+      },
+    );
   }
 }

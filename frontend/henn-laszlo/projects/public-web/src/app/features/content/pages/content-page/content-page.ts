@@ -22,6 +22,10 @@ import {
   RevealOnScroll,
 } from '../../../../shared/directives/reveal-on-scroll';
 
+import {
+  SsrResponseService,
+} from '../../../../core/http/ssr-response.service';
+
 interface ContentPageSeoData {
   readonly title: string;
   readonly description: string;
@@ -42,6 +46,7 @@ interface ContentPageSeoData {
 export class ContentPage {
   private readonly route = inject(ActivatedRoute);
   private readonly seo = inject(SeoService);
+  private readonly response = inject(SsrResponseService);
 
   protected readonly store =
     inject(PublishedContentPageStore);
@@ -102,26 +107,51 @@ export class ContentPage {
     this.store.load(key);
 
     effect(() => {
-      if (this.store.error()) {
+      if (this.store.isNotFound()) {
+        this.response.setNotFound();
+
         this.seo.updatePage({
-          ...seoData,
+          title:
+            `${seoData.title} – az oldal nem található`,
+          description:
+            'A keresett tartalmi oldal nem található.',
+          canonicalPath:
+            seoData.canonicalPath,
           type: 'website',
-          robots: 'noindex, follow',
+          robots:
+            'noindex, nofollow, noarchive',
         });
 
         return;
       }
 
-      const contentPage = this.store.contentPage();
+      if (this.store.error()) {
+        this.response.setStatus(500);
+
+        this.seo.updatePage({
+          ...seoData,
+          type: 'website',
+          robots:
+            'noindex, follow',
+        });
+
+        return;
+      }
+
+      const contentPage =
+        this.store.contentPage();
 
       if (!contentPage) {
         return;
       }
 
       this.seo.updatePage({
-        title: contentPage.titleHu,
-        description: seoData.description,
-        canonicalPath: seoData.canonicalPath,
+        title:
+          contentPage.titleHu,
+        description:
+          seoData.description,
+        canonicalPath:
+          seoData.canonicalPath,
         type: 'website',
       });
     });

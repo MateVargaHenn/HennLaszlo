@@ -10,7 +10,7 @@ import {
 } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { ContentPageKey } from '../models/content-page-key';
-import { PublishedContentPage } from '../models/published-content-page';
+import { PublishedContentPageDetails } from '../models/published-content-page-details';
 import { ContentApi } from '../services/content-api';
 
 @Injectable({
@@ -32,7 +32,7 @@ export class PublishedContentPageStore {
   });
 
   readonly contentPage =
-    computed<PublishedContentPage | null>(() => {
+    computed<PublishedContentPageDetails | null>(() => {
       if (!this.contentPageResource.hasValue()) {
         return null;
       }

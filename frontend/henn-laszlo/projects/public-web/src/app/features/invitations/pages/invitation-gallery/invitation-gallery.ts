@@ -17,6 +17,7 @@ import {
 import {
   RevealOnScroll,
 } from '../../../../shared/directives/reveal-on-scroll';
+import { SeoService } from '../../../../core/seo/seo.service';
 
 @Component({
   selector: 'app-invitation-gallery',
@@ -32,6 +33,21 @@ export class InvitationGallery {
 
     protected readonly selectedInvitation =
       signal<InvitationListItem | null>(null);
+
+    private readonly seo =
+      inject(SeoService);
+
+    constructor() {
+      this.seo.updatePage({
+        title: 'Meghívók',
+        description:
+          'Henn László András kiállításaihoz és ' +
+          'művészeti eseményeihez készült meghívók ' +
+          'válogatása.',
+        canonicalPath: '/meghivok',
+        type: 'website',
+      });
+    }
 
     protected openInvitation(
       invitation: InvitationListItem

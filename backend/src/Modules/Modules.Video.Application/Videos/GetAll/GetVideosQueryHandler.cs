@@ -26,7 +26,10 @@ internal sealed class GetVideosQueryHandler(
                 video.DescriptionHu,
                 video.DescriptionEn,
                 video.VideoUrl,
-                video.DisplayOrder))
+                video.DisplayOrder,
+                video.CreatedAtUtc,
+                video.UpdatedAtUtc ??
+                video.CreatedAtUtc))
             .ToList();
     }
 }

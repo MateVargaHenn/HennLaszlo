@@ -6,6 +6,9 @@ import {
 } from '@angular/platform-browser';
 
 import { SeoService } from './seo.service';
+import {
+  SEO_SITE_URL,
+} from './seo.config';
 
 describe('SeoService', () => {
   let document: Document;
@@ -14,7 +17,15 @@ describe('SeoService', () => {
   let title: Title;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: SEO_SITE_URL,
+          useValue:
+            'https://hennlaszlo.hu',
+        },
+      ],
+    });
 
     document = TestBed.inject(DOCUMENT);
     meta = TestBed.inject(Meta);

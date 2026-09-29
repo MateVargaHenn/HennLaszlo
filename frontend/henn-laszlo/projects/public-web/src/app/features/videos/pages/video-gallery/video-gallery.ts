@@ -1,9 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+} from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PublishedVideosStore } from 'video-data-access';
 import type { VideoListItem } from 'video-data-access';
 
 import { RevealOnScroll } from '../../../../shared/directives/reveal-on-scroll';
+import { SeoService } from '../../../../core/seo/seo.service';
 
 interface DisplayVideo {
   readonly video: VideoListItem;
@@ -29,6 +36,127 @@ export class VideoGallery {
       embedUrl: this.createYouTubeEmbedUrl(video.videoUrl),
     })),
   );
+
+  private readonly seo =
+    inject(SeoService);
+
+  constructor() {
+    effect(() => {
+      const videos =
+        this.store.videos();
+
+      const canonicalPath =
+        '/videok';
+
+      const canonicalUrl =
+        this.seo.toAbsoluteUrl(
+          canonicalPath,
+        );
+
+      const siteUrl =
+        this.seo.toAbsoluteUrl('/');
+
+      const personId =
+        `${siteUrl}#person`;
+
+      const websiteId =
+        `${siteUrl}#website`;
+
+      const videoStructuredData =
+        videos.map(video => {
+          const videoId =
+            this.getYouTubeVideoId(
+              video.videoUrl,
+            );
+
+          const description =
+            video.descriptionHu?.trim() ||
+            `${video.titleHu} – videó Henn László András művészeti munkásságáról.`;
+
+          return {
+            '@type': 'VideoObject',
+            '@id':
+              `${canonicalUrl}#video-${
+                encodeURIComponent(
+                  video.id,
+                )
+              }`,
+            name: video.titleHu,
+            description,
+            url: video.videoUrl,
+            uploadDate:
+              video.createdAtUtc,
+            dateModified:
+              video.updatedAtUtc,
+            inLanguage: 'hu-HU',
+            about: {
+              '@id': personId,
+            },
+            isPartOf: {
+              '@id':
+                `${canonicalUrl}#webpage`,
+            },
+            ...(videoId
+              ? {
+                  embedUrl:
+                    'https://www.youtube-nocookie.com/' +
+                    `embed/${videoId}`,
+                  thumbnailUrl:
+                    'https://i.ytimg.com/' +
+                    `vi/${videoId}/hqdefault.jpg`,
+                }
+              : {}),
+            ...(video.year !== null
+              ? {
+                  dateCreated:
+                    video.year.toString(),
+                }
+              : {}),
+          };
+        });
+
+      this.seo.updatePage({
+        title: 'Videók',
+        description:
+          'Videók Henn László András festőművész ' +
+          'alkotásairól, kiállításairól és művészeti ' +
+          'munkásságáról.',
+        canonicalPath,
+        type: 'website',
+        breadcrumbs: [
+          {
+            name: 'Kezdőlap',
+            path: '/',
+          },
+          {
+            name: 'Videók',
+            path: canonicalPath,
+          },
+        ],
+        structuredData: [
+          {
+            '@type': 'CollectionPage',
+            '@id':
+              `${canonicalUrl}#webpage`,
+            url: canonicalUrl,
+            name: 'Videók',
+            description:
+              'Videók Henn László András festőművész ' +
+              'alkotásairól, kiállításairól és művészeti ' +
+              'munkásságáról.',
+            inLanguage: 'hu-HU',
+            isPartOf: {
+              '@id': websiteId,
+            },
+            about: {
+              '@id': personId,
+            },
+          },
+          ...videoStructuredData,
+        ],
+      });
+    });
+  }
 
   private createYouTubeEmbedUrl(videoUrl: string): SafeResourceUrl | null {
     const videoId = this.getYouTubeVideoId(videoUrl);

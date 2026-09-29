@@ -48,6 +48,12 @@ public sealed class Video
     public DateTime CreatedAtUtc { get; private set; } =
         DateTime.UtcNow;
 
+    public DateTime? UpdatedAtUtc
+    {
+        get;
+        private set;
+    } = DateTime.UtcNow;
+
     public static Video Create(
         string titleHu,
         string? titleEn,
@@ -94,16 +100,19 @@ public sealed class Video
         DescriptionEn =
             NormalizeOptionalText(descriptionEn);
         VideoUrl = NormalizeVideoUrl(videoUrl);
+        MarkAsUpdated();
     }
 
     public void Publish()
     {
         IsPublished = true;
+        MarkAsUpdated();
     }
 
     public void Unpublish()
     {
         IsPublished = false;
+        MarkAsUpdated();
     }
 
     public void SetDisplayOrder(
@@ -111,6 +120,7 @@ public sealed class Video
     {
         ValidateDisplayOrder(displayOrder);
         DisplayOrder = displayOrder;
+        MarkAsUpdated();
     }
 
     private static string? NormalizeOptionalText(
@@ -172,5 +182,10 @@ public sealed class Video
             throw new ArgumentOutOfRangeException(
                 nameof(displayOrder));
         }
+    }
+
+    private void MarkAsUpdated()
+    {
+        UpdatedAtUtc = DateTime.UtcNow;
     }
 }
