@@ -153,6 +153,18 @@ export const routes: Routes = [
     canActivate: [adminAuthGuard],
   },
   {
+    path: 'settings',
+    loadComponent: () =>
+      import(
+        './features/settings/pages/admin-website-settings/admin-website-settings'
+      ).then(
+        (component) =>
+          component.AdminWebsiteSettings,
+      ),
+    canActivate: [adminAuthGuard],
+    title: 'Webbeállítások | Henn László Admin',
+  },
+  {
     path: '**',
     redirectTo: 'artworks',
   },

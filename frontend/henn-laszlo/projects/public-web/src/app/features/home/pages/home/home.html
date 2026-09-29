@@ -2,23 +2,22 @@
   <div class="hero__inner">
     <div class="hero__content" appRevealOnScroll>
       <h1 id="hero-title" class="hero__title">
-        Henn László András
+        {{ websiteSettings.settings().artistName }}
       </h1>
 
       <p class="hero__subtitle">
-        Galyasi Miklós nívódíjas festőművész, grafikus
+        {{ websiteSettings.settings().artistSubtitle }}
       </p>
 
       <img
         class="hero__signature"
         src="/images/henn-signature-animated.svg"
-        alt="Henn László András aláírása"
+        [alt]="websiteSettings.settings().artistName + ' aláírása'"
         aria-hidden="true"
       />
 
       <p class="hero__description">
-        Válogatás az alkotó festményeiből, kiállításaiból
-        és több évtizedes művészi munkásságából.
+        {{ websiteSettings.settings().heroDescription }}
       </p>
 
       <a class="hero__link" routerLink="/muvek">

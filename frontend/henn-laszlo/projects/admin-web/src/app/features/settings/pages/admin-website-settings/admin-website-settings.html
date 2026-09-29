@@ -1,0 +1,381 @@
+<main class="min-h-screen bg-stone-100 px-5 py-10 text-stone-900">
+  <div class="mx-auto max-w-5xl">
+    <header class="mb-8">
+      <p class="text-sm uppercase tracking-[0.2em] text-stone-500">
+        Adminisztráció
+      </p>
+
+      <h1 class="mt-2 font-serif text-4xl">
+        Webbeállítások
+      </h1>
+
+      <p class="mt-3 max-w-3xl text-sm leading-6 text-stone-600">
+        Itt kezelhetők a weboldalon több helyen megjelenő
+        alapadatok, az alapértelmezett keresőoptimalizálási
+        szövegek és a közösségi hivatkozások.
+      </p>
+    </header>
+
+    @if (store.isLoading() && !store.settings()) {
+      <p class="rounded-xl bg-white p-6 shadow-sm">
+        A webbeállítások betöltése…
+      </p>
+    }
+    @else if (store.loadError() && !store.settings()) {
+      <div class="rounded-xl border border-red-200 bg-red-50 p-6">
+        <p class="text-red-800">
+          A webbeállítások most nem tölthetők be.
+        </p>
+
+        <button
+          type="button"
+          class="mt-4 rounded-lg bg-stone-950 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-stone-800"
+          (click)="store.reload()"
+        >
+          Újrapróbálom
+        </button>
+      </div>
+    }
+    @else if (store.settings(); as settings) {
+      <form
+        class="overflow-hidden rounded-xl bg-white shadow-sm"
+        [formGroup]="form"
+        (ngSubmit)="save()"
+      >
+        <div class="space-y-10 p-6 sm:p-8">
+          <section aria-labelledby="identity-settings">
+            <div class="mb-5">
+              <h2
+                id="identity-settings"
+                class="font-serif text-2xl"
+              >
+                Arculat és kezdőlap
+              </h2>
+
+              <p class="mt-1 text-sm text-stone-500">
+                A művész neve, megnevezése és a kezdőlap rövid
+                bemutatkozó szövege.
+              </p>
+            </div>
+
+            <div class="grid gap-5 md:grid-cols-2">
+              <div>
+                <label
+                  for="artistName"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  Művész neve
+                  <span class="text-red-700">*</span>
+                </label>
+
+                <input
+                  id="artistName"
+                  type="text"
+                  formControlName="artistName"
+                  autocomplete="name"
+                  class="w-full rounded-lg border border-stone-300 px-4 py-3 outline-none transition-colors focus:border-stone-900"
+                />
+
+                @if (
+                  form.controls.artistName.touched &&
+                  form.controls.artistName.invalid
+                ) {
+                  <p class="mt-2 text-sm text-red-700">
+                    A név kötelező, és legfeljebb 200 karakter lehet.
+                  </p>
+                }
+              </div>
+
+              <div>
+                <label
+                  for="artistSubtitle"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  Művészi megnevezés
+                  <span class="text-red-700">*</span>
+                </label>
+
+                <input
+                  id="artistSubtitle"
+                  type="text"
+                  formControlName="artistSubtitle"
+                  class="w-full rounded-lg border border-stone-300 px-4 py-3 outline-none transition-colors focus:border-stone-900"
+                />
+
+                @if (
+                  form.controls.artistSubtitle.touched &&
+                  form.controls.artistSubtitle.invalid
+                ) {
+                  <p class="mt-2 text-sm text-red-700">
+                    A megnevezés kötelező, és legfeljebb 300 karakter lehet.
+                  </p>
+                }
+              </div>
+            </div>
+
+            <div class="mt-5">
+              <label
+                for="heroDescription"
+                class="mb-2 block text-sm font-medium"
+              >
+                Kezdőlapi bemutatkozás
+                <span class="text-red-700">*</span>
+              </label>
+
+              <textarea
+                id="heroDescription"
+                rows="5"
+                formControlName="heroDescription"
+                class="w-full resize-y rounded-lg border border-stone-300 px-4 py-3 leading-6 outline-none transition-colors focus:border-stone-900"
+              ></textarea>
+
+              <div class="mt-2 flex items-start justify-between gap-4 text-sm">
+                @if (
+                  form.controls.heroDescription.touched &&
+                  form.controls.heroDescription.invalid
+                ) {
+                  <p class="text-red-700">
+                    A bemutatkozás kötelező, és legfeljebb 1000 karakter lehet.
+                  </p>
+                }
+                @else {
+                  <span></span>
+                }
+
+                <span class="shrink-0 text-stone-400">
+                  {{ form.controls.heroDescription.value.length }} / 1000
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="border-t border-stone-200 pt-10"
+            aria-labelledby="seo-settings"
+          >
+            <div class="mb-5">
+              <h2
+                id="seo-settings"
+                class="font-serif text-2xl"
+              >
+                Alapértelmezett SEO
+              </h2>
+
+              <p class="mt-1 text-sm text-stone-500">
+                Ezek az értékek szolgálnak tartalékként, ha egy
+                oldalhoz nincs külön oldalcím vagy leírás beállítva.
+              </p>
+            </div>
+
+            <div class="space-y-5">
+              <div>
+                <label
+                  for="defaultSeoTitle"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  Alapértelmezett oldalcím
+                  <span class="text-red-700">*</span>
+                </label>
+
+                <input
+                  id="defaultSeoTitle"
+                  type="text"
+                  formControlName="defaultSeoTitle"
+                  class="w-full rounded-lg border border-stone-300 px-4 py-3 outline-none transition-colors focus:border-stone-900"
+                />
+
+                @if (
+                  form.controls.defaultSeoTitle.touched &&
+                  form.controls.defaultSeoTitle.invalid
+                ) {
+                  <p class="mt-2 text-sm text-red-700">
+                    Az oldalcím kötelező, és legfeljebb 200 karakter lehet.
+                  </p>
+                }
+              </div>
+
+              <div>
+                <label
+                  for="defaultSeoDescription"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  Alapértelmezett leírás
+                  <span class="text-red-700">*</span>
+                </label>
+
+                <textarea
+                  id="defaultSeoDescription"
+                  rows="4"
+                  formControlName="defaultSeoDescription"
+                  class="w-full resize-y rounded-lg border border-stone-300 px-4 py-3 leading-6 outline-none transition-colors focus:border-stone-900"
+                ></textarea>
+
+                <div class="mt-2 flex items-start justify-between gap-4 text-sm">
+                  @if (
+                    form.controls.defaultSeoDescription.touched &&
+                    form.controls.defaultSeoDescription.invalid
+                  ) {
+                    <p class="text-red-700">
+                      A leírás kötelező, és legfeljebb 500 karakter lehet.
+                    </p>
+                  }
+                  @else {
+                    <span></span>
+                  }
+
+                  <span class="shrink-0 text-stone-400">
+                    {{ form.controls.defaultSeoDescription.value.length }} / 500
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="border-t border-stone-200 pt-10"
+            aria-labelledby="social-settings"
+          >
+            <div class="mb-5">
+              <h2
+                id="social-settings"
+                class="font-serif text-2xl"
+              >
+                Közösségi oldalak
+              </h2>
+
+              <p class="mt-1 text-sm text-stone-500">
+                A nem használt mezők üresen hagyhatók. Teljes,
+                <span class="font-mono">https://</span> kezdetű címet adj meg.
+              </p>
+            </div>
+
+            <div class="space-y-5">
+              <div>
+                <label
+                  for="facebookUrl"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  Facebook
+                  <span class="font-normal text-stone-400">– opcionális</span>
+                </label>
+
+                <input
+                  id="facebookUrl"
+                  type="url"
+                  formControlName="facebookUrl"
+                  inputmode="url"
+                  placeholder="https://facebook.com/…"
+                  class="w-full rounded-lg border border-stone-300 px-4 py-3 outline-none transition-colors focus:border-stone-900"
+                />
+
+                @if (
+                  form.controls.facebookUrl.touched &&
+                  form.controls.facebookUrl.invalid
+                ) {
+                  <p class="mt-2 text-sm text-red-700">
+                    Érvényes http vagy https webcímet adj meg.
+                  </p>
+                }
+              </div>
+
+              <div>
+                <label
+                  for="instagramUrl"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  Instagram
+                  <span class="font-normal text-stone-400">– opcionális</span>
+                </label>
+
+                <input
+                  id="instagramUrl"
+                  type="url"
+                  formControlName="instagramUrl"
+                  inputmode="url"
+                  placeholder="https://instagram.com/…"
+                  class="w-full rounded-lg border border-stone-300 px-4 py-3 outline-none transition-colors focus:border-stone-900"
+                />
+
+                @if (
+                  form.controls.instagramUrl.touched &&
+                  form.controls.instagramUrl.invalid
+                ) {
+                  <p class="mt-2 text-sm text-red-700">
+                    Érvényes http vagy https webcímet adj meg.
+                  </p>
+                }
+              </div>
+
+              <div>
+                <label
+                  for="youtubeUrl"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  YouTube
+                  <span class="font-normal text-stone-400">– opcionális</span>
+                </label>
+
+                <input
+                  id="youtubeUrl"
+                  type="url"
+                  formControlName="youtubeUrl"
+                  inputmode="url"
+                  placeholder="https://youtube.com/…"
+                  class="w-full rounded-lg border border-stone-300 px-4 py-3 outline-none transition-colors focus:border-stone-900"
+                />
+
+                @if (
+                  form.controls.youtubeUrl.touched &&
+                  form.controls.youtubeUrl.invalid
+                ) {
+                  <p class="mt-2 text-sm text-red-700">
+                    Érvényes http vagy https webcímet adj meg.
+                  </p>
+                }
+              </div>
+            </div>
+          </section>
+
+          @if (store.savedSuccessfully()) {
+            <p
+              class="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800"
+              role="status"
+            >
+              A webbeállításokat sikeresen mentettük.
+            </p>
+          }
+
+          @if (store.saveError()) {
+            <p
+              class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+              role="alert"
+            >
+              A webbeállítások mentése sikertelen.
+            </p>
+          }
+        </div>
+
+        <footer
+          class="flex flex-wrap items-center justify-between gap-4 border-t border-stone-200 bg-stone-50 px-6 py-5 sm:px-8"
+        >
+          <p class="text-xs text-stone-500">
+            Utoljára módosítva:
+            {{ settings.updatedAtUtc | date:'yyyy. MM. dd. HH:mm' }}
+          </p>
+
+          <button
+            type="submit"
+            class="rounded-lg bg-stone-950 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800 disabled:cursor-wait disabled:opacity-50"
+            [disabled]="store.isSaving()"
+          >
+            {{
+              store.isSaving()
+                ? 'Mentés…'
+                : 'Módosítások mentése'
+            }}
+          </button>
+        </footer>
+      </form>
+    }
+  </div>
+</main>

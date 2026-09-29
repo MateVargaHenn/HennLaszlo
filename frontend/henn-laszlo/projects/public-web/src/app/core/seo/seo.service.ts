@@ -9,14 +9,20 @@ import {
 } from '@angular/platform-browser';
 
 interface SeoPageMetadata {
-  readonly title: string;
-  readonly description: string;
+  readonly title?: string;
+  readonly description?: string;
   readonly canonicalPath: string;
   readonly type?: 'website' | 'article';
   readonly robots?: string;
   readonly imagePath?: string;
   readonly imageAlt?: string;
   readonly includeSiteName?: boolean;
+}
+
+interface WebsiteSeoDefaults {
+  readonly siteName: string;
+  readonly title: string;
+  readonly description: string;
 }
 
 @Injectable({
@@ -27,8 +33,18 @@ export class SeoService {
   private readonly meta = inject(Meta);
   private readonly title = inject(Title);
 
-  private readonly siteName =
-    'Henn László András';
+  private defaults: WebsiteSeoDefaults = {
+    siteName: 'Henn László András',
+    title:
+      'Henn László András | Festőművész és grafikus',
+    description:
+      'Henn László András Galyasi Miklós ' +
+      'nívódíjas festőművész és grafikus ' +
+      'hivatalos oldala.',
+  };
+
+  private currentMetadata:
+    SeoPageMetadata | null = null;
 
   private readonly siteUrl =
     'https://hennlaszlo.hu';
@@ -36,14 +52,38 @@ export class SeoService {
   private readonly defaultImagePath =
     '/video/medistacio-poster.webp';
 
-  private readonly defaultImageAlt =
-    'Henn László András festőművész és grafikus';
+  configureDefaults(
+    defaults: WebsiteSeoDefaults,
+  ): void {
+    this.defaults = defaults;
+
+    if (this.currentMetadata) {
+      this.applyPageMetadata(
+        this.currentMetadata,
+      );
+    }
+  }
 
   updatePage(metadata: SeoPageMetadata): void {
+    this.currentMetadata = metadata;
+    this.applyPageMetadata(metadata);
+  }
+
+  private applyPageMetadata(
+    metadata: SeoPageMetadata,
+  ): void {
+    const pageTitle =
+      metadata.title ??
+      this.defaults.title;
+
+    const description =
+      metadata.description ??
+      this.defaults.description;
+
     const documentTitle =
       metadata.includeSiteName === false
-        ? metadata.title
-        : `${metadata.title} | ${this.siteName}`;
+        ? pageTitle
+        : `${pageTitle} | ${this.defaults.siteName}`;
 
     const canonicalUrl =
       this.resolveUrl(metadata.canonicalPath);
@@ -56,13 +96,13 @@ export class SeoService {
 
     const imageAlt =
       metadata.imageAlt ??
-      this.defaultImageAlt;
+      `${this.defaults.siteName} festőművész és grafikus`;
 
     this.title.setTitle(documentTitle);
 
     this.updateName(
       'description',
-      metadata.description,
+      description,
     );
 
     this.updateName(
@@ -77,7 +117,7 @@ export class SeoService {
 
     this.updateProperty(
       'og:description',
-      metadata.description,
+      description,
     );
 
     this.updateProperty(
@@ -92,7 +132,7 @@ export class SeoService {
 
     this.updateProperty(
       'og:site_name',
-      this.siteName,
+      this.defaults.siteName,
     );
 
     this.updateProperty(
@@ -127,7 +167,7 @@ export class SeoService {
 
     this.updateName(
       'twitter:description',
-      metadata.description,
+      description,
     );
 
     this.updateName(

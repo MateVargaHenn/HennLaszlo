@@ -57,4 +57,33 @@ describe('SeoService', () => {
       'https://hennlaszlo.hu/teszt',
     );
   });
+
+  it('should use the configured website defaults', () => {
+    service.configureDefaults({
+      siteName: 'Teszt Művész',
+      title: 'Beállított oldalcím',
+      description: 'Beállított leírás.',
+    });
+
+    service.updatePage({
+      canonicalPath: '/',
+      includeSiteName: false,
+    });
+
+    expect(title.getTitle()).toBe(
+      'Beállított oldalcím',
+    );
+
+    expect(
+      meta.getTag(
+        'name="description"',
+      )?.content,
+    ).toBe('Beállított leírás.');
+
+    expect(
+      meta.getTag(
+        'property="og:site_name"',
+      )?.content,
+    ).toBe('Teszt Művész');
+  });
 });

@@ -14,6 +14,9 @@ using Modules.Content.Presentation.Articles.GetAdminList;
 using Modules.Content.Presentation.Articles.GetAdminById;
 using Modules.Content.Presentation.Articles.Update;
 using Modules.Content.Presentation.Articles.Delete;
+using Modules.Content.Presentation.WebsiteSettings.GetPublic;
+using Modules.Content.Presentation.WebsiteSettings.GetAdmin;
+using Modules.Content.Presentation.WebsiteSettings.Update;
 
 
 namespace Modules.Content.Presentation;
@@ -27,6 +30,7 @@ public static class ContentEndpoints
         endpoints.MapGetPublishedContentPageByKey();
         endpoints.MapGetPublishedArticles();
         endpoints.MapGetPublishedArticleBySlug();
+        endpoints.MapGetPublicWebsiteSettings();
 
         return endpoints;
     }
@@ -48,6 +52,9 @@ public static class ContentEndpoints
         endpoints.MapGetAdminArticleById();
         endpoints.MapUpdateArticle();
         endpoints.MapDeleteArticle();
+
+        endpoints.MapGetAdminWebsiteSettings();
+        endpoints.MapUpdateWebsiteSettings();
 
         return endpoints;
     }

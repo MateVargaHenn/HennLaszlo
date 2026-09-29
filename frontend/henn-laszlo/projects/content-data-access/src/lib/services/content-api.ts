@@ -15,6 +15,9 @@ import { CreateArticleResponse } from '../models/create-article-response';
 import { PublishedArticleDetails } from '../models/published-article-details';
 import { PublishedArticleListItem } from '../models/published-article-list-item';
 import { UpdateArticleRequest } from '../models/update-article-request';
+import { AdminWebsiteSettings } from '../models/admin-website-settings';
+import { PublicWebsiteSettings } from '../models/public-website-settings';
+import { UpdateWebsiteSettingsRequest } from '../models/update-website-settings-request';
 
 @Injectable({
   providedIn: 'root',
@@ -75,6 +78,29 @@ export class ContentApi {
     return this.http.put<void>(
       `${this.apiBaseUrl}/api/admin/content-pages/${key}/unpublish`,
       null,
+    );
+  }
+
+  getPublicWebsiteSettings():
+    Observable<PublicWebsiteSettings> {
+    return this.http.get<PublicWebsiteSettings>(
+      `${this.apiBaseUrl}/api/website-settings`,
+    );
+  }
+
+  getAdminWebsiteSettings():
+    Observable<AdminWebsiteSettings> {
+    return this.http.get<AdminWebsiteSettings>(
+      `${this.apiBaseUrl}/api/admin/website-settings`,
+    );
+  }
+
+  updateWebsiteSettings(
+    request: UpdateWebsiteSettingsRequest,
+  ): Observable<void> {
+    return this.http.put<void>(
+      `${this.apiBaseUrl}/api/admin/website-settings`,
+      request,
     );
   }
 
