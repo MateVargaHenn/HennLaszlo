@@ -5,4 +5,6 @@ export interface PublishedArticleListItem {
   readonly titleEn: string | null;
   readonly summaryHu: string | null;
   readonly summaryEn: string | null;
+  readonly createdAtUtc: string;
+  readonly updatedAtUtc: string;
 }

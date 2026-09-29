@@ -30,6 +30,10 @@ import {
   RevealOnScroll,
 } from '../../../../shared/directives/reveal-on-scroll';
 
+import {
+  SsrResponseService,
+} from '../../../../core/http/ssr-response.service';
+
 @Component({
   selector: 'app-article-details',
   imports: [
@@ -45,6 +49,7 @@ export class ArticleDetails {
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private readonly seo = inject(SeoService);
+  private readonly response = inject(SsrResponseService);
 
   protected readonly articleStore =
     inject(PublishedArticleDetailsStore);
@@ -67,25 +72,64 @@ export class ArticleDetails {
         this.articleStore.load(slug);
       });
 
-    effect(() => {
-      const article = this.articleStore.article();
+      effect(() => {
+        const slug =
+          this.route.snapshot.paramMap
+            .get('slug')
+            ?.trim() ?? '';
 
-      if (!article) {
-        return;
-      }
+        const canonicalPath =
+          `/irasok/${
+            encodeURIComponent(slug)
+          }`;
 
-      const description =
-        article.summaryHu?.trim() ||
-        `${article.titleHu}. Írás Henn László András festőművész honlapján.`;
+        if (
+          this.articleStore.isNotFound()
+        ) {
+          this.response.setNotFound();
 
-      this.seo.updatePage({
-        title: article.titleHu,
-        description,
-        canonicalPath:
-          `/irasok/${encodeURIComponent(article.slug)}`,
-        type: 'article',
+          this.seo.updatePage({
+            title:
+              'Az írás nem található',
+            description:
+              'A keresett írás nem található.',
+            canonicalPath,
+            type: 'article',
+            robots:
+              'noindex, nofollow, noarchive',
+          });
+
+          return;
+        }
+
+        if (this.articleStore.error()) {
+          this.response.setStatus(500);
+
+          this.seo.updatePage({
+            title:
+              'Az írás nem érhető el',
+            description:
+              'A keresett írás jelenleg nem érhető el.',
+            canonicalPath,
+            type: 'article',
+            robots:
+              'noindex, follow',
+          });
+
+          return;
+        }
+
+        const article =
+          this.articleStore.article();
+
+        if (!article) {
+          return;
+        }
+
+        // Innentől marad a már elkészített
+        // description + canonicalUrl +
+        // structuredData kód.
       });
-    });
   }
 
   private setLoadingSeo(slug: string): void {

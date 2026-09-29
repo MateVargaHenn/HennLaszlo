@@ -9,4 +9,6 @@ export interface ArtworkListItem {
   readonly heightCm: number | null;
   readonly isFeatured: boolean;
   readonly displayOrder: number;
+  readonly createdAtUtc: string;
+  readonly updatedAtUtc: string;
 }

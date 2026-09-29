@@ -8,6 +8,7 @@ import { ArtworkCard } from '../../components/artwork-card/artwork-card';
 import {
   RevealOnScroll,
 } from '../../../../shared/directives/reveal-on-scroll';
+import { SeoService } from '../../../../core/seo/seo.service';
 
 @Component({
   selector: 'app-artwork-gallery',
@@ -19,6 +20,21 @@ import {
 export class ArtworkGallery {
   protected readonly store =
     inject(PublishedArtworksStore);
+
+    private readonly seo =
+      inject(SeoService);
+
+    constructor() {
+      this.seo.updatePage({
+        title: 'Művek',
+        description:
+          'Henn László András festőművész és grafikus ' +
+          'válogatott festményei, grafikái és egyéb ' +
+          'képzőművészeti alkotásai.',
+        canonicalPath: '/muvek',
+        type: 'website',
+      });
+    }
 
   protected getDimensions(
     widthCm: number | null,

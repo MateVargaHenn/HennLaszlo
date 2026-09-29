@@ -5,4 +5,6 @@ public sealed record PublishedContentPageDetails(
     string TitleHu,
     string? TitleEn,
     string ContentHu,
-    string? ContentEn);
+    string? ContentEn,
+    DateTime CreatedAtUtc,
+    DateTime UpdatedAtUtc);

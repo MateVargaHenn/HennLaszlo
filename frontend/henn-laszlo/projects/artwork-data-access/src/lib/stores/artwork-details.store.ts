@@ -4,6 +4,9 @@ import {
   Injectable,
   signal,
 } from '@angular/core';
+import {
+  HttpErrorResponse,
+} from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ArtworkApi } from '../services/artwork-api';
 
@@ -40,6 +43,18 @@ export class ArtworkDetailsStore {
   readonly error = computed(() =>
     this.resource.error()
   );
+
+  readonly isNotFound =
+  computed(() => {
+    const error =
+      this.resource.error();
+
+    return (
+      error instanceof
+        HttpErrorResponse &&
+      error.status === 404
+    );
+  });
 
   setArtworkId(artworkId: string): void {
     if (this.artworkId() !== artworkId) {

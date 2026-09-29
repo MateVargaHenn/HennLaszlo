@@ -51,6 +51,10 @@ internal sealed class ArtworkConfiguration
         builder.Property(x => x.CreatedAtUtc)
             .IsRequired();
 
+        builder.Property(
+            artwork =>
+                artwork.UpdatedAtUtc);
+
         builder.HasIndex(x => x.IsPublished);
 
         builder.HasIndex(x => new

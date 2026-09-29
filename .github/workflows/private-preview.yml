@@ -36,6 +36,7 @@ jobs:
       - name: Prepare private integration environment
         run: |
           cp .env.example .env
+          printf '\n' >> .env
           cat >> .env <<'ENV'
           POSTGRES_PASSWORD=ci-only-postgres-password
           RABBITMQ_DEFAULT_PASS=ci-only-rabbit-password

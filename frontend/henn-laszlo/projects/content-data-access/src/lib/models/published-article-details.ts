@@ -7,4 +7,6 @@ export interface PublishedArticleDetails {
   readonly summaryEn: string | null;
   readonly contentHu: string;
   readonly contentEn: string | null;
+  readonly createdAtUtc: string;
+  readonly updatedAtUtc: string;
 }

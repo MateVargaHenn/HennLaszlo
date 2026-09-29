@@ -27,7 +27,10 @@ internal class GetArtworksQueryHandler(
                 artwork.WidthCm,
                 artwork.HeightCm,
                 artwork.IsFeatured,
-                artwork.DisplayOrder))
+                artwork.DisplayOrder,
+                artwork.CreatedAtUtc,
+                artwork.UpdatedAtUtc ??
+                artwork.CreatedAtUtc))
             .ToArray();
     }
 }

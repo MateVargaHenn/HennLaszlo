@@ -6,4 +6,6 @@ public sealed record PublishedArticleListItem(
     string TitleHu,
     string? TitleEn,
     string? SummaryHu,
-    string? SummaryEn);
+    string? SummaryEn,
+    DateTime CreatedAtUtc,
+    DateTime UpdatedAtUtc);

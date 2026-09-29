@@ -27,7 +27,9 @@ internal sealed class GetPublishedArticlesQueryHandler(
                         article.TitleHu,
                         article.TitleEn,
                         article.SummaryHu,
-                        article.SummaryEn))
+                        article.SummaryEn,
+                        article.CreatedAtUtc,
+                        article.UpdatedAtUtc))
             .ToList();
     }
 }

@@ -8,4 +8,6 @@ public sealed record VideoListItem(
     string? DescriptionHu,
     string? DescriptionEn,
     string VideoUrl,
-    int DisplayOrder);
+    int DisplayOrder,
+    DateTime CreatedAtUtc,
+    DateTime UpdatedAtUtc);

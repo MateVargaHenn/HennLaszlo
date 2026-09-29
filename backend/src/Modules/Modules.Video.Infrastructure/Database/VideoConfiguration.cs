@@ -41,6 +41,10 @@ internal sealed class VideoConfiguration
         builder.Property(video => video.CreatedAtUtc)
             .IsRequired();
 
+        builder.Property(
+            video =>
+                video.UpdatedAtUtc);
+
         builder.HasIndex(video => new
         {
             video.IsPublished,

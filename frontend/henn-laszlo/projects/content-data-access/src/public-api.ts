@@ -42,8 +42,8 @@ export type {
 } from './lib/models/content-page-key';
 
 export type {
-  PublishedContentPage,
-} from './lib/models/published-content-page';
+  PublishedContentPageDetails,
+} from './lib/models/published-content-page-details';
 
 export type {
   UpsertContentPageRequest,

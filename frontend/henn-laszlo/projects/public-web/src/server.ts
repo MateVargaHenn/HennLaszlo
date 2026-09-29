@@ -6,33 +6,63 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import {
+  createSitemapXml,
+} from './server/sitemap';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+const angularApp =
+  new AngularNodeAppEngine();
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
+app.get(
+  '/sitemap.xml',
+  async (_request, response) => {
+    try {
+      const sitemap =
+        await createSitemapXml();
+
+      response
+        .status(200)
+        .set(
+          'Content-Type',
+          'application/xml; charset=utf-8',
+        )
+        .set(
+          'Cache-Control',
+          'public, max-age=300, ' +
+          'stale-while-revalidate=3600',
+        )
+        .send(sitemap);
+    } catch (error) {
+      console.error(
+        'A sitemap előállítása sikertelen.',
+        error,
+      );
+
+      response
+        .status(503)
+        .type('text/plain')
+        .send(
+          'A sitemap átmenetileg nem érhető el.',
+        );
+    }
+  },
+);
 
 /**
  * Serve static files from /browser
  */
 app.use(
-  express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: false,
-    redirect: false,
-  }),
+  express.static(
+    browserDistFolder,
+    {
+      maxAge: '1y',
+      index: false,
+      redirect: false,
+    },
+  ),
 );
 
 /**

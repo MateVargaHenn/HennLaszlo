@@ -62,6 +62,12 @@ public sealed class Artwork
 
     public DateTime CreatedAtUtc { get; private set; } = DateTime.UtcNow;
 
+	public DateTime? UpdatedAtUtc
+	{
+		get;
+		private set;
+	} = DateTime.UtcNow;
+
     public static Artwork Create(
             string titleHu,
             string? titleEn,
@@ -132,6 +138,7 @@ public sealed class Artwork
 		HeightCm = heightCm;
 		DescriptionHu = NormalizeOptionalText(descriptionHu);
 		DescriptionEn = NormalizeOptionalText(descriptionEn);
+		MarkAsUpdated();
 	}
 
 	public void SetImage(Guid imageId)
@@ -144,6 +151,7 @@ public sealed class Artwork
 		}
 
 		ImageId = imageId;
+		MarkAsUpdated();
 	}
 
 	public void RemoveImage()
@@ -155,6 +163,7 @@ public sealed class Artwork
 		}
 
 		ImageId = null;
+		MarkAsUpdated();
 	}
 
 	public void Publish()
@@ -166,12 +175,14 @@ public sealed class Artwork
 		}
 
 		IsPublished = true;
+		MarkAsUpdated();
 	}
 
 	public void Unpublish()
 	{
 		IsPublished = false;
 		IsFeatured = false;
+		MarkAsUpdated();
 	}
 
 	public void SetFeatured(bool isFeatured)
@@ -183,6 +194,7 @@ public sealed class Artwork
 		}
 
 		IsFeatured = isFeatured;
+		MarkAsUpdated();
 	}
 
 	public void SetDisplayOrder(int displayOrder)
@@ -193,6 +205,7 @@ public sealed class Artwork
 		}
 
 		DisplayOrder = displayOrder;
+		MarkAsUpdated();
 	}
 
 	private static void ValidateYear(int? year)
@@ -225,5 +238,10 @@ public sealed class Artwork
 		{
 			throw new ArgumentOutOfRangeException(nameof(heightCm));
 		}
+	}
+
+	private void MarkAsUpdated()
+	{
+		UpdatedAtUtc = DateTime.UtcNow;
 	}
 }

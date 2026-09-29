@@ -3,6 +3,9 @@ import { provideServerRendering, withRoutes } from '@angular/ssr';
 import { appConfig } from './app.config';
 import { serverRoutes } from './app.routes.server';
 import { HttpInterceptorFn, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import {
+  SEO_SITE_URL,
+} from './core/seo/seo.config';
 
 // SSR can reach the API on the Compose network; the browser keeps same-origin /api URLs.
 const internalApiInterceptor: HttpInterceptorFn = (request, next) => {
@@ -18,6 +21,19 @@ const serverConfig: ApplicationConfig = {
   providers: [
     provideServerRendering(withRoutes(serverRoutes)),
     provideHttpClient(withFetch(), withInterceptors([internalApiInterceptor])),
+    {
+      provide: SEO_SITE_URL,
+      useFactory: () => {
+        const configuredSiteUrl =
+          process.env['PUBLIC_SITE_URL']
+            ?.trim();
+
+        return new URL(
+          configuredSiteUrl ||
+          'http://localhost:4000',
+        ).origin;
+      },
+    },
   ],
 };
 
