@@ -14,7 +14,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/home/pages/home/home')
             .then(component => component.Home),
-        title: 'Henn László András | Galyasi Miklós nívódíjas festőművész, grafikus',
       },
       {
         path: 'bemutatkozas',

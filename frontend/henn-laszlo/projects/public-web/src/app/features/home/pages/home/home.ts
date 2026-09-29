@@ -6,6 +6,9 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PublishedArtworksStore } from 'artwork-data-access';
+import {
+  PublicWebsiteSettingsStore,
+} from 'content-data-access';
 import { ArtworkCard } from '../../../artworks/components/artwork-card/artwork-card';
 import {
   RevealOnScroll,
@@ -26,17 +29,16 @@ export class Home {
   protected readonly artworkStore =
     inject(PublishedArtworksStore);
 
-    constructor() {
-      this.seo.updatePage({
-        title:
-          'Henn László András | Festőművész és grafikus',
-        description:
-          'Henn László András Galyasi Miklós nívódíjas festőművész és grafikus hivatalos oldala: művek, kiállítások, meghívók és írások.',
-        canonicalPath: '/',
-        type: 'website',
-        includeSiteName: false,
-      });
-    }
+  protected readonly websiteSettings =
+    inject(PublicWebsiteSettingsStore);
+
+  constructor() {
+    this.seo.updatePage({
+      canonicalPath: '/',
+      type: 'website',
+      includeSiteName: false,
+    });
+  }
 protected readonly featuredArtworks = computed(() =>
   this.artworkStore
     .artworks()

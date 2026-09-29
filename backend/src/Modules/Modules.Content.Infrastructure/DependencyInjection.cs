@@ -43,6 +43,10 @@ public static class DependencyInjection
             IArticleRepository,
             ArticleRepository>();
 
+        services.AddScoped<
+            IWebsiteSettingsRepository,
+            WebsiteSettingsRepository>();
+
         return services;
     }
 }

@@ -4,6 +4,9 @@ import {
   provideRouter,
 } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
+import {
+  PublicWebsiteSettingsStore,
+} from 'content-data-access';
 
 describe('PublicLayout', () => {
   let component: PublicLayout;
@@ -12,6 +15,26 @@ describe('PublicLayout', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PublicLayout],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        {
+          provide: PublicWebsiteSettingsStore,
+          useValue: {
+            settings: () => ({
+              artistName: 'Teszt Művész',
+              artistSubtitle: 'Festőművész',
+              heroDescription: 'Teszt leírás.',
+              defaultSeoTitle: 'Tesztoldal',
+              defaultSeoDescription:
+                'Teszt SEO-leírás.',
+              facebookUrl: null,
+              instagramUrl: null,
+              youtubeUrl: null,
+            }),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PublicLayout);
@@ -23,10 +46,3 @@ describe('PublicLayout', () => {
     expect(component).toBeTruthy();
   });
 });
-await TestBed.configureTestingModule({
-  imports: [PublicLayout],
-  providers: [
-    provideRouter([]),
-    provideHttpClient(),
-  ],
-}).compileComponents();

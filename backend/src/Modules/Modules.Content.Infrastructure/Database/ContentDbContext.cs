@@ -14,6 +14,9 @@ public sealed class ContentDbContext(
     public DbSet<Domain.Article> Articles =>
     Set<Domain.Article>();
 
+    public DbSet<Domain.WebsiteSettings> WebsiteSettings =>
+        Set<Domain.WebsiteSettings>();
+
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)
     {

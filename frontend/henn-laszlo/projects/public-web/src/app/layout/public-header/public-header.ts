@@ -10,6 +10,9 @@ import {
   RouterLink,
   RouterLinkActive,
 } from '@angular/router';
+import {
+  PublicWebsiteSettingsStore,
+} from 'content-data-access';
 
 type DesktopNavigationGroup =
   | 'career'
@@ -30,6 +33,9 @@ export class PublicHeader {
     inject<ElementRef<HTMLElement>>(
       ElementRef,
     );
+
+  protected readonly websiteSettings =
+    inject(PublicWebsiteSettingsStore);
 
   protected readonly isMenuOpen =
     signal(false);

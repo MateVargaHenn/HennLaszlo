@@ -3,6 +3,9 @@ import {
   TestBed,
 } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import {
+  PublicWebsiteSettingsStore,
+} from 'content-data-access';
 
 import { PublicHeader } from './public-header';
 
@@ -15,6 +18,14 @@ describe('PublicHeader', () => {
       imports: [PublicHeader],
       providers: [
         provideRouter([]),
+        {
+          provide: PublicWebsiteSettingsStore,
+          useValue: {
+            settings: () => ({
+              artistName: 'Teszt Művész',
+            }),
+          },
+        },
       ],
     }).compileComponents();
 
@@ -27,6 +38,12 @@ describe('PublicHeader', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should display the configured artist name', () => {
+    expect(
+      fixture.nativeElement.textContent,
+    ).toContain('Teszt Művész');
   });
 
   it('should display every mobile navigation item', () => {
