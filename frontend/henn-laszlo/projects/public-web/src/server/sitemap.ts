@@ -52,13 +52,13 @@ const contentPages = [
 
 export async function createSitemapXml():
   Promise<string> {
-  const apiOrigin =
-    (
-      process.env[
+    const apiOrigin =
+    new URL(
+        process.env[
         'INTERNAL_API_ORIGIN'
-      ] ??
-      'http://localhost:5270'
-    ).replace(/\/+$/, '');
+        ] ??
+        'http://localhost:5270',
+    ).origin;
 
   const publicSiteUrl =
     new URL(

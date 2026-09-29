@@ -64,8 +64,9 @@ export class SeoService {
     SeoPageMetadata | null = null;
 
   private readonly siteUrl =
-    inject(SEO_SITE_URL)
-      .replace(/\/+$/, '');
+    new URL(
+      inject(SEO_SITE_URL),
+    ).origin;
 
   private readonly defaultImagePath =
     '/video/medistacio-poster.webp';

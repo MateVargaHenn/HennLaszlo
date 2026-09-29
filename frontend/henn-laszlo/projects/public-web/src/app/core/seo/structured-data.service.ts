@@ -48,7 +48,7 @@ export class StructuredDataService {
     let script =
       this.document
         .querySelector<HTMLScriptElement>(
-          'script[data-app-structured-data]',
+          'script#app-structured-data',
         );
 
     if (graph.length === 0) {
@@ -65,10 +65,7 @@ export class StructuredDataService {
       script.type =
         'application/ld+json';
 
-      script.setAttribute(
-        'data-app-structured-data',
-        '',
-      );
+      script.id = 'app-structured-data';
 
       this.document.head.appendChild(
         script,
@@ -80,6 +77,9 @@ export class StructuredDataService {
         '@context':
           'https://schema.org',
         '@graph': graph,
-      }).replace(/</g, '\\u003c');
+      }).replaceAll(
+        '<',
+        String.raw`\u003c`,
+      );
   }
 }

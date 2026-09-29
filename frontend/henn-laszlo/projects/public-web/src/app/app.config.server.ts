@@ -28,10 +28,10 @@ const serverConfig: ApplicationConfig = {
           process.env['PUBLIC_SITE_URL']
             ?.trim();
 
-        return (
+        return new URL(
           configuredSiteUrl ||
-          'http://localhost:4000'
-        ).replace(/\/+$/, '');
+          'http://localhost:4000',
+        ).origin;
       },
     },
   ],
