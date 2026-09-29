@@ -36,7 +36,15 @@ export class AdminWebsiteSettingsStore {
 
   readonly settings =
     computed<AdminWebsiteSettings | null>(
-      () => this.settingsResource.value() ?? null,
+      () => {
+        if (
+          !this.settingsResource.hasValue()
+        ) {
+          return null;
+        }
+
+        return this.settingsResource.value();
+      },
     );
 
   readonly isLoading =
