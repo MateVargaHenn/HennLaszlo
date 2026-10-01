@@ -13,13 +13,16 @@ export const richTextEditorConfig:
 
     plugins: [
       'advlist',
+      'advcode',
+      'advtable',
       'autolink',
       'lists',
       'link',
+      'linkchecker',
+      'markdown',
       'charmap',
       'searchreplace',
       'visualblocks',
-      'code',
       'fullscreen',
       'preview',
       'anchor',
@@ -84,7 +87,7 @@ export const richTextEditorConfig:
 
       blockquote {
         margin: 24px 0;
-        border-left: 4px solid #0891b2;
+        border-left: 4px solid #815c4d;
         background: #f5f5f4;
         padding: 16px 20px;
         color: #57534e;
@@ -92,7 +95,7 @@ export const richTextEditorConfig:
       }
 
       a {
-        color: #0e7490;
+        color: #815c4d;
         text-decoration: underline;
       }
     `,

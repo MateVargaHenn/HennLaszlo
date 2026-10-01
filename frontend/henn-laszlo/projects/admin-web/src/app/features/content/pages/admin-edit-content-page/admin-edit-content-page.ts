@@ -32,19 +32,21 @@ import {
 import {
   environment,
 } from '../../../../../environments/environment';
+import { ContentEditorBase } from '../../../../core/editor/content-editor-base';
 
 @Component({
   selector: 'app-admin-edit-content-page',
   imports: [
     ReactiveFormsModule,
     RouterLink,
-    EditorComponent,
+    EditorComponent
   ],
   templateUrl: './admin-edit-content-page.html',
   styleUrl: './admin-edit-content-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminEditContentPage {
+export class AdminEditContentPage
+  extends ContentEditorBase {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -54,7 +56,7 @@ export class AdminEditContentPage {
   protected readonly store =
     inject(AdminContentPageDetailsStore);
 
-  protected readonly form = new FormGroup({
+  protected override readonly form = new FormGroup({
     titleHu: new FormControl('', {
       nonNullable: true,
       validators: [
@@ -89,6 +91,7 @@ export class AdminEditContentPage {
     richTextEditorConfig;
 
   constructor() {
+    super();
     const key =
       this.route.snapshot.paramMap.get('key');
 
@@ -104,6 +107,12 @@ export class AdminEditContentPage {
 
       if (!contentPage) {
         return;
+      }
+
+      if (contentPage.contentEn?.trim()) {
+        this.isEnglishContentEditorVisible.set(
+          true,
+        );
       }
 
       this.form.reset(
@@ -142,6 +151,8 @@ export class AdminEditContentPage {
       });
 
       this.listStore.reload();
+
+      this.form.markAsPristine();
 
       await this.router.navigate(['/content']);
     }
