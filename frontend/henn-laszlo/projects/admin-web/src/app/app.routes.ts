@@ -133,7 +133,7 @@ export const routes: Routes = [
         './features/content/pages/article-list/article-list'
       ).then(
         (component) => component.ArticleList,
-      ),
+    ),
     canActivate: [adminAuthGuard],
     
   },

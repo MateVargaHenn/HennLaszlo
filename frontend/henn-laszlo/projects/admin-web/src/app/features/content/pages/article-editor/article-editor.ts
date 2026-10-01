@@ -4,7 +4,6 @@ import {
   effect,
   inject,
   signal,
-  HostListener,
   DestroyRef
 } from '@angular/core';
 import {
@@ -47,8 +46,8 @@ import {
   richTextEditorConfig,
 } from '../../config/rich-text-editor-config';
 import {
-  PendingChangesAware,
-} from '../../../../core/editor/pending-changes.guard';
+  ContentEditorBase,
+} from '../../../../core/editor/content-editor-base';
 
 interface ArticleDraftValue {
   readonly slug: string;
@@ -72,7 +71,7 @@ interface ArticleDraftValue {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArticleEditor 
-  implements PendingChangesAware {
+  extends ContentEditorBase {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -98,10 +97,7 @@ export class ArticleEditor
   protected readonly isDeleteConfirmationOpen =
     signal(false);
 
-  protected readonly isEnglishContentEditorVisible =
-    signal(false);
-
-  protected readonly form = new FormGroup({
+  protected override readonly form = new FormGroup({
     slug: new FormControl('', {
       nonNullable: true,
       validators: [
@@ -167,6 +163,7 @@ export class ArticleEditor
     inject(LocalDraftStorage);
 
   constructor() {
+    super();
     this.form.valueChanges
       .pipe(
         debounceTime(1000),
@@ -228,33 +225,6 @@ export class ArticleEditor
 
       this.restoreDraft();
     });
-  }
-
-  public hasUnsavedChanges(): boolean {
-    return this.form.dirty;
-  }
-
-  @HostListener(
-    'window:beforeunload',
-    ['$event'],
-  )
-  protected handleBeforeUnload(
-    event: BeforeUnloadEvent,
-  ): void {
-    if (!this.hasUnsavedChanges()) {
-      return;
-    }
-
-    event.preventDefault();
-    event.returnValue =
-      'Nem mentett módosítások vannak.';
-  }
-
-  protected enableEnglishContentEditor():
-    void {
-    this.isEnglishContentEditorVisible.set(
-      true,
-    );
   }
 
   protected async save(): Promise<void> {

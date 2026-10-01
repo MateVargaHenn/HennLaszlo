@@ -2,9 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
-  HostListener,
   inject,
-  signal,
 } from '@angular/core';
 import {
   FormControl,
@@ -32,12 +30,9 @@ import {
 } from '../../config/rich-text-editor-config';
 
 import {
-  PendingChangesAware
-} from '../../../../core/editor/pending-changes.guard'
-
-import {
   environment,
 } from '../../../../../environments/environment';
+import { ContentEditorBase } from '../../../../core/editor/content-editor-base';
 
 @Component({
   selector: 'app-admin-edit-content-page',
@@ -51,7 +46,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminEditContentPage
-  implements PendingChangesAware {
+  extends ContentEditorBase {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -61,10 +56,7 @@ export class AdminEditContentPage
   protected readonly store =
     inject(AdminContentPageDetailsStore);
 
-  protected readonly isEnglishContentEditorVisible =
-    signal(false);
-
-  protected readonly form = new FormGroup({
+  protected override readonly form = new FormGroup({
     titleHu: new FormControl('', {
       nonNullable: true,
       validators: [
@@ -99,6 +91,7 @@ export class AdminEditContentPage
     richTextEditorConfig;
 
   constructor() {
+    super();
     const key =
       this.route.snapshot.paramMap.get('key');
 
@@ -134,33 +127,6 @@ export class AdminEditContentPage
         },
       );
     });
-  }
-
-  public hasUnsavedChanges(): boolean {
-    return this.form.dirty;
-  }
-
-  @HostListener(
-    'window:beforeunload',
-    ['$event'],
-  )
-  protected handleBeforeUnload(
-    event: BeforeUnloadEvent,
-  ): void {
-    if (!this.hasUnsavedChanges()) {
-      return;
-    }
-
-    event.preventDefault();
-    event.returnValue =
-      'Nem mentett módosítások vannak.';
-  }
-
-  protected enableEnglishContentEditor():
-    void {
-    this.isEnglishContentEditorVisible.set(
-      true,
-    );
   }
 
   protected async save(): Promise<void> {
