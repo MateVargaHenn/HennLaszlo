@@ -34,6 +34,7 @@ internal sealed class GetAdminWebsiteSettingsQueryHandler(
             settings.FacebookUrl,
             settings.InstagramUrl,
             settings.YoutubeUrl,
+            settings.EmailAddress,
             settings.UpdatedAtUtc);
     }
 }

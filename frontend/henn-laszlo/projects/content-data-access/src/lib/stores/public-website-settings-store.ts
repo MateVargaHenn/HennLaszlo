@@ -27,7 +27,8 @@ const fallbackSettings: PublicWebsiteSettings = {
     'meghívók, videók és írások.',
   facebookUrl: null,
   instagramUrl: null,
-  youtubeUrl: null,
+  youtubeUrl: 'https://www.youtube.com/@LA_Henn',
+  emailAddress: 'hennlaa@gmail.com',
 };
 
 @Injectable({

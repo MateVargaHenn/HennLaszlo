@@ -7,4 +7,5 @@ export interface PublicWebsiteSettings {
   readonly facebookUrl: string | null;
   readonly instagramUrl: string | null;
   readonly youtubeUrl: string | null;
+  readonly emailAddress: string | null;
 }

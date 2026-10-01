@@ -39,6 +39,7 @@ describe('Home', () => {
               facebookUrl: null,
               instagramUrl: null,
               youtubeUrl: null,
+              emailAddress: null,
             }),
           },
         },

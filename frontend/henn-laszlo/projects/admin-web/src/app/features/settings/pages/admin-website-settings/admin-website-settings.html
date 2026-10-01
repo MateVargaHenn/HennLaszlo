@@ -333,6 +333,33 @@
                   </p>
                 }
               </div>
+                            <div>
+                <label
+                  for="emailAddress"
+                  class="mb-2 block text-sm font-medium"
+                >
+                  Email cím
+                  <span class="font-normal text-stone-400">– opcionális</span>
+                </label>
+
+                <input
+                  id="emailAddress"
+                  type="email"
+                  formControlName="emailAddress"
+                  inputmode="email"
+                  placeholder="example@domain.com"
+                  class="w-full rounded-lg border border-stone-300 px-4 py-3 outline-none transition-colors focus:border-stone-900"
+                />
+
+                @if (
+                  form.controls.emailAddress.touched &&
+                  form.controls.emailAddress.invalid
+                ) {
+                  <p class="mt-2 text-sm text-red-700">
+                    Érvényes email címet adj meg.
+                  </p>
+                }
+              </div>
             </div>
           </section>
 

@@ -169,21 +169,6 @@ app-content-page .content-rich-text .contact-card__address {
 app-content-page .content-rich-text .contact-card__link {
   display: inline-flex;
   width: fit-content;
-  max-width: 100%;
-  min-height: 0;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
-  border: 1px solid #155e75;
-  border-radius: 0.75rem;
-  background: rgb(8 145 178 / 8%);
-  padding: 0.9rem 1.2rem;
-  line-height: 1.4;
-  text-decoration: none;
-  transition:
-    border-color 150ms ease,
-    background-color 150ms ease,
-    transform 150ms ease;
 }
 
 app-content-page .content-rich-text .contact-card__link:hover {

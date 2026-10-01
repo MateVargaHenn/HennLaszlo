@@ -10,5 +10,6 @@ public sealed record UpdateWebsiteSettingsCommand(
     string DefaultSeoDescription,
     string? FacebookUrl,
     string? InstagramUrl,
-    string? YoutubeUrl)
+    string? YoutubeUrl,
+    string? EmailAddress)
     : IRequest;
