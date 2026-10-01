@@ -27,7 +27,8 @@ internal sealed class UpdateWebsiteSettingsCommandHandler(
                 request.DefaultSeoDescription,
                 request.FacebookUrl,
                 request.InstagramUrl,
-                request.YoutubeUrl);
+                request.YoutubeUrl,
+                request.EmailAddress);
 
             websiteSettingsRepository.Add(settings);
         }
@@ -41,7 +42,8 @@ internal sealed class UpdateWebsiteSettingsCommandHandler(
                 request.DefaultSeoDescription,
                 request.FacebookUrl,
                 request.InstagramUrl,
-                request.YoutubeUrl);
+                request.YoutubeUrl,
+                request.EmailAddress);
         }
 
         await unitOfWork.SaveChangesAsync(

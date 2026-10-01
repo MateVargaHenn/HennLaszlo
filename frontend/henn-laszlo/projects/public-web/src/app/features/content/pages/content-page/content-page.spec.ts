@@ -30,6 +30,26 @@ describe('ContentPage', () => {
           provide: ContentApi,
           useValue: {
             getPublishedContentPage,
+            getPublicWebsiteSettings:
+          vi.fn(() =>
+            of({
+              artistName:
+                'Henn László András',
+              artistSubtitle:
+                'Festőművész, grafikus',
+              heroDescription:
+                'Bemutatkozás',
+              defaultSeoTitle:
+                'Henn László András',
+              defaultSeoDescription:
+                'Hivatalos weboldal',
+              facebookUrl: null,
+              instagramUrl: null,
+              youtubeUrl: null,
+              emailAddress:
+                'hennlaa@gmail.com',
+            }),
+            ),
           },
         },
       ],

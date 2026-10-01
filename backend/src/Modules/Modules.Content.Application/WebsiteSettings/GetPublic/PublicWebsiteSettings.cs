@@ -8,4 +8,5 @@ public sealed record PublicWebsiteSettings(
     string DefaultSeoDescription,
     string? FacebookUrl,
     string? InstagramUrl,
-    string? YoutubeUrl);
+    string? YoutubeUrl,
+    string? EmailAddress);

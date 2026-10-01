@@ -31,6 +31,7 @@ describe('PublicLayout', () => {
               facebookUrl: null,
               instagramUrl: null,
               youtubeUrl: null,
+              emailAddress: null,
             }),
           },
         },

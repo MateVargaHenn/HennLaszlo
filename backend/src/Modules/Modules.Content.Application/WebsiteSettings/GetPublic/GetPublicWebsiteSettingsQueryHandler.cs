@@ -32,6 +32,7 @@ internal sealed class GetPublicWebsiteSettingsQueryHandler(
             settings.DefaultSeoDescription,
             settings.FacebookUrl,
             settings.InstagramUrl,
-            settings.YoutubeUrl);
+            settings.YoutubeUrl,
+            settings.EmailAddress);
     }
 }

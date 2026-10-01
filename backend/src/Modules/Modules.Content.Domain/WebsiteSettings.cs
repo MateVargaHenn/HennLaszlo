@@ -1,3 +1,5 @@
+using System.Net.Mail;
+
 namespace Modules.Content.Domain;
 
 public sealed class WebsiteSettings
@@ -8,6 +10,7 @@ public sealed class WebsiteSettings
     public const int SeoTitleMaxLength = 200;
     public const int SeoDescriptionMaxLength = 500;
     public const int UrlMaxLength = 2048;
+    public const int EmailAddressMaxLength = 254;
 
     public static readonly Guid SingletonId =
         Guid.Parse(
@@ -25,7 +28,8 @@ public sealed class WebsiteSettings
         string defaultSeoDescription,
         string? facebookUrl,
         string? instagramUrl,
-        string? youtubeUrl)
+        string? youtubeUrl,
+        string? emailAddress)
     {
         Id = SingletonId;
 
@@ -37,7 +41,8 @@ public sealed class WebsiteSettings
             defaultSeoDescription,
             facebookUrl,
             instagramUrl,
-            youtubeUrl);
+            youtubeUrl,
+            emailAddress);
     }
 
     public Guid Id { get; private set; } =
@@ -64,6 +69,8 @@ public sealed class WebsiteSettings
 
     public string? YoutubeUrl { get; private set; }
 
+    public string? EmailAddress { get; private set; }
+
     public DateTime UpdatedAtUtc { get; private set; } =
         DateTime.UtcNow;
 
@@ -75,7 +82,8 @@ public sealed class WebsiteSettings
         string defaultSeoDescription,
         string? facebookUrl,
         string? instagramUrl,
-        string? youtubeUrl)
+        string? youtubeUrl,
+        string? emailAddress)
     {
         return new WebsiteSettings(
             artistName,
@@ -85,7 +93,8 @@ public sealed class WebsiteSettings
             defaultSeoDescription,
             facebookUrl,
             instagramUrl,
-            youtubeUrl);
+            youtubeUrl,
+            emailAddress);
     }
 
     public void Update(
@@ -96,7 +105,8 @@ public sealed class WebsiteSettings
         string defaultSeoDescription,
         string? facebookUrl,
         string? instagramUrl,
-        string? youtubeUrl)
+        string? youtubeUrl,
+        string? emailAddress)
     {
         SetValues(
             artistName,
@@ -106,7 +116,8 @@ public sealed class WebsiteSettings
             defaultSeoDescription,
             facebookUrl,
             instagramUrl,
-            youtubeUrl);
+            youtubeUrl,
+            emailAddress);
 
         UpdatedAtUtc = DateTime.UtcNow;
     }
@@ -119,7 +130,8 @@ public sealed class WebsiteSettings
         string defaultSeoDescription,
         string? facebookUrl,
         string? instagramUrl,
-        string? youtubeUrl)
+        string? youtubeUrl,
+        string? emailAddress)
     {
         ArtistName = NormalizeRequired(
             artistName,
@@ -157,6 +169,40 @@ public sealed class WebsiteSettings
         YoutubeUrl = NormalizeOptionalUrl(
             youtubeUrl,
             nameof(youtubeUrl));
+        
+        EmailAddress = NormalizeOptionalEmail(
+            emailAddress,
+            nameof(emailAddress));
+    }
+
+    private static string? NormalizeOptionalEmail(
+    string? value,
+    string parameterName)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        string normalized = value.Trim();
+
+        if (
+            normalized.Length >
+                EmailAddressMaxLength ||
+            !MailAddress.TryCreate(
+                normalized,
+                out MailAddress? address) ||
+            !string.Equals(
+                address.Address,
+                normalized,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            throw new ArgumentException(
+                "A megadott e-mail-cím érvénytelen.",
+                parameterName);
+        }
+
+        return normalized;
     }
 
     private static string NormalizeRequired(

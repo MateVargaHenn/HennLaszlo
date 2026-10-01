@@ -95,6 +95,13 @@ export class AdminWebsiteSettings {
         ),
       ],
     }),
+    emailAddress: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        Validators.maxLength(254),
+        Validators.email,
+      ],
+    }),
   });
 
   constructor() {
@@ -116,6 +123,7 @@ export class AdminWebsiteSettings {
           facebookUrl: settings.facebookUrl ?? '',
           instagramUrl: settings.instagramUrl ?? '',
           youtubeUrl: settings.youtubeUrl ?? '',
+          emailAddress: settings.emailAddress ?? ''
         },
         {
           emitEvent: false,
@@ -155,6 +163,9 @@ export class AdminWebsiteSettings {
         ),
         youtubeUrl: this.normalizeOptionalUrl(
           value.youtubeUrl,
+        ),
+        emailAddress: this.normalizeOptionalUrl(
+          value.emailAddress,
         ),
       });
 

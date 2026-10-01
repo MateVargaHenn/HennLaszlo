@@ -10,4 +10,5 @@ public sealed record AdminWebsiteSettingsDetails(
     string? FacebookUrl,
     string? InstagramUrl,
     string? YoutubeUrl,
+    string? EmailAddress,
     DateTime UpdatedAtUtc);

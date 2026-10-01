@@ -41,7 +41,8 @@ describe('AdminWebsiteSettings', () => {
                 facebookUrl: null,
                 instagramUrl: null,
                 youtubeUrl:
-                  'https://youtube.com/@hennlaszlo',
+                  'https://youtube.com/@LA_Henn',
+                emailAddress: 'hennlaa@gmail.com',
                 updatedAtUtc:
                   '2026-09-29T10:00:00Z',
               }),

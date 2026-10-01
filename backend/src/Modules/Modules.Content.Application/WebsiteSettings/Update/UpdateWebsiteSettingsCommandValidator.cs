@@ -57,6 +57,17 @@ internal sealed class UpdateWebsiteSettingsCommandValidator
 
         AddOptionalUrlRule(
             command => command.YoutubeUrl);
+            
+        RuleFor(command => command.EmailAddress)
+            .MaximumLength(
+                WebsiteSettingsEntity
+                    .EmailAddressMaxLength)
+            .EmailAddress()
+            .When(command =>
+                !string.IsNullOrWhiteSpace(
+                    command.EmailAddress))
+            .WithMessage(
+                "Érvényes e-mail-címet adjon meg.");
     }
 
     private void AddOptionalUrlRule(

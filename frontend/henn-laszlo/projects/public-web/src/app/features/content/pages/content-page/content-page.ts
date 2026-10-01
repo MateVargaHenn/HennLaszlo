@@ -12,6 +12,7 @@ import {
 import {
   ContentPageKey,
   PublishedContentPageStore,
+  PublicWebsiteSettingsStore,
 } from 'content-data-access';
 
 import {
@@ -88,6 +89,14 @@ export class ContentPage {
       canonicalPath: '/irasok',
     },
   };
+
+  protected readonly websiteSettings =
+    inject(PublicWebsiteSettingsStore);
+
+  protected readonly isContactPage =
+    this.route.snapshot
+      .data['contentPageKey'] ===
+    'contact';
 
   constructor() {
     const key =

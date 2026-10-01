@@ -58,6 +58,9 @@ internal sealed class WebsiteSettingsConfiguration
         builder.Property(settings => settings.UpdatedAtUtc)
             .IsRequired();
 
+            builder.Property(settings => settings.EmailAddress)
+                .HasMaxLength(WebsiteSettings.EmailAddressMaxLength);
+
         builder.HasData(
             new
             {
@@ -89,7 +92,8 @@ internal sealed class WebsiteSettingsConfiguration
                     0,
                     0,
                     0,
-                    DateTimeKind.Utc)
+                    DateTimeKind.Utc),
+                EmailAddress = "hennlaa@gmail.com"
             });
     }
 }

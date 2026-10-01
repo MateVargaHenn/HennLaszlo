@@ -8,4 +8,5 @@ internal sealed record UpdateWebsiteSettingsRequest(
     string DefaultSeoDescription,
     string? FacebookUrl,
     string? InstagramUrl,
+    string? EmailAddress,
     string? YoutubeUrl);

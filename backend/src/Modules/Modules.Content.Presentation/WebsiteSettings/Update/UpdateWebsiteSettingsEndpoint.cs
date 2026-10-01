@@ -35,7 +35,8 @@ internal static class UpdateWebsiteSettingsEndpoint
                 request.DefaultSeoDescription,
                 request.FacebookUrl,
                 request.InstagramUrl,
-                request.YoutubeUrl),
+                request.YoutubeUrl,
+                request.EmailAddress),
             cancellationToken);
 
         return Results.NoContent();
