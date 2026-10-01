@@ -2,6 +2,9 @@ import { Routes } from '@angular/router';
 import {
   adminAuthGuard,
 } from './core/auth/admin-auth.guard';
+import {
+  pendingChangesGuard,
+} from './core/editor/pending-changes.guard';
 
 export const routes: Routes = [
   {
@@ -121,6 +124,7 @@ export const routes: Routes = [
           component.AdminEditContentPage,
       ),
     canActivate: [adminAuthGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'content/articles',
@@ -131,6 +135,7 @@ export const routes: Routes = [
         (component) => component.ArticleList,
       ),
     canActivate: [adminAuthGuard],
+    
   },
   {
     path: 'content/articles/new',
@@ -141,6 +146,7 @@ export const routes: Routes = [
         (component) => component.ArticleEditor,
       ),
     canActivate: [adminAuthGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'content/articles/:articleId/edit',
@@ -151,6 +157,7 @@ export const routes: Routes = [
         (component) => component.ArticleEditor,
       ),
     canActivate: [adminAuthGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'settings',

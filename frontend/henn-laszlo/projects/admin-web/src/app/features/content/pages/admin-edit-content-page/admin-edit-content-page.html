@@ -165,7 +165,7 @@
                 </p>
             </div>
 
-            <div class="grid gap-5 xl:grid-cols-2">
+            <div class="space-y-8">
               <div>
                 <label
                   for="contentHu"
@@ -176,10 +176,10 @@
                 </label>
 
                 <editor
-                id="contentHu"
-                [apiKey]="tinyMceApiKey"
-                [init]="editorConfig"
-                formControlName="contentHu"
+                  id="contentHu"
+                  [apiKey]="tinyMceApiKey"
+                  [init]="editorConfig"
+                  formControlName="contentHu"
                 ></editor>
 
                 @if (
@@ -192,24 +192,44 @@
                 }
               </div>
 
-              <div>
-                <label
-                  for="contentEn"
-                  class="mb-2 block text-sm font-medium"
-                >
-                  Angol tartalom
-                  <span class="font-normal text-stone-400">
-                    – opcionális
-                  </span>
-                </label>
+              @if (isEnglishContentEditorVisible()) {
+                <div>
+                  <label
+                    for="contentEn"
+                    class="mb-2 block text-sm font-medium"
+                  >
+                    Angol tartalom
+                    <span class="font-normal text-stone-400">
+                      – opcionális
+                    </span>
+                  </label>
 
-                <editor
-                id="contentEn"
-                [apiKey]="tinyMceApiKey"
-                [init]="editorConfig"
-                formControlName="contentEn"
-                ></editor>
+                  <editor
+                    id="contentEn"
+                    [apiKey]="tinyMceApiKey"
+                    [init]="editorConfig"
+                    formControlName="contentEn"
+                  ></editor>
+                </div>
+              }
+              @else {
+              <div
+                class="flex flex-col gap-4 rounded-lg border border-dashed border-stone-300 bg-stone-50 p-5 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <p class="text-sm text-stone-600">
+                  Az angol szövegszerkesztő csak szükség esetén
+                  töltődik be.
+                </p>
+
+                <button
+                  type="button"
+                  class="shrink-0 rounded-lg border border-cyan-700 bg-white px-4 py-2 text-sm font-semibold text-cyan-800 transition-colors hover:bg-cyan-50"
+                  (click)="enableEnglishContentEditor()"
+                >
+                  Angol tartalom hozzáadása
+                </button>
               </div>
+              }
             </div>
           </section>
 

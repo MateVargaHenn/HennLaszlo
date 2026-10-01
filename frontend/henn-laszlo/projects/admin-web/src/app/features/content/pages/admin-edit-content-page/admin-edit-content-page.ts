@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
+  HostListener,
   inject,
+  signal,
 } from '@angular/core';
 import {
   FormControl,
@@ -30,6 +32,10 @@ import {
 } from '../../config/rich-text-editor-config';
 
 import {
+  PendingChangesAware
+} from '../../../../core/editor/pending-changes.guard'
+
+import {
   environment,
 } from '../../../../../environments/environment';
 
@@ -38,13 +44,14 @@ import {
   imports: [
     ReactiveFormsModule,
     RouterLink,
-    EditorComponent,
+    EditorComponent
   ],
   templateUrl: './admin-edit-content-page.html',
   styleUrl: './admin-edit-content-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminEditContentPage {
+export class AdminEditContentPage
+  implements PendingChangesAware {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -53,6 +60,9 @@ export class AdminEditContentPage {
 
   protected readonly store =
     inject(AdminContentPageDetailsStore);
+
+  protected readonly isEnglishContentEditorVisible =
+    signal(false);
 
   protected readonly form = new FormGroup({
     titleHu: new FormControl('', {
@@ -106,6 +116,12 @@ export class AdminEditContentPage {
         return;
       }
 
+      if (contentPage.contentEn?.trim()) {
+        this.isEnglishContentEditorVisible.set(
+          true,
+        );
+      }
+
       this.form.reset(
         {
           titleHu: contentPage.titleHu,
@@ -118,6 +134,33 @@ export class AdminEditContentPage {
         },
       );
     });
+  }
+
+  public hasUnsavedChanges(): boolean {
+    return this.form.dirty;
+  }
+
+  @HostListener(
+    'window:beforeunload',
+    ['$event'],
+  )
+  protected handleBeforeUnload(
+    event: BeforeUnloadEvent,
+  ): void {
+    if (!this.hasUnsavedChanges()) {
+      return;
+    }
+
+    event.preventDefault();
+    event.returnValue =
+      'Nem mentett módosítások vannak.';
+  }
+
+  protected enableEnglishContentEditor():
+    void {
+    this.isEnglishContentEditorVisible.set(
+      true,
+    );
   }
 
   protected async save(): Promise<void> {
@@ -142,6 +185,8 @@ export class AdminEditContentPage {
       });
 
       this.listStore.reload();
+
+      this.form.markAsPristine();
 
       await this.router.navigate(['/content']);
     }

@@ -94,8 +94,8 @@ describe('AdminWebsiteSettings', () => {
           'Henn László András hivatalos weboldala.',
         facebookUrl: null,
         instagramUrl: null,
-        youtubeUrl:
-          'https://youtube.com/@hennlaszlo',
+        youtubeUrl: 'https://youtube.com/@LA_Henn',
+        emailAddress: 'hennlaa@gmail.com',
       });
   });
 });

@@ -4,7 +4,19 @@ import {
   effect,
   inject,
   signal,
+  HostListener,
+  DestroyRef
 } from '@angular/core';
+import {
+  takeUntilDestroyed,
+} from '@angular/core/rxjs-interop';
+import {
+  debounceTime,
+} from 'rxjs';
+
+import {
+  LocalDraftStorage,
+} from '../../../../core/drafts/local-draft-storage';
 import {
   FormControl,
   FormGroup,
@@ -34,6 +46,19 @@ import {
 import {
   richTextEditorConfig,
 } from '../../config/rich-text-editor-config';
+import {
+  PendingChangesAware,
+} from '../../../../core/editor/pending-changes.guard';
+
+interface ArticleDraftValue {
+  readonly slug: string;
+  readonly titleHu: string;
+  readonly titleEn: string;
+  readonly summaryHu: string;
+  readonly summaryEn: string;
+  readonly contentHu: string;
+  readonly contentEn: string;
+}
 
 @Component({
   selector: 'app-article-editor',
@@ -46,7 +71,8 @@ import {
   styleUrl: './article-editor.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArticleEditor {
+export class ArticleEditor 
+  implements PendingChangesAware {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -59,10 +85,20 @@ export class ArticleEditor {
   private readonly articleId =
     this.route.snapshot.paramMap.get('articleId');
 
+  private readonly draftKey =
+    this.articleId
+      ? `article:${this.articleId}`
+      : 'article:new';
+
+  private hasCheckedDraft = false;
+
   protected readonly isEditMode =
     this.articleId !== null;
 
   protected readonly isDeleteConfirmationOpen =
+    signal(false);
+
+  protected readonly isEnglishContentEditorVisible =
     signal(false);
 
   protected readonly form = new FormGroup({
@@ -124,7 +160,28 @@ export class ArticleEditor {
   protected readonly editorConfig =
     richTextEditorConfig;
 
+  private readonly destroyRef =
+    inject(DestroyRef);
+
+  private readonly draftStorage =
+    inject(LocalDraftStorage);
+
   constructor() {
+    this.form.valueChanges
+      .pipe(
+        debounceTime(1000),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => {
+        if (!this.form.dirty) {
+          return;
+        }
+
+        this.draftStorage.save<ArticleDraftValue>(
+          this.draftKey,
+          this.form.getRawValue(),
+        );
+      });
     if (this.articleId) {
       this.form.controls.slug.disable({
         emitEvent: false,
@@ -134,6 +191,7 @@ export class ArticleEditor {
     }
     else {
       this.store.clear();
+      this.restoreDraft();
     }
 
     effect(() => {
@@ -145,6 +203,12 @@ export class ArticleEditor {
         article.id !== this.articleId
       ) {
         return;
+      }
+
+      if (article.contentEn?.trim()) {
+        this.isEnglishContentEditorVisible.set(
+          true,
+        );
       }
 
       this.form.reset(
@@ -161,7 +225,36 @@ export class ArticleEditor {
           emitEvent: false,
         },
       );
+
+      this.restoreDraft();
     });
+  }
+
+  public hasUnsavedChanges(): boolean {
+    return this.form.dirty;
+  }
+
+  @HostListener(
+    'window:beforeunload',
+    ['$event'],
+  )
+  protected handleBeforeUnload(
+    event: BeforeUnloadEvent,
+  ): void {
+    if (!this.hasUnsavedChanges()) {
+      return;
+    }
+
+    event.preventDefault();
+    event.returnValue =
+      'Nem mentett módosítások vannak.';
+  }
+
+  protected enableEnglishContentEditor():
+    void {
+    this.isEnglishContentEditorVisible.set(
+      true,
+    );
   }
 
   protected async save(): Promise<void> {
@@ -202,6 +295,12 @@ export class ArticleEditor {
 
         this.listStore.reload();
 
+        this.form.markAsPristine();
+
+        this.draftStorage.remove(
+          this.draftKey,
+        );
+
         await this.router.navigate([
           '/content/articles',
         ]);
@@ -218,6 +317,12 @@ export class ArticleEditor {
         await this.store.create(createRequest);
 
       this.listStore.reload();
+
+      this.form.markAsPristine();
+
+      this.draftStorage.remove(
+        this.draftKey,
+      );
 
       await this.router.navigate([
         '/content/articles',
@@ -323,12 +428,79 @@ export class ArticleEditor {
 
       this.listStore.reload();
 
+      this.form.markAsPristine();
+
+      this.draftStorage.remove(
+        this.draftKey,
+      );
+
       await this.router.navigate([
         '/content/articles',
       ]);
     }
     catch {
       // A store eltárolja a hibát.
+    }
+  }
+
+  private restoreDraft(): void {
+  if (this.hasCheckedDraft) {
+    return;
+  }
+
+  this.hasCheckedDraft = true;
+
+  const draft =
+    this.draftStorage.load<ArticleDraftValue>(
+      this.draftKey,
+    );
+
+  if (!draft) {
+    return;
+  }
+
+  if (
+    JSON.stringify(draft.value) ===
+    JSON.stringify(this.form.getRawValue())
+  ) {
+    this.draftStorage.remove(
+      this.draftKey,
+    );
+
+    return;
+  }
+
+  const savedAt =
+    new Date(
+      draft.savedAtUtc,
+    ).toLocaleString('hu-HU');
+
+  const shouldRestore = window.confirm(
+    'Találtunk egy nem mentett piszkozatot ' +
+    `(${savedAt}). Visszaállítod?`,
+  );
+
+  if (!shouldRestore) {
+    this.draftStorage.remove(
+      this.draftKey,
+    );
+
+    return;
+  }
+
+  this.form.patchValue(
+      draft.value,
+      {
+        emitEvent: false,
+      },
+    );
+
+    this.form.markAsDirty();
+
+    if (draft.value.contentEn.trim()) {
+      this.isEnglishContentEditorVisible.set(
+        true,
+      );
     }
   }
 
