@@ -1,5 +1,5 @@
 app-content-page .content-rich-text {
-  color: #d6d3d1;
+  color: #57534e;
   font-size: 1rem;
   line-height: 1.8;
 }
@@ -15,7 +15,7 @@ app-content-page .content-rich-text > :last-child {
 app-content-page .content-rich-text h2 {
   margin-top: 2.75rem;
   margin-bottom: 1rem;
-  color: #fafaf9;
+  color: #1c1917;
   font-family: Georgia, serif;
   font-size: clamp(1.5rem, 3vw, 2rem);
   line-height: 1.25;
@@ -24,7 +24,7 @@ app-content-page .content-rich-text h2 {
 app-content-page .content-rich-text h3 {
   margin-top: 2rem;
   margin-bottom: 0.75rem;
-  color: #f5f5f4;
+  color: #292524;
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -56,34 +56,36 @@ app-content-page .content-rich-text li + li {
 }
 
 app-content-page .content-rich-text strong {
-  color: #fafaf9;
+  color: #292524;
   font-weight: 600;
 }
 
 app-content-page .content-rich-text a {
-  color: #67e8f9;
+  color: #815c4d;
   text-decoration: underline;
-  text-decoration-color: #155e75;
+  text-decoration-color: #b9a297;
   text-underline-offset: 0.2em;
   transition: color 150ms ease;
 }
 
 app-content-page .content-rich-text a:hover {
-  color: #cffafe;
+  color: #634438;
 }
 
 app-content-page .content-rich-text blockquote {
   margin: 2rem 0;
-  border-left: 3px solid #67e8f9;
-  padding: 0.5rem 0 0.5rem 1.25rem;
-  color: #a8a29e;
+  border-left: 3px solid #815c4d;
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: #f5f3f1;
+  padding: 1rem 1.25rem;
+  color: #57534e;
   font-style: italic;
 }
 
 app-content-page .content-rich-text hr {
   margin: 2.5rem 0;
   border: 0;
-  border-top: 1px solid #292524;
+  border-top: 1px solid #d6d3d1;
 }
 
 app-content-page .content-rich-text img {
@@ -103,30 +105,30 @@ app-content-page .content-rich-text table {
 
 app-content-page .content-rich-text th,
 app-content-page .content-rich-text td {
-  border: 1px solid #44403c;
+  border: 1px solid #d6d3d1;
   padding: 0.75rem 1rem;
   text-align: left;
 }
 
 app-content-page .content-rich-text th {
-  background: #1c1917;
-  color: #fafaf9;
+  background: #f5f5f4;
+  color: #292524;
 }
 
 app-content-page .content-rich-text .contact-card {
   position: relative;
   max-width: 44rem;
   overflow: hidden;
-  border: 1px solid #44403c;
+  border: 1px solid #d6d3d1;
   border-radius: 1rem;
   background:
     linear-gradient(
       135deg,
-      #1c1917 0%,
-      #0c0a09 100%
+      #ffffff 0%,
+      #f5f3f1 100%
     );
   padding: clamp(1.5rem, 4vw, 2.5rem);
-  box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 20%);
+  box-shadow: 0 1.5rem 3rem rgb(41 37 36 / 10%);
 }
 
 app-content-page .content-rich-text .contact-card::before {
@@ -135,13 +137,13 @@ app-content-page .content-rich-text .contact-card::before {
   left: 0;
   width: 5rem;
   height: 0.2rem;
-  background: #67e8f9;
+  background: #815c4d;
   content: "";
 }
 
 app-content-page .content-rich-text .contact-card__eyebrow {
   margin: 0;
-  color: #67e8f9;
+  color: #815c4d;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -155,11 +157,10 @@ app-content-page .content-rich-text .contact-card h2 {
 app-content-page .content-rich-text .contact-card__intro {
   max-width: 38rem;
   margin-bottom: 1.75rem;
-  color: #a8a29e;
+  color: #57534e;
   text-align: left !important;
   hyphens: none;
 }
-
 
 app-content-page .content-rich-text .contact-card__address {
   margin: 0;
@@ -168,22 +169,34 @@ app-content-page .content-rich-text .contact-card__address {
 
 app-content-page .content-rich-text .contact-card__link {
   display: inline-flex;
+  flex-direction: column;
+  gap: 0.35rem;
   width: fit-content;
+  border: 1px solid #d6d3d1;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  box-shadow: 0 0.5rem 1.5rem rgb(41 37 36 / 6%);
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    transform 150ms ease;
 }
 
 app-content-page .content-rich-text .contact-card__link:hover {
-  border-color: #67e8f9;
-  background: rgb(8 145 178 / 15%);
+  border-color: #815c4d;
+  background: #faf7f5;
   transform: translateY(-2px);
 }
 
 app-content-page .content-rich-text .contact-card__link:focus-visible {
-  outline: 2px solid #67e8f9;
+  outline: 2px solid #815c4d;
   outline-offset: 3px;
 }
 
 app-content-page .content-rich-text .contact-card__link-label {
-  color: #a8a29e;
+  color: #78716c;
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -191,7 +204,7 @@ app-content-page .content-rich-text .contact-card__link-label {
 
 app-content-page .content-rich-text .contact-card__link strong {
   overflow-wrap: anywhere;
-  color: #cffafe;
+  color: #634438;
   font-size: clamp(1rem, 4vw, 1.25rem);
 }
 
