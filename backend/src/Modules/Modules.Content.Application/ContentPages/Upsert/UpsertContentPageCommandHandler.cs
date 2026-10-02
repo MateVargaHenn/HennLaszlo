@@ -5,6 +5,8 @@ namespace Modules.Content.Application.ContentPages.Upsert;
 
 internal sealed class UpsertContentPageCommandHandler(
     IContentPageRepository contentPageRepository,
+    IContentRevisionRepository
+        contentRevisionRepository,
     IContentUnitOfWork unitOfWork)
     : IRequestHandler<
         UpsertContentPageCommand,
@@ -32,6 +34,10 @@ internal sealed class UpsertContentPageCommandHandler(
         }
         else
         {
+            contentRevisionRepository.Add(
+                Domain.ContentRevision.Capture(
+                    contentPage));
+
             contentPage.Update(
                 request.TitleHu,
                 request.TitleEn,

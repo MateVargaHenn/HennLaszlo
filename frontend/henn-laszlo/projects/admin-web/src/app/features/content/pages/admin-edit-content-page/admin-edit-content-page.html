@@ -42,6 +42,11 @@
       </div>
     }
     @else if (store.contentPage(); as contentPage) {
+      <app-content-revision-history
+        class="mb-6 block"
+        [hasUnsavedChanges]="form.dirty"
+        (restored)="handleRevisionRestored()"
+      />
       <form
         class="overflow-hidden rounded-xl bg-white shadow-sm"
         [formGroup]="form"

@@ -108,3 +108,19 @@ export {
 export {
   AdminArticleEditorStore,
 } from './lib/stores/admin-article-editor-store';
+
+export type {
+  ContentRevisionTarget,
+} from './lib/models/content-revision-target';
+
+export type {
+  ContentRevisionListItem,
+} from './lib/models/content-revision-list-item';
+
+export type {
+  ContentRevisionDetails,
+} from './lib/models/content-revision-details';
+
+export {
+  ContentRevisionsStore,
+} from './lib/stores/content-revisions-store';

@@ -30,6 +30,7 @@ import {
 import {
   AdminArticleEditorStore,
   AdminArticlesStore,
+  ContentRevisionsStore,
 } from 'content-data-access';
 import type {
   CreateArticleRequest,
@@ -48,6 +49,9 @@ import {
 import {
   ContentEditorBase,
 } from '../../../../core/editor/content-editor-base';
+import {
+  ContentRevisionHistory,
+} from '../../components/content-revision-history/content-revision-history';
 
 interface ArticleDraftValue {
   readonly slug: string;
@@ -65,6 +69,10 @@ interface ArticleDraftValue {
     ReactiveFormsModule,
     RouterLink,
     EditorComponent,
+    ContentRevisionHistory,
+  ],
+  providers: [
+    ContentRevisionsStore,
   ],
   templateUrl: './article-editor.html',
   styleUrl: './article-editor.css',
@@ -96,6 +104,9 @@ export class ArticleEditor
 
   protected readonly isDeleteConfirmationOpen =
     signal(false);
+
+  protected readonly revisionsStore =
+    inject(ContentRevisionsStore);
 
   protected override readonly form = new FormGroup({
     slug: new FormControl('', {
@@ -179,17 +190,24 @@ export class ArticleEditor
           this.form.getRawValue(),
         );
       });
-    if (this.articleId) {
-      this.form.controls.slug.disable({
-        emitEvent: false,
-      });
 
-      this.store.load(this.articleId);
-    }
-    else {
-      this.store.clear();
-      this.restoreDraft();
-    }
+      if (this.articleId) {
+        this.form.controls.slug.disable({
+          emitEvent: false,
+        });
+
+        this.store.load(this.articleId);
+
+        this.revisionsStore.load(
+          'articles',
+          this.articleId,
+        );
+      }
+      else {
+        this.store.clear();
+        this.revisionsStore.clear();
+        this.restoreDraft();
+      }
 
     effect(() => {
       const article = this.store.article();
@@ -346,6 +364,21 @@ export class ArticleEditor
       // A store eltárolja a megjelenítendő hibát.
     }
   }
+
+  protected handleRevisionRestored(): void {
+  if (!this.articleId) {
+    return;
+  }
+
+  this.form.markAsPristine();
+
+  this.draftStorage.remove(
+    this.draftKey,
+  );
+
+  this.store.load(this.articleId);
+  this.listStore.reload();
+}
 
   protected requestDeleteArticle(): void {
     if (

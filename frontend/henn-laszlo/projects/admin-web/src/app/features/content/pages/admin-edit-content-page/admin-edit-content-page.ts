@@ -19,6 +19,7 @@ import {
   AdminContentPageDetailsStore,
   AdminContentPagesStore,
   ContentPageKey,
+  ContentRevisionsStore,
 } from 'content-data-access';
 
 import {
@@ -34,12 +35,22 @@ import {
 } from '../../../../../environments/environment';
 import { ContentEditorBase } from '../../../../core/editor/content-editor-base';
 
+import {
+  ContentRevisionHistory,
+} from '../../components/content-revision-history/content-revision-history';
+
 @Component({
   selector: 'app-admin-edit-content-page',
   imports: [
     ReactiveFormsModule,
     RouterLink,
-    EditorComponent
+    EditorComponent,
+    ContentRevisionHistory
+  ],
+  providers: [
+    AdminContentPageDetailsStore,
+    AdminContentPagesStore,
+    ContentRevisionsStore,
   ],
   templateUrl: './admin-edit-content-page.html',
   styleUrl: './admin-edit-content-page.css',
@@ -90,6 +101,12 @@ export class AdminEditContentPage
   protected readonly editorConfig = 
     richTextEditorConfig;
 
+  protected readonly revisionsStore =
+    inject(ContentRevisionsStore);
+
+  private loadedRevisionTargetId:
+    string | null = null;
+
   constructor() {
     super();
     const key =
@@ -107,6 +124,19 @@ export class AdminEditContentPage
 
       if (!contentPage) {
         return;
+      }
+
+      if (
+        this.loadedRevisionTargetId !==
+        contentPage.id
+      ) {
+        this.loadedRevisionTargetId =
+          contentPage.id;
+
+        this.revisionsStore.load(
+          'content-pages',
+          contentPage.id,
+        );
       }
 
       if (contentPage.contentEn?.trim()) {
@@ -159,6 +189,13 @@ export class AdminEditContentPage
     catch {
       // A store eltárolja a megjelenítendő hibát.
     }
+  }
+
+  protected handleRevisionRestored(): void {
+    this.form.markAsPristine();
+
+    this.store.reload();
+    this.listStore.reload();
   }
 
   private normalizeOptionalText(
