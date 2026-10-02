@@ -232,4 +232,73 @@ describe('ContentRevisionHistory', () => {
             ?.trim() === text,
         );
     }
+
+    it(
+    'should keep the selected revision and allow retry after restore fails',
+    async () => {
+        const error = new Error(
+        'A visszaállítás sikertelen.',
+        );
+
+        store.restore.mockImplementationOnce(
+        async () => {
+            store.restoreError.set(error);
+            throw error;
+        },
+        );
+
+        store.selectedRevision.set(
+        revisionDetails,
+        );
+
+        const restored = vi.fn();
+
+        fixture.componentInstance.restored
+        .subscribe(restored);
+
+        fixture.detectChanges();
+
+        findButton(
+        'Verzió visszaállítása',
+        )!.click();
+
+        fixture.detectChanges();
+
+        findButton('Visszaállítás')!.click();
+
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(store.restore)
+        .toHaveBeenCalledExactlyOnceWith(
+            revisionDetails.id,
+        );
+
+        expect(restored)
+        .not.toHaveBeenCalled();
+
+        expect(store.selectedRevision())
+        .toEqual(revisionDetails);
+
+        expect(store.closeRevision)
+        .not.toHaveBeenCalled();
+
+        const retryButton =
+        findButton('Visszaállítás');
+
+        expect(retryButton).toBeDefined();
+        expect(retryButton!.disabled).toBe(false);
+
+        retryButton!.click();
+
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(store.restore)
+        .toHaveBeenCalledTimes(2);
+
+        expect(restored)
+        .toHaveBeenCalledOnce();
+    },
+    );
 });
