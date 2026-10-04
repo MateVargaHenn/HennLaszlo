@@ -17,6 +17,7 @@ using Modules.Content.Presentation.Articles.Delete;
 using Modules.Content.Presentation.WebsiteSettings.GetPublic;
 using Modules.Content.Presentation.WebsiteSettings.GetAdmin;
 using Modules.Content.Presentation.WebsiteSettings.Update;
+using Modules.Content.Presentation.ContentRevisions.GetList;
 
 
 namespace Modules.Content.Presentation;
@@ -55,6 +56,7 @@ public static class ContentEndpoints
 
         endpoints.MapGetAdminWebsiteSettings();
         endpoints.MapUpdateWebsiteSettings();
+        endpoints.MapGetContentRevisions();
 
         return endpoints;
     }

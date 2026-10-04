@@ -9,4 +9,5 @@ export interface AdminContentPageDetails {
   readonly contentEn: string | null;
   readonly isPublished: boolean;
   readonly updatedAtUtc: string;
+  readonly version: string;
 }

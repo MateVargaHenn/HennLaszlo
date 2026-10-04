@@ -1,6 +1,6 @@
 {
   "name": "henn-laszlo",
-  "version": "0.5.0",
+  "version": "0.5.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

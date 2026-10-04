@@ -18,6 +18,15 @@ import { UpdateArticleRequest } from '../models/update-article-request';
 import { AdminWebsiteSettings } from '../models/admin-website-settings';
 import { PublicWebsiteSettings } from '../models/public-website-settings';
 import { UpdateWebsiteSettingsRequest } from '../models/update-website-settings-request';
+import {
+  ContentRevisionDetails,
+} from '../models/content-revision-details';
+import {
+  ContentRevisionListItem,
+} from '../models/content-revision-list-item';
+import {
+  ContentRevisionTarget,
+} from '../models/content-revision-target';
 
 @Injectable({
   providedIn: 'root',
@@ -182,6 +191,43 @@ deleteArticle(
 ): Observable<void> {
   return this.http.delete<void>(
     `${this.apiBaseUrl}/api/admin/articles/${articleId}`,
+  );
+}
+
+getContentRevisions(
+  target: ContentRevisionTarget,
+  targetId: string,
+): Observable<readonly ContentRevisionListItem[]> {
+  return this.http.get<
+    readonly ContentRevisionListItem[]
+  >(
+    `${this.apiBaseUrl}/api/admin/` +
+    `${target}/${encodeURIComponent(targetId)}/revisions`,
+  );
+}
+
+getContentRevision(
+  target: ContentRevisionTarget,
+  targetId: string,
+  revisionId: string,
+): Observable<ContentRevisionDetails> {
+  return this.http.get<ContentRevisionDetails>(
+    `${this.apiBaseUrl}/api/admin/` +
+    `${target}/${encodeURIComponent(targetId)}/` +
+    `revisions/${encodeURIComponent(revisionId)}`,
+  );
+}
+
+restoreContentRevision(
+  target: ContentRevisionTarget,
+  targetId: string,
+  revisionId: string,
+): Observable<void> {
+  return this.http.post<void>(
+    `${this.apiBaseUrl}/api/admin/` +
+    `${target}/${encodeURIComponent(targetId)}/` +
+    `revisions/${encodeURIComponent(revisionId)}/restore`,
+    null,
   );
 }
 }

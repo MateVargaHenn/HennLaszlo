@@ -4,8 +4,12 @@ import {
   effect,
   inject,
   signal,
-  DestroyRef
+  DestroyRef,
+  computed,
 } from '@angular/core';
+import {
+  HttpErrorResponse,
+} from '@angular/common/http';
 import {
   takeUntilDestroyed,
 } from '@angular/core/rxjs-interop';
@@ -30,6 +34,7 @@ import {
 import {
   AdminArticleEditorStore,
   AdminArticlesStore,
+  ContentRevisionsStore,
 } from 'content-data-access';
 import type {
   CreateArticleRequest,
@@ -48,6 +53,9 @@ import {
 import {
   ContentEditorBase,
 } from '../../../../core/editor/content-editor-base';
+import {
+  ContentRevisionHistory,
+} from '../../components/content-revision-history/content-revision-history';
 
 interface ArticleDraftValue {
   readonly slug: string;
@@ -57,6 +65,7 @@ interface ArticleDraftValue {
   readonly summaryEn: string;
   readonly contentHu: string;
   readonly contentEn: string;
+  readonly baseVersion?: string | undefined;
 }
 
 @Component({
@@ -65,6 +74,10 @@ interface ArticleDraftValue {
     ReactiveFormsModule,
     RouterLink,
     EditorComponent,
+    ContentRevisionHistory,
+  ],
+  providers: [
+    ContentRevisionsStore,
   ],
   templateUrl: './article-editor.html',
   styleUrl: './article-editor.css',
@@ -81,6 +94,16 @@ export class ArticleEditor
   protected readonly store =
     inject(AdminArticleEditorStore);
 
+  protected readonly hasVersionConflict =
+  computed(() => {
+    const error = this.store.mutationError();
+
+    return (
+      error instanceof HttpErrorResponse &&
+      error.status === 409
+    );
+  });
+
   private readonly articleId =
     this.route.snapshot.paramMap.get('articleId');
 
@@ -90,12 +113,16 @@ export class ArticleEditor
       : 'article:new';
 
   private hasCheckedDraft = false;
+  private loadedVersion: string | undefined;
 
   protected readonly isEditMode =
     this.articleId !== null;
 
   protected readonly isDeleteConfirmationOpen =
     signal(false);
+
+  protected readonly revisionsStore =
+    inject(ContentRevisionsStore);
 
   protected override readonly form = new FormGroup({
     slug: new FormControl('', {
@@ -176,20 +203,30 @@ export class ArticleEditor
 
         this.draftStorage.save<ArticleDraftValue>(
           this.draftKey,
-          this.form.getRawValue(),
+          {
+            ...this.form.getRawValue(),
+            baseVersion: this.loadedVersion,
+          },
         );
       });
-    if (this.articleId) {
-      this.form.controls.slug.disable({
-        emitEvent: false,
-      });
 
-      this.store.load(this.articleId);
-    }
-    else {
-      this.store.clear();
-      this.restoreDraft();
-    }
+      if (this.articleId) {
+        this.form.controls.slug.disable({
+          emitEvent: false,
+        });
+
+        this.store.load(this.articleId);
+
+        this.revisionsStore.load(
+          'articles',
+          this.articleId,
+        );
+      }
+      else {
+        this.store.clear();
+        this.revisionsStore.clear();
+        this.restoreDraft();
+      }
 
     effect(() => {
       const article = this.store.article();
@@ -201,6 +238,11 @@ export class ArticleEditor
       ) {
         return;
       }
+      if (this.form.dirty) {
+        return;
+      }
+
+      this.loadedVersion = article.version;
 
       if (article.contentEn?.trim()) {
         this.isEnglishContentEditorVisible.set(
@@ -239,7 +281,8 @@ export class ArticleEditor
 
     const value = this.form.getRawValue();
 
-    const commonRequest: UpdateArticleRequest = {
+    const commonRequest:
+      Omit<UpdateArticleRequest, 'expectedVersion'> = {
       titleHu: value.titleHu.trim(),
       titleEn: this.normalizeOptionalText(
         value.titleEn,
@@ -258,9 +301,24 @@ export class ArticleEditor
 
     try {
       if (this.articleId) {
+        const expectedVersion = this.loadedVersion;
+
+        if (!expectedVersion) {
+          window.alert(
+            'Az írás verziója nem érhető el. ' +
+            'Másold ki a módosításaidat, ' +
+            'majd töltsd újra az oldalt.',
+          );
+
+          return;
+        }
+
         await this.store.update(
           this.articleId,
-          commonRequest,
+          {
+            ...commonRequest,
+            expectedVersion,
+          },
         );
 
         this.listStore.reload();
@@ -347,6 +405,21 @@ export class ArticleEditor
     }
   }
 
+  protected handleRevisionRestored(): void {
+  if (!this.articleId) {
+    return;
+  }
+
+  this.form.markAsPristine();
+
+  this.draftStorage.remove(
+    this.draftKey,
+  );
+
+  this.store.load(this.articleId);
+  this.listStore.reload();
+}
+
   protected requestDeleteArticle(): void {
     if (
       !this.articleId ||
@@ -429,8 +502,13 @@ export class ArticleEditor
     return;
   }
 
+  const {
+  baseVersion,
+  ...draftValue
+  } = draft.value;
+
   if (
-    JSON.stringify(draft.value) ===
+    JSON.stringify(draftValue) ===
     JSON.stringify(this.form.getRawValue())
   ) {
     this.draftStorage.remove(
@@ -458,8 +536,12 @@ export class ArticleEditor
     return;
   }
 
-  this.form.patchValue(
-      draft.value,
+    if (this.articleId) {
+      this.loadedVersion = baseVersion;
+    }
+
+    this.form.patchValue(
+      draftValue,
       {
         emitEvent: false,
       },

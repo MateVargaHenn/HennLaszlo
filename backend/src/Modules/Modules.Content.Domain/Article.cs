@@ -53,6 +53,8 @@ public sealed class Article
 
     public DateTime UpdatedAtUtc { get; private set; }
 
+    public Guid Version { get; private set; } = Guid.NewGuid();
+
     public static Article Create(
         string slug,
         string titleHu,
@@ -99,18 +101,21 @@ public sealed class Article
         ContentHu = contentHu.Trim();
         ContentEn = NormalizeOptionalText(contentEn);
         UpdatedAtUtc = DateTime.UtcNow;
+        Version = Guid.NewGuid();
     }
 
     public void Publish()
     {
         IsPublished = true;
         UpdatedAtUtc = DateTime.UtcNow;
+        Version = Guid.NewGuid();
     }
 
     public void Unpublish()
     {
         IsPublished = false;
         UpdatedAtUtc = DateTime.UtcNow;
+        Version = Guid.NewGuid();
     }
 
     private static string NormalizeSlug(string slug)

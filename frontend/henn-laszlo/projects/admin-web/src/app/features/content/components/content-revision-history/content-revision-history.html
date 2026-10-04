@@ -1,0 +1,288 @@
+<section
+  class="rounded-xl border border-stone-200 bg-white p-6 shadow-sm"
+>
+  <div
+    class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+  >
+    <div>
+      <h2 class="text-lg font-semibold text-stone-950">
+        Verzióelőzmények
+      </h2>
+
+      <p class="mt-1 text-sm text-stone-600">
+        Korábban mentett változatok megtekintése és
+        visszaállítása.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="self-start rounded-lg border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-100"
+      [disabled]="store.isLoading()"
+      (click)="store.reload()"
+    >
+      Frissítés
+    </button>
+  </div>
+
+  @if (store.isLoading()) {
+    <p
+      class="mt-5 text-sm text-stone-600"
+      role="status"
+    >
+      Verzióelőzmények betöltése…
+    </p>
+  }
+  @else if (store.loadError()) {
+    <p
+      class="mt-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+      role="alert"
+    >
+      A verzióelőzmények nem tölthetők be.
+    </p>
+  }
+  @else if (store.revisions().length === 0) {
+    <p class="mt-5 text-sm text-stone-600">
+      Még nincs korábbi mentett változat.
+    </p>
+  }
+  @else {
+    <ol class="mt-5 divide-y divide-stone-200">
+      @for (
+        revision of store.revisions();
+        track revision.id
+      ) {
+        <li
+          class="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div>
+            <p class="font-medium text-stone-900">
+              {{ revision.titleHu }}
+            </p>
+
+            <time
+              class="mt-1 block text-sm text-stone-500"
+              [attr.datetime]="revision.createdAtUtc"
+            >
+              {{ formatDate(revision.createdAtUtc) }}
+            </time>
+          </div>
+
+          <button
+            type="button"
+            class="self-start rounded-lg border border-cyan-700 px-4 py-2 text-sm font-semibold text-cyan-800 hover:bg-cyan-50"
+            (click)="openRevision(revision.id)"
+          >
+            Megtekintés
+          </button>
+        </li>
+      }
+    </ol>
+  }
+</section>
+
+@if (
+  !isRestoreConfirmationOpen() &&
+  (
+    store.isRevisionLoading() ||
+    store.selectedRevision() ||
+    store.revisionLoadError()
+  )
+) {
+  <div
+    class="fixed inset-0 z-50 grid place-items-center p-5"
+    (keydown.escape)="closeRevision()"
+  >
+    <button
+      type="button"
+      class="absolute inset-0 bg-stone-950/60 backdrop-blur-sm"
+      aria-label="Verzióelőnézet bezárása"
+      [disabled]="store.isRestoring()"
+      (click)="closeRevision()"
+    ></button>
+
+    <section
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="revision-preview-title"
+      class="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-xl bg-white p-7 shadow-2xl"
+    >
+      @if (store.isRevisionLoading()) {
+        <p class="text-stone-600" role="status">
+          A verzió betöltése…
+        </p>
+      }
+      @else if (store.revisionLoadError()) {
+        <h2
+          id="revision-preview-title"
+          class="font-serif text-2xl text-stone-950"
+        >
+          A verzió nem tölthető be
+        </h2>
+
+        <p class="mt-3 text-stone-600">
+          Zárd be az ablakot, majd próbáld újra.
+        </p>
+      }
+      @else if (
+        store.selectedRevision();
+        as revision
+      ) {
+        <p
+          class="text-sm uppercase tracking-[0.18em] text-cyan-800"
+        >
+          Korábbi verzió
+        </p>
+
+        <h2
+          id="revision-preview-title"
+          class="mt-2 font-serif text-3xl text-stone-950"
+        >
+          {{ revision.titleHu }}
+        </h2>
+
+        @if (revision.titleEn) {
+          <p class="mt-2 text-lg text-stone-500">
+            {{ revision.titleEn }}
+          </p>
+        }
+
+        <time
+          class="mt-3 block text-sm text-stone-500"
+          [attr.datetime]="revision.createdAtUtc"
+        >
+          {{ formatDate(revision.createdAtUtc) }}
+        </time>
+
+        @if (revision.summaryHu) {
+          <p
+            class="mt-6 rounded-lg bg-stone-100 p-4 leading-7 text-stone-700"
+          >
+            {{ revision.summaryHu }}
+          </p>
+        }
+
+        <h3 class="mt-6 font-semibold text-stone-900">
+          Magyar tartalom
+        </h3>
+
+        <div
+          class="mt-2 rounded-lg border border-stone-200 p-5 leading-7 text-stone-800"
+          [innerHTML]="revision.contentHu"
+        ></div>
+
+        @if (revision.contentEn) {
+          <h3 class="mt-6 font-semibold text-stone-900">
+            Angol tartalom
+          </h3>
+
+          <div
+            class="mt-2 rounded-lg border border-stone-200 p-5 leading-7 text-stone-800"
+            [innerHTML]="revision.contentEn"
+          ></div>
+        }
+
+        <div
+          class="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"
+        >
+          <button
+            type="button"
+            class="rounded-lg px-5 py-2.5 text-sm font-semibold text-stone-700 hover:bg-stone-100"
+            (click)="closeRevision()"
+          >
+            Bezárás
+          </button>
+
+          <button
+            type="button"
+            class="rounded-lg bg-cyan-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-cyan-900"
+            (click)="requestRestore()"
+          >
+            Verzió visszaállítása
+          </button>
+        </div>
+      }
+    </section>
+  </div>
+}
+
+@if (isRestoreConfirmationOpen()) {
+  @if (store.selectedRevision(); as revision) {
+    <div
+      class="fixed inset-0 z-[60] grid place-items-center p-5"
+      (keydown.escape)="cancelRestore()"
+    >
+      <button
+        type="button"
+        class="absolute inset-0 bg-stone-950/60 backdrop-blur-sm"
+        aria-label="Visszaállítás megszakítása"
+        [disabled]="store.isRestoring()"
+        (click)="cancelRestore()"
+      ></button>
+
+      <section
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="restore-revision-title"
+        class="relative z-10 w-full max-w-md rounded-xl bg-white p-7 shadow-2xl"
+      >
+        <p
+          class="text-sm uppercase tracking-[0.18em] text-amber-700"
+        >
+          Verzió visszaállítása
+        </p>
+
+        <h2
+          id="restore-revision-title"
+          class="mt-2 font-serif text-2xl text-stone-950"
+        >
+          Biztosan visszaállítod?
+        </h2>
+
+        <p class="mt-4 leading-6 text-stone-600">
+          A(z)
+          <strong class="text-stone-900">
+            {{ revision.titleHu }}
+          </strong>
+          című korábbi változat lesz az aktuális tartalom.
+          A jelenlegi mentett változat megmarad az
+          előzmények között.
+        </p>
+
+        @if (store.restoreError()) {
+          <p
+            class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-800"
+            role="alert"
+          >
+            A verzió visszaállítása nem sikerült.
+          </p>
+        }
+
+        <div class="mt-7 flex justify-end gap-3">
+          <button
+            type="button"
+            class="rounded-md px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-100 disabled:opacity-50"
+            [disabled]="store.isRestoring()"
+            (click)="cancelRestore()"
+          >
+            Mégse
+          </button>
+
+          <button
+            type="button"
+            class="rounded-md bg-amber-700 px-4 py-2 text-sm font-medium text-white hover:bg-amber-800 disabled:cursor-wait disabled:opacity-50"
+            [disabled]="store.isRestoring()"
+            (click)="confirmRestore()"
+          >
+            @if (store.isRestoring()) {
+              Visszaállítás…
+            }
+            @else {
+              Visszaállítás
+            }
+          </button>
+        </div>
+      </section>
+    </div>
+  }
+}

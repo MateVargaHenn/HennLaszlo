@@ -10,4 +10,5 @@ export interface AdminArticleDetails {
   readonly isPublished: boolean;
   readonly createdAtUtc: string;
   readonly updatedAtUtc: string;
+  readonly version: string;
 }

@@ -16,6 +16,11 @@ internal sealed class ContentPageConfiguration
             contentPage.Id);
 
         builder.Property(contentPage =>
+            contentPage.Version)
+        .IsConcurrencyToken()
+        .IsRequired();
+
+        builder.Property(contentPage =>
                 contentPage.Id)
             .ValueGeneratedNever();
 

@@ -6,4 +6,5 @@ internal sealed record UpdateArticleRequest(
     string? SummaryHu,
     string? SummaryEn,
     string ContentHu,
-    string? ContentEn);
+    string? ContentEn,
+    Guid ExpectedVersion);

@@ -8,4 +8,5 @@ public sealed record AdminContentPageDetails(
     string ContentHu,
     string? ContentEn,
     bool IsPublished,
-    DateTime UpdatedAtUtc);
+    DateTime UpdatedAtUtc,
+    Guid Version);

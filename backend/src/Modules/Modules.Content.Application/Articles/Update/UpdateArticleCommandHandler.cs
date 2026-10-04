@@ -6,6 +6,8 @@ namespace Modules.Content.Application.Articles.Update;
 
 internal sealed class UpdateArticleCommandHandler(
     IArticleRepository articleRepository,
+    IContentRevisionRepository
+        contentRevisionRepository,
     IContentUnitOfWork unitOfWork)
     : IRequestHandler<UpdateArticleCommand>
 {
@@ -23,6 +25,18 @@ internal sealed class UpdateArticleCommandHandler(
             throw new NotFoundException(
                 "Az írás nem található.");
         }
+
+        if (article.Version != request.ExpectedVersion)
+        {
+            throw new ConflictException(
+                "Az írás időközben megváltozott. " +
+                "A módosításaid nem kerültek mentésre. " +
+                "Másold ki őket, mielőtt újratöltöd az írást.");
+        }
+
+        contentRevisionRepository.Add(
+            Domain.ContentRevision.Capture(
+                article));
 
         article.UpdateDetails(
             request.TitleHu,

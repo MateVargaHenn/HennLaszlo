@@ -36,6 +36,7 @@ internal sealed class GetAdminArticleByIdQueryHandler(
             article.ContentEn,
             article.IsPublished,
             article.CreatedAtUtc,
-            article.UpdatedAtUtc);
+            article.UpdatedAtUtc,
+            article.Version);
     }
 }
