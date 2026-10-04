@@ -23,7 +23,7 @@ export class AdminContentPageDetailsStore {
   private readonly saving = signal(false);
 
   private readonly saveErrorState =
-    signal<Error | undefined>(undefined);
+    signal<unknown | undefined>(undefined);
 
   private readonly contentPageResource = resource({
     params: () => this.contentPageKey(),
@@ -97,12 +97,7 @@ export class AdminContentPageDetailsStore {
       this.reload();
     }
     catch (error) {
-      this.saveErrorState.set(
-        error instanceof Error
-          ? error
-          : new Error('A mentés sikertelen.'),
-      );
-
+      this.saveErrorState.set(error);
       throw error;
     }
     finally {
