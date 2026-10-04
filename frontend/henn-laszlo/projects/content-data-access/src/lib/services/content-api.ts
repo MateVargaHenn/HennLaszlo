@@ -231,4 +231,21 @@ restoreContentRevision(
     { expectedVersion },
   );
 }
+
+  uploadContentFile(
+    file: Blob,
+    fileName: string,
+  ): Observable<{ readonly id: string }> {
+    const formData = new FormData();
+    formData.append('file', file, fileName);
+
+    return this.http.post<{ readonly id: string }>(
+      `${this.apiBaseUrl}/api/admin/files`,
+      formData,
+    );
+  }
+
+  getContentFileUrl(fileId: string): string {
+    return `${this.apiBaseUrl}/api/content-files/${encodeURIComponent(fileId)}`;
+  }
 }

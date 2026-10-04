@@ -57,4 +57,22 @@ internal sealed class ContentPageRepository(
                 contentPage.Key)
             .ToListAsync(cancellationToken);
     }
+    public Task<bool> HasPublishedFileReferenceAsync(
+        string filePath,
+        CancellationToken cancellationToken = default)
+    {
+        // Include the closing HTML attribute quote to avoid matching ID prefixes.
+        string doubleQuotedPath = filePath + "\"";
+        string singleQuotedPath = filePath + "'";
+
+        return dbContext.ContentPages.AnyAsync(
+            contentPage => contentPage.IsPublished && (
+                contentPage.ContentHu.Contains(doubleQuotedPath) ||
+                contentPage.ContentHu.Contains(singleQuotedPath) ||
+                (contentPage.ContentEn != null && (
+                    contentPage.ContentEn.Contains(doubleQuotedPath) ||
+                    contentPage.ContentEn.Contains(singleQuotedPath)))),
+            cancellationToken);
+    }
+
 }

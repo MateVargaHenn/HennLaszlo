@@ -27,9 +27,7 @@ import {
   EditorComponent,
 } from '@tinymce/tinymce-angular';
 
-import {
-  richTextEditorConfig,
-} from '../../config/rich-text-editor-config';
+import { ContentFileUpload } from '../../services/content-file-upload';
 
 import {
   environment,
@@ -53,6 +51,7 @@ import {
     ContentRevisionHistory
   ],
   providers: [
+    ContentFileUpload,
     AdminContentPageDetailsStore,
     AdminContentPagesStore,
     ContentRevisionsStore,
@@ -113,8 +112,10 @@ export class AdminEditContentPage
   protected readonly tinyMceApiKey =
     environment.tinyMceApiKey;
 
-  protected readonly editorConfig = 
-    richTextEditorConfig;
+  protected readonly fileUploads = inject(ContentFileUpload);
+
+  protected readonly editorConfig =
+    this.fileUploads.createEditorConfig();
 
   protected readonly revisionsStore =
     inject(ContentRevisionsStore);
@@ -178,10 +179,14 @@ export class AdminEditContentPage
     });
   }
 
+  public override hasUnsavedChanges(): boolean {
+    return super.hasUnsavedChanges() || this.fileUploads.isUploading();
+  }
+
   protected async save(): Promise<void> {
     this.form.markAllAsTouched();
 
-    if (this.form.invalid || this.store.isSaving()) {
+    if (this.form.invalid || this.fileUploads.isUploading() || this.store.isSaving()) {
       return;
     }
 
@@ -198,6 +203,13 @@ export class AdminEditContentPage
     }
 
     const value = this.form.getRawValue();
+
+    if (!this.fileUploads.canSave([
+      value.contentHu,
+      value.contentEn ?? '',
+    ])) {
+      return;
+    }
 
     try {
       await this.store.save({

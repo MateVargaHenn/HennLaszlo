@@ -86,6 +86,24 @@ internal sealed class ArticleRepository(
                 cancellationToken);
     }
 
+    public Task<bool> HasPublishedFileReferenceAsync(
+        string filePath,
+        CancellationToken cancellationToken = default)
+    {
+        // Include the closing HTML attribute quote to avoid matching ID prefixes.
+        string doubleQuotedPath = filePath + "\"";
+        string singleQuotedPath = filePath + "'";
+
+        return dbContext.Articles.AnyAsync(
+            article => article.IsPublished && (
+                article.ContentHu.Contains(doubleQuotedPath) ||
+                article.ContentHu.Contains(singleQuotedPath) ||
+                (article.ContentEn != null && (
+                    article.ContentEn.Contains(doubleQuotedPath) ||
+                    article.ContentEn.Contains(singleQuotedPath)))),
+            cancellationToken);
+    }
+
     private static string NormalizeSlug(string slug)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(slug);

@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules.Content.Application\Modules.Content.Application.csproj" />
+    <ProjectReference Include="..\Modules.FileStorage.Contracts\Modules.FileStorage.Contracts.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

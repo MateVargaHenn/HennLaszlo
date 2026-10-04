@@ -1,10 +1,7 @@
-import type {
-  EditorComponent,
-} from '@tinymce/tinymce-angular';
-
+import type { EditorComponent } from '@tinymce/tinymce-angular';
 
 export const richTextEditorConfig:
-  EditorComponent['init'] = {
+  NonNullable<EditorComponent['init']> = {
     height: 520,
     min_height: 420,
 
@@ -18,6 +15,8 @@ export const richTextEditorConfig:
       'autolink',
       'lists',
       'link',
+      'image',
+      'video',
       'linkchecker',
       'markdown',
       'charmap',
@@ -40,8 +39,8 @@ export const richTextEditorConfig:
       'alignleft aligncenter alignright alignjustify | ' +
       'bullist numlist outdent indent | ' +
       'blockquote | ' +
-      'link unlink anchor | ' +
-      'table | ' +
+      'link unlink anchor image video uploadfile | ' +
+      'table |' +
       'searchreplace charmap insertdatetime | ' +
       'removeformat | ' +
       'code preview fullscreen help',
@@ -60,7 +59,7 @@ export const richTextEditorConfig:
       '12px 14px 16px 18px 20px 24px 30px 36px',
 
     browser_spellcheck: true,
-    contextmenu: 'link table',
+    contextmenu: 'link image table',
     paste_data_images: false,
 
     statusbar: true,
@@ -97,6 +96,10 @@ export const richTextEditorConfig:
       a {
         color: #815c4d;
         text-decoration: underline;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
       }
     `,
   };

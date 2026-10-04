@@ -23,4 +23,7 @@ public interface IArticleRepository
     Task<Domain.Article?> GetPublishedBySlugAsync(
         string slug,
         CancellationToken cancellationToken = default);
+    Task<bool> HasPublishedFileReferenceAsync(
+        string filePath,
+        CancellationToken cancellationToken = default);
 }

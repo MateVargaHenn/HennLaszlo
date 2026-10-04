@@ -18,4 +18,7 @@ public interface IContentPageRepository
 
     Task<IReadOnlyList<Domain.ContentPage>> GetAllAsync(
         CancellationToken cancellationToken = default);
+    Task<bool> HasPublishedFileReferenceAsync(
+        string filePath,
+        CancellationToken cancellationToken = default);
 }
