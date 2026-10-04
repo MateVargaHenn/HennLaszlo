@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   signal,
 } from '@angular/core';
@@ -82,7 +83,10 @@ function createStoreStub() {
     }),
 
     restore: vi.fn(
-      async (_revisionId: string) =>
+      async (
+        _revisionId: string,
+        _expectedVersion: string,
+      ) =>
         undefined,
     ),
   };
@@ -117,6 +121,10 @@ describe('ContentRevisionHistory', () => {
       ContentRevisionHistory,
     );
 
+    fixture.componentRef.setInput(
+      'expectedVersion',
+      'version-1',
+    );
     fixture.detectChanges();
   });
 
@@ -172,6 +180,7 @@ describe('ContentRevisionHistory', () => {
       expect(store.restore)
         .toHaveBeenCalledWith(
           revisionDetails.id,
+          'version-1',
         );
 
       expect(restored)
@@ -272,6 +281,7 @@ describe('ContentRevisionHistory', () => {
         expect(store.restore)
         .toHaveBeenCalledExactlyOnceWith(
             revisionDetails.id,
+            'version-1',
         );
 
         expect(restored)
@@ -301,4 +311,73 @@ describe('ContentRevisionHistory', () => {
         .toHaveBeenCalledOnce();
     },
     );
+
+  it('should keep the preview and show a conflict without emitting restored', async () => {
+    const conflict = new HttpErrorResponse({ status: 409 });
+    store.restore.mockImplementationOnce(async () => {
+      store.restoreError.set(conflict);
+      throw conflict;
+    });
+    store.selectedRevision.set(revisionDetails);
+    const restored = vi.fn();
+    fixture.componentInstance.restored.subscribe(restored);
+    fixture.detectChanges();
+
+    findButton('Verzió visszaállítása')!.click();
+    fixture.detectChanges();
+    findButton('Visszaállítás')!.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(store.restore).toHaveBeenCalledExactlyOnceWith(
+      revisionDetails.id,
+      'version-1',
+    );
+    expect(restored).not.toHaveBeenCalled();
+    expect(store.selectedRevision()).toEqual(revisionDetails);
+    expect(store.closeRevision).not.toHaveBeenCalled();
+    expect(fixture.nativeElement.textContent).toContain(
+      'A visszaállítás nem történt meg.',
+    );
+    expect(findButton('Visszaállítás')!.disabled).toBe(true);
+  });
+
+  it('should not restore without a loaded version', () => {
+    const alert = vi.spyOn(window, 'alert').mockImplementation(() => undefined);
+    try {
+      fixture.componentRef.setInput('expectedVersion', undefined);
+      store.selectedRevision.set(revisionDetails);
+      fixture.detectChanges();
+      findButton('Verzió visszaállítása')!.click();
+      fixture.detectChanges();
+
+      expect(alert).toHaveBeenCalledOnce();
+      expect(store.restore).not.toHaveBeenCalled();
+      expect(findButton('Visszaállítás')).toBeUndefined();
+    }
+    finally {
+      alert.mockRestore();
+    }
+  });
+
+  it('should recheck unsaved changes when confirming', () => {
+    const alert = vi.spyOn(window, 'alert').mockImplementation(() => undefined);
+    try {
+      store.selectedRevision.set(revisionDetails);
+      fixture.detectChanges();
+      findButton('Verzió visszaállítása')!.click();
+      fixture.detectChanges();
+
+      fixture.componentRef.setInput('hasUnsavedChanges', true);
+      fixture.detectChanges();
+      findButton('Visszaállítás')!.click();
+
+      expect(alert).toHaveBeenCalledOnce();
+      expect(store.restore).not.toHaveBeenCalled();
+    }
+    finally {
+      alert.mockRestore();
+    }
+  });
+
 });

@@ -7,5 +7,6 @@ public sealed record RestoreContentRevisionCommand(
     Domain.ContentRevisionTargetType
         TargetType,
     Guid TargetId,
-    Guid RevisionId)
+    Guid RevisionId,
+    Guid ExpectedVersion)
     : IRequest;

@@ -122,7 +122,7 @@ export class AdminEditContentPage
   private loadedRevisionTargetId:
     string | null = null;
 
-  private loadedVersion: string | undefined;
+  protected loadedVersion: string | undefined;
 
   constructor() {
     super();

@@ -198,6 +198,7 @@ export class ContentRevisionsStore {
 
   async restore(
     revisionId: string,
+    expectedVersion: string,
   ): Promise<void> {
     const target = this.targetState();
 
@@ -207,8 +208,16 @@ export class ContentRevisionsStore {
       );
     }
 
+    if (!expectedVersion.trim()) {
+      throw new Error(
+        'A visszaállításhoz hiányzik a tartalom verziója.',
+      );
+    }
+
     if (this.restoring()) {
-      return;
+      throw new Error(
+        'Már folyamatban van egy visszaállítás.',
+      );
     }
 
     this.restoring.set(true);
@@ -220,6 +229,7 @@ export class ContentRevisionsStore {
           target.target,
           target.targetId,
           revisionId,
+          expectedVersion,
         ),
       );
 

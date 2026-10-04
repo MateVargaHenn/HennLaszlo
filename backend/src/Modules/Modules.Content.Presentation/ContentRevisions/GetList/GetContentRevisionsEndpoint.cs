@@ -90,6 +90,7 @@ internal static class
 			(
 				Guid targetId,
 				Guid revisionId,
+				RestoreContentRevisionRequest request,
 				ISender sender,
 				CancellationToken
 					cancellationToken) =>
@@ -97,6 +98,7 @@ internal static class
 					targetType,
 					targetId,
 					revisionId,
+					request,
 					sender,
 					cancellationToken))
 		.WithName(
@@ -105,7 +107,11 @@ internal static class
 		.Produces(
 			StatusCodes.Status204NoContent)
 		.ProducesProblem(
-			StatusCodes.Status404NotFound);
+			StatusCodes.Status404NotFound)
+        .ProducesProblem(
+            StatusCodes.Status409Conflict)
+        .ProducesProblem(
+            StatusCodes.Status400BadRequest);
     }
 
     private static async Task<IResult>
@@ -150,6 +156,7 @@ internal static class
             ContentRevisionTargetType targetType,
             Guid targetId,
             Guid revisionId,
+            RestoreContentRevisionRequest request,
             ISender sender,
             CancellationToken cancellationToken)
     {
@@ -157,7 +164,8 @@ internal static class
             new RestoreContentRevisionCommand(
                 targetType,
                 targetId,
-                revisionId),
+                revisionId,
+                request.ExpectedVersion),
             cancellationToken);
 
         return Results.NoContent();

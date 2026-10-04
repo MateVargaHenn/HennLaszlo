@@ -43,6 +43,7 @@ internal sealed class
                 await RestoreArticleAsync(
                     request.TargetId,
                     revision,
+                    request.ExpectedVersion,
                     cancellationToken);
                 break;
 
@@ -52,6 +53,7 @@ internal sealed class
                 await RestoreContentPageAsync(
                     request.TargetId,
                     revision,
+                    request.ExpectedVersion,
                     cancellationToken);
                 break;
 
@@ -67,6 +69,7 @@ internal sealed class
     private async Task RestoreArticleAsync(
         Guid articleId,
         Domain.ContentRevision revision,
+        Guid expectedVersion,
         CancellationToken cancellationToken)
     {
         Domain.Article? article =
@@ -78,6 +81,16 @@ internal sealed class
         {
             throw new NotFoundException(
                 "Az írás nem található.");
+        }
+
+        if (expectedVersion == Guid.Empty ||
+            article.Version != expectedVersion)
+        {
+            throw new ConflictException(
+                "A tartalom időközben megváltozott. " +
+                "A visszaállítás nem történt meg. " +
+                "Töltsd újra az oldalt, és ellenőrizd " +
+                "az aktuális tartalmat.");
         }
 
         contentRevisionRepository.Add(
@@ -96,6 +109,7 @@ internal sealed class
     private async Task RestoreContentPageAsync(
         Guid contentPageId,
         Domain.ContentRevision revision,
+        Guid expectedVersion,
         CancellationToken cancellationToken)
     {
         Domain.ContentPage? contentPage =
@@ -108,6 +122,16 @@ internal sealed class
         {
             throw new NotFoundException(
                 "A tartalmi oldal nem található.");
+        }
+
+        if (expectedVersion == Guid.Empty ||
+            contentPage.Version != expectedVersion)
+        {
+            throw new ConflictException(
+                "A tartalom időközben megváltozott. " +
+                "A visszaállítás nem történt meg. " +
+                "Töltsd újra az oldalt, és ellenőrizd " +
+                "az aktuális tartalmat.");
         }
 
         contentRevisionRepository.Add(

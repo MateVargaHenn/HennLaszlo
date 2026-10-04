@@ -1,0 +1,691 @@
+diff --git a/backend/src/Modules/Modules.Content.Application/ContentRevisions/Restore/RestoreContentRevisionCommand.cs b/backend/src/Modules/Modules.Content.Application/ContentRevisions/Restore/RestoreContentRevisionCommand.cs
+index 1d0dec5..d8b9cc0 100644
+--- a/backend/src/Modules/Modules.Content.Application/ContentRevisions/Restore/RestoreContentRevisionCommand.cs
++++ b/backend/src/Modules/Modules.Content.Application/ContentRevisions/Restore/RestoreContentRevisionCommand.cs
+@@ -7,5 +7,6 @@ public sealed record RestoreContentRevisionCommand(
+     Domain.ContentRevisionTargetType
+         TargetType,
+     Guid TargetId,
+-    Guid RevisionId)
+-    : IRequest;
+\ No newline at end of file
++    Guid RevisionId,
++    Guid ExpectedVersion)
++    : IRequest;
+diff --git a/backend/src/Modules/Modules.Content.Application/ContentRevisions/Restore/RestoreContentRevisionCommandHandler.cs b/backend/src/Modules/Modules.Content.Application/ContentRevisions/Restore/RestoreContentRevisionCommandHandler.cs
+index 2509564..88e632c 100644
+--- a/backend/src/Modules/Modules.Content.Application/ContentRevisions/Restore/RestoreContentRevisionCommandHandler.cs
++++ b/backend/src/Modules/Modules.Content.Application/ContentRevisions/Restore/RestoreContentRevisionCommandHandler.cs
+@@ -43,6 +43,7 @@ internal sealed class
+                 await RestoreArticleAsync(
+                     request.TargetId,
+                     revision,
++                    request.ExpectedVersion,
+                     cancellationToken);
+                 break;
+ 
+@@ -52,6 +53,7 @@ internal sealed class
+                 await RestoreContentPageAsync(
+                     request.TargetId,
+                     revision,
++                    request.ExpectedVersion,
+                     cancellationToken);
+                 break;
+ 
+@@ -67,6 +69,7 @@ internal sealed class
+     private async Task RestoreArticleAsync(
+         Guid articleId,
+         Domain.ContentRevision revision,
++        Guid expectedVersion,
+         CancellationToken cancellationToken)
+     {
+         Domain.Article? article =
+@@ -80,6 +83,16 @@ internal sealed class
+                 "Az írás nem található.");
+         }
+ 
++        if (expectedVersion == Guid.Empty ||
++            article.Version != expectedVersion)
++        {
++            throw new ConflictException(
++                "A tartalom időközben megváltozott. " +
++                "A visszaállítás nem történt meg. " +
++                "Töltsd újra az oldalt, és ellenőrizd " +
++                "az aktuális tartalmat.");
++        }
++
+         contentRevisionRepository.Add(
+             Domain.ContentRevision.Capture(
+                 article));
+@@ -96,6 +109,7 @@ internal sealed class
+     private async Task RestoreContentPageAsync(
+         Guid contentPageId,
+         Domain.ContentRevision revision,
++        Guid expectedVersion,
+         CancellationToken cancellationToken)
+     {
+         Domain.ContentPage? contentPage =
+@@ -110,6 +124,16 @@ internal sealed class
+                 "A tartalmi oldal nem található.");
+         }
+ 
++        if (expectedVersion == Guid.Empty ||
++            contentPage.Version != expectedVersion)
++        {
++            throw new ConflictException(
++                "A tartalom időközben megváltozott. " +
++                "A visszaállítás nem történt meg. " +
++                "Töltsd újra az oldalt, és ellenőrizd " +
++                "az aktuális tartalmat.");
++        }
++
+         contentRevisionRepository.Add(
+             Domain.ContentRevision.Capture(
+                 contentPage));
+@@ -120,4 +144,4 @@ internal sealed class
+             revision.ContentHu,
+             revision.ContentEn);
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/backend/src/Modules/Modules.Content.Presentation/ContentRevisions/GetList/GetContentRevisionsEndpoint.cs b/backend/src/Modules/Modules.Content.Presentation/ContentRevisions/GetList/GetContentRevisionsEndpoint.cs
+index 850716e..9ee5a18 100644
+--- a/backend/src/Modules/Modules.Content.Presentation/ContentRevisions/GetList/GetContentRevisionsEndpoint.cs
++++ b/backend/src/Modules/Modules.Content.Presentation/ContentRevisions/GetList/GetContentRevisionsEndpoint.cs
+@@ -90,6 +90,7 @@ internal static class
+ 			(
+ 				Guid targetId,
+ 				Guid revisionId,
++				RestoreContentRevisionRequest request,
+ 				ISender sender,
+ 				CancellationToken
+ 					cancellationToken) =>
+@@ -97,6 +98,7 @@ internal static class
+ 					targetType,
+ 					targetId,
+ 					revisionId,
++					request,
+ 					sender,
+ 					cancellationToken))
+ 		.WithName(
+@@ -105,7 +107,11 @@ internal static class
+ 		.Produces(
+ 			StatusCodes.Status204NoContent)
+ 		.ProducesProblem(
+-			StatusCodes.Status404NotFound);
++			StatusCodes.Status404NotFound)
++        .ProducesProblem(
++            StatusCodes.Status409Conflict)
++        .ProducesProblem(
++            StatusCodes.Status400BadRequest);
+     }
+ 
+     private static async Task<IResult>
+@@ -150,6 +156,7 @@ internal static class
+             ContentRevisionTargetType targetType,
+             Guid targetId,
+             Guid revisionId,
++            RestoreContentRevisionRequest request,
+             ISender sender,
+             CancellationToken cancellationToken)
+     {
+@@ -157,9 +164,10 @@ internal static class
+             new RestoreContentRevisionCommand(
+                 targetType,
+                 targetId,
+-                revisionId),
++                revisionId,
++                request.ExpectedVersion),
+             cancellationToken);
+ 
+         return Results.NoContent();
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/backend/src/Modules/Modules.Content.Presentation/ContentRevisions/GetList/RestoreContentRevisionRequest.cs b/backend/src/Modules/Modules.Content.Presentation/ContentRevisions/GetList/RestoreContentRevisionRequest.cs
+new file mode 100644
+index 0000000..ee9645a
+--- /dev/null
++++ b/backend/src/Modules/Modules.Content.Presentation/ContentRevisions/GetList/RestoreContentRevisionRequest.cs
+@@ -0,0 +1,5 @@
++namespace Modules.Content.Presentation
++    .ContentRevisions.GetList;
++
++internal sealed record RestoreContentRevisionRequest(
++    Guid ExpectedVersion);
+diff --git a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.html b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.html
+index ef5becd..3d4a32d 100644
+--- a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.html
++++ b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.html
+@@ -254,7 +254,16 @@
+             class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-800"
+             role="alert"
+           >
+-            A verzió visszaállítása nem sikerült.
++            @if (hasRestoreConflict()) {
++              A tartalom időközben megváltozott egy másik
++              szerkesztés során. A visszaállítás nem történt meg.
++              Zárd be ezt az ablakot, töltsd újra az oldalt,
++              és ellenőrizd az aktuális tartalmat.
++            }
++            @else {
++              A verzió visszaállítása nem sikerült.
++              Próbáld meg később újra.
++            }
+           </p>
+         }
+ 
+@@ -271,7 +280,7 @@
+           <button
+             type="button"
+             class="rounded-md bg-amber-700 px-4 py-2 text-sm font-medium text-white hover:bg-amber-800 disabled:cursor-wait disabled:opacity-50"
+-            [disabled]="store.isRestoring()"
++            [disabled]="store.isRestoring() || hasRestoreConflict()"
+             (click)="confirmRestore()"
+           >
+             @if (store.isRestoring()) {
+@@ -285,4 +294,4 @@
+       </section>
+     </div>
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.spec.ts b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.spec.ts
+index 594ee15..4b24319 100644
+--- a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.spec.ts
++++ b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.spec.ts
+@@ -1,3 +1,4 @@
++import { HttpErrorResponse } from '@angular/common/http';
+ import {
+   signal,
+ } from '@angular/core';
+@@ -82,7 +83,10 @@ function createStoreStub() {
+     }),
+ 
+     restore: vi.fn(
+-      async (_revisionId: string) =>
++      async (
++        _revisionId: string,
++        _expectedVersion: string,
++      ) =>
+         undefined,
+     ),
+   };
+@@ -117,6 +121,10 @@ describe('ContentRevisionHistory', () => {
+       ContentRevisionHistory,
+     );
+ 
++    fixture.componentRef.setInput(
++      'expectedVersion',
++      'version-1',
++    );
+     fixture.detectChanges();
+   });
+ 
+@@ -172,6 +180,7 @@ describe('ContentRevisionHistory', () => {
+       expect(store.restore)
+         .toHaveBeenCalledWith(
+           revisionDetails.id,
++          'version-1',
+         );
+ 
+       expect(restored)
+@@ -272,6 +281,7 @@ describe('ContentRevisionHistory', () => {
+         expect(store.restore)
+         .toHaveBeenCalledExactlyOnceWith(
+             revisionDetails.id,
++            'version-1',
+         );
+ 
+         expect(restored)
+@@ -301,4 +311,73 @@ describe('ContentRevisionHistory', () => {
+         .toHaveBeenCalledOnce();
+     },
+     );
+-});
+\ No newline at end of file
++
++  it('should keep the preview and show a conflict without emitting restored', async () => {
++    const conflict = new HttpErrorResponse({ status: 409 });
++    store.restore.mockImplementationOnce(async () => {
++      store.restoreError.set(conflict);
++      throw conflict;
++    });
++    store.selectedRevision.set(revisionDetails);
++    const restored = vi.fn();
++    fixture.componentInstance.restored.subscribe(restored);
++    fixture.detectChanges();
++
++    findButton('Verzió visszaállítása')!.click();
++    fixture.detectChanges();
++    findButton('Visszaállítás')!.click();
++    await fixture.whenStable();
++    fixture.detectChanges();
++
++    expect(store.restore).toHaveBeenCalledExactlyOnceWith(
++      revisionDetails.id,
++      'version-1',
++    );
++    expect(restored).not.toHaveBeenCalled();
++    expect(store.selectedRevision()).toEqual(revisionDetails);
++    expect(store.closeRevision).not.toHaveBeenCalled();
++    expect(fixture.nativeElement.textContent).toContain(
++      'A visszaállítás nem történt meg.',
++    );
++    expect(findButton('Visszaállítás')!.disabled).toBe(true);
++  });
++
++  it('should not restore without a loaded version', () => {
++    const alert = vi.spyOn(window, 'alert').mockImplementation(() => undefined);
++    try {
++      fixture.componentRef.setInput('expectedVersion', undefined);
++      store.selectedRevision.set(revisionDetails);
++      fixture.detectChanges();
++      findButton('Verzió visszaállítása')!.click();
++      fixture.detectChanges();
++
++      expect(alert).toHaveBeenCalledOnce();
++      expect(store.restore).not.toHaveBeenCalled();
++      expect(findButton('Visszaállítás')).toBeUndefined();
++    }
++    finally {
++      alert.mockRestore();
++    }
++  });
++
++  it('should recheck unsaved changes when confirming', () => {
++    const alert = vi.spyOn(window, 'alert').mockImplementation(() => undefined);
++    try {
++      store.selectedRevision.set(revisionDetails);
++      fixture.detectChanges();
++      findButton('Verzió visszaállítása')!.click();
++      fixture.detectChanges();
++
++      fixture.componentRef.setInput('hasUnsavedChanges', true);
++      fixture.detectChanges();
++      findButton('Visszaállítás')!.click();
++
++      expect(alert).toHaveBeenCalledOnce();
++      expect(store.restore).not.toHaveBeenCalled();
++    }
++    finally {
++      alert.mockRestore();
++    }
++  });
++
++});
+diff --git a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.ts b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.ts
+index 1b3536b..7380f34 100644
+--- a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.ts
++++ b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revision-history.ts
+@@ -1,4 +1,6 @@
++import { HttpErrorResponse } from '@angular/common/http';
+ import {
++  computed,
+   ChangeDetectionStrategy,
+   Component,
+   inject,
+@@ -21,11 +23,22 @@ export class ContentRevisionHistory {
+   readonly hasUnsavedChanges =
+     input(false);
+ 
++  readonly expectedVersion =
++    input<string | undefined>(undefined);
++
+   readonly restored = output<void>();
+ 
+   protected readonly store =
+     inject(ContentRevisionsStore);
+ 
++  protected readonly hasRestoreConflict =
++    computed(() => {
++      const error = this.store.restoreError();
++
++      return error instanceof HttpErrorResponse &&
++        error.status === 409;
++    });
++
+   protected readonly isRestoreConfirmationOpen =
+       signal(false);
+ 
+@@ -68,6 +81,14 @@ export class ContentRevisionHistory {
+       return;
+     }
+ 
++    if (!this.expectedVersion()?.trim()) {
++      window.alert(
++        'A tartalom verziója nem érhető el. ' +
++        'Töltsd újra az oldalt a visszaállítás előtt.',
++      );
++      return;
++    }
++
+     this.isRestoreConfirmationOpen.set(
+       true,
+     );
+@@ -90,13 +111,35 @@ export class ContentRevisionHistory {
+ 
+     if (
+       !revision ||
+-      this.store.isRestoring()
++      this.store.isRestoring() ||
++      this.hasRestoreConflict()
+     ) {
+       return;
+     }
+ 
++    // A megerősítés megnyitása óta is változhatott a form.
++    if (this.hasUnsavedChanges()) {
++      window.alert(
++        'A verzió visszaállítása előtt mentsd el ' +
++        'vagy vesd el a jelenlegi módosításokat.',
++      );
++      return;
++    }
++
++    const expectedVersion = this.expectedVersion();
++    if (!expectedVersion?.trim()) {
++      window.alert(
++        'A tartalom verziója nem érhető el. ' +
++        'Töltsd újra az oldalt a visszaállítás előtt.',
++      );
++      return;
++    }
++
+     try {
+-      await this.store.restore(revision.id);
++      await this.store.restore(
++        revision.id,
++        expectedVersion,
++      );
+ 
+       this.isRestoreConfirmationOpen.set(
+         false,
+@@ -115,4 +158,4 @@ export class ContentRevisionHistory {
+     return new Date(value)
+       .toLocaleString('hu-HU');
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revisions-store.spec.ts b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revisions-store.spec.ts
+new file mode 100644
+index 0000000..7a9a6f8
+--- /dev/null
++++ b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/components/content-revision-history/content-revisions-store.spec.ts
+@@ -0,0 +1,130 @@
++import { HttpErrorResponse } from '@angular/common/http';
++import { ComponentFixture, TestBed } from '@angular/core/testing';
++import {
++  ContentApi,
++  ContentRevisionDetails,
++  ContentRevisionTarget,
++  ContentRevisionsStore,
++} from 'content-data-access';
++import { of, throwError } from 'rxjs';
++import { describe, expect, it, vi } from 'vitest';
++
++import { ContentRevisionHistory } from './content-revision-history';
++
++const revision: ContentRevisionDetails = {
++  id: 'revision-1',
++  titleHu: 'Korábbi cím',
++  titleEn: null,
++  summaryHu: null,
++  summaryEn: null,
++  contentHu: '<p>Korábbi tartalom</p>',
++  contentEn: null,
++  createdAtUtc: '2026-10-01T12:00:00Z',
++};
++
++const targets: readonly ContentRevisionTarget[] = [
++  'articles',
++  'content-pages',
++];
++
++for (const target of targets) {
++  describe(`ContentRevisionsStore restore: ${target}`, () => {
++    async function setup(fail: boolean) {
++      const conflict = new HttpErrorResponse({ status: 409 });
++      const restore = vi.fn(() => fail
++        ? throwError(() => conflict)
++        : of(undefined));
++
++      await TestBed.configureTestingModule({
++        imports: [ContentRevisionHistory],
++        providers: [
++          ContentRevisionsStore,
++          {
++            provide: ContentApi,
++            useValue: {
++              getContentRevisions: vi.fn(() => of([
++                {
++                  id: revision.id,
++                  titleHu: revision.titleHu,
++                  createdAtUtc: revision.createdAtUtc,
++                },
++              ])),
++              getContentRevision: vi.fn(() => of(revision)),
++              restoreContentRevision: restore,
++            },
++          },
++        ],
++      }).compileComponents();
++
++      const store = TestBed.inject(ContentRevisionsStore);
++      const fixture = TestBed.createComponent(ContentRevisionHistory);
++      fixture.componentRef.setInput('expectedVersion', 'loaded-version');
++      store.load(target, 'target-1');
++      store.selectRevision(revision.id);
++      fixture.detectChanges();
++      await fixture.whenStable();
++      fixture.detectChanges();
++
++      return { store, fixture, restore, conflict };
++    }
++
++    function button(
++      fixture: ComponentFixture<ContentRevisionHistory>,
++      label: string,
++    ): HTMLButtonElement {
++      const buttons = fixture.nativeElement.querySelectorAll(
++        'button',
++      ) as NodeListOf<HTMLButtonElement>;
++      const found = Array.from(buttons).find(
++        item => item.textContent?.trim() === label,
++      );
++      if (!found) {
++        throw new Error(`Missing button: ${label}`);
++      }
++      return found;
++    }
++
++    it('should forward the loaded version and retain the preview on HTTP 409', async () => {
++      const { store, fixture, restore, conflict } = await setup(true);
++      const restored = vi.fn();
++      fixture.componentInstance.restored.subscribe(restored);
++
++      button(fixture, 'Verzió visszaállítása').click();
++      fixture.detectChanges();
++      button(fixture, 'Visszaállítás').click();
++      await fixture.whenStable();
++      fixture.detectChanges();
++
++      expect(restore).toHaveBeenCalledExactlyOnceWith(
++        target, 'target-1', revision.id, 'loaded-version',
++      );
++      expect(store.restoreError()).toBe(conflict);
++      expect(store.selectedRevision()).toEqual(revision);
++      expect(store.isRestoring()).toBe(false);
++      expect(restored).not.toHaveBeenCalled();
++      expect(fixture.nativeElement.textContent).toContain(
++        'A visszaállítás nem történt meg.',
++      );
++    });
++
++    it('should close the preview and emit restored after a successful restore', async () => {
++      const { store, fixture, restore } = await setup(false);
++      const restored = vi.fn();
++      fixture.componentInstance.restored.subscribe(restored);
++
++      button(fixture, 'Verzió visszaállítása').click();
++      fixture.detectChanges();
++      button(fixture, 'Visszaállítás').click();
++      await fixture.whenStable();
++      fixture.detectChanges();
++
++      expect(restore).toHaveBeenCalledExactlyOnceWith(
++        target, 'target-1', revision.id, 'loaded-version',
++      );
++      expect(store.restoreError()).toBeUndefined();
++      expect(store.selectedRevision()).toBeNull();
++      expect(store.isRestoring()).toBe(false);
++      expect(restored).toHaveBeenCalledOnce();
++    });
++  });
++}
+diff --git a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/admin-edit-content-page/admin-edit-content-page.html b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/admin-edit-content-page/admin-edit-content-page.html
+index 71bf044..eaceb16 100644
+--- a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/admin-edit-content-page/admin-edit-content-page.html
++++ b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/admin-edit-content-page/admin-edit-content-page.html
+@@ -45,6 +45,7 @@
+       <app-content-revision-history
+         class="mb-6 block"
+         [hasUnsavedChanges]="form.dirty"
++        [expectedVersion]="loadedVersion"
+         (restored)="handleRevisionRestored()"
+       />
+       <form
+@@ -285,4 +286,4 @@
+       </form>
+     }
+   </div>
+-</main>
+\ No newline at end of file
++</main>
+diff --git a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/admin-edit-content-page/admin-edit-content-page.ts b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/admin-edit-content-page/admin-edit-content-page.ts
+index 748cf78..356d796 100644
+--- a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/admin-edit-content-page/admin-edit-content-page.ts
++++ b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/admin-edit-content-page/admin-edit-content-page.ts
+@@ -122,7 +122,7 @@ export class AdminEditContentPage
+   private loadedRevisionTargetId:
+     string | null = null;
+ 
+-  private loadedVersion: string | undefined;
++  protected loadedVersion: string | undefined;
+ 
+   constructor() {
+     super();
+@@ -249,4 +249,4 @@ export class AdminEditContentPage
+       value === 'memberships-and-awards' ||
+       value === 'writings';
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/article-editor/article-editor.html b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/article-editor/article-editor.html
+index 619ac42..0db36c5 100644
+--- a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/article-editor/article-editor.html
++++ b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/article-editor/article-editor.html
+@@ -146,6 +146,7 @@
+           <app-content-revision-history
+             class="mb-6 block"
+             [hasUnsavedChanges]="form.dirty"
++        [expectedVersion]="loadedVersion"
+             (restored)="handleRevisionRestored()"
+           />
+         }
+@@ -478,4 +479,4 @@
+       </section>
+     </div>
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/article-editor/article-editor.ts b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/article-editor/article-editor.ts
+index 746c059..4ff7c14 100644
+--- a/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/article-editor/article-editor.ts
++++ b/frontend/henn-laszlo/projects/admin-web/src/app/features/content/pages/article-editor/article-editor.ts
+@@ -113,7 +113,7 @@ export class ArticleEditor
+       : 'article:new';
+ 
+   private hasCheckedDraft = false;
+-  private loadedVersion: string | undefined;
++  protected loadedVersion: string | undefined;
+ 
+   protected readonly isEditMode =
+     this.articleId !== null;
+@@ -565,4 +565,4 @@ export class ArticleEditor
+       ? normalized
+       : null;
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/frontend/henn-laszlo/projects/content-data-access/src/lib/services/content-api.ts b/frontend/henn-laszlo/projects/content-data-access/src/lib/services/content-api.ts
+index 579e78c..8a11652 100644
+--- a/frontend/henn-laszlo/projects/content-data-access/src/lib/services/content-api.ts
++++ b/frontend/henn-laszlo/projects/content-data-access/src/lib/services/content-api.ts
+@@ -222,12 +222,13 @@ restoreContentRevision(
+   target: ContentRevisionTarget,
+   targetId: string,
+   revisionId: string,
++  expectedVersion: string,
+ ): Observable<void> {
+   return this.http.post<void>(
+     `${this.apiBaseUrl}/api/admin/` +
+     `${target}/${encodeURIComponent(targetId)}/` +
+     `revisions/${encodeURIComponent(revisionId)}/restore`,
+-    null,
++    { expectedVersion },
+   );
+ }
+ }
+diff --git a/frontend/henn-laszlo/projects/content-data-access/src/lib/stores/content-revisions-store.ts b/frontend/henn-laszlo/projects/content-data-access/src/lib/stores/content-revisions-store.ts
+index cbd241f..5147b67 100644
+--- a/frontend/henn-laszlo/projects/content-data-access/src/lib/stores/content-revisions-store.ts
++++ b/frontend/henn-laszlo/projects/content-data-access/src/lib/stores/content-revisions-store.ts
+@@ -198,6 +198,7 @@ export class ContentRevisionsStore {
+ 
+   async restore(
+     revisionId: string,
++    expectedVersion: string,
+   ): Promise<void> {
+     const target = this.targetState();
+ 
+@@ -207,8 +208,16 @@ export class ContentRevisionsStore {
+       );
+     }
+ 
++    if (!expectedVersion.trim()) {
++      throw new Error(
++        'A visszaállításhoz hiányzik a tartalom verziója.',
++      );
++    }
++
+     if (this.restoring()) {
+-      return;
++      throw new Error(
++        'Már folyamatban van egy visszaállítás.',
++      );
+     }
+ 
+     this.restoring.set(true);
+@@ -220,6 +229,7 @@ export class ContentRevisionsStore {
+           target.target,
+           target.targetId,
+           revisionId,
++          expectedVersion,
+         ),
+       );
+ 
+@@ -247,4 +257,4 @@ export class ContentRevisionsStore {
+ 
+     this.restoreErrorState.set(undefined);
+   }
+-}
+\ No newline at end of file
++}
