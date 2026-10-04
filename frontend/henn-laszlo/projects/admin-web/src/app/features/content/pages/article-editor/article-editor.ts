@@ -113,7 +113,7 @@ export class ArticleEditor
       : 'article:new';
 
   private hasCheckedDraft = false;
-  private loadedVersion: string | undefined;
+  protected loadedVersion: string | undefined;
 
   protected readonly isEditMode =
     this.articleId !== null;

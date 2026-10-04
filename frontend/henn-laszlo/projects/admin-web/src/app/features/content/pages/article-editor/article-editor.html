@@ -146,6 +146,7 @@
           <app-content-revision-history
             class="mb-6 block"
             [hasUnsavedChanges]="form.dirty"
+        [expectedVersion]="loadedVersion"
             (restored)="handleRevisionRestored()"
           />
         }

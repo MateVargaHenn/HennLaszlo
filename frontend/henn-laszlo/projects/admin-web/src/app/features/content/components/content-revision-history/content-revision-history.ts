@@ -1,4 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {
+  computed,
   ChangeDetectionStrategy,
   Component,
   inject,
@@ -21,10 +23,21 @@ export class ContentRevisionHistory {
   readonly hasUnsavedChanges =
     input(false);
 
+  readonly expectedVersion =
+    input<string | undefined>(undefined);
+
   readonly restored = output<void>();
 
   protected readonly store =
     inject(ContentRevisionsStore);
+
+  protected readonly hasRestoreConflict =
+    computed(() => {
+      const error = this.store.restoreError();
+
+      return error instanceof HttpErrorResponse &&
+        error.status === 409;
+    });
 
   protected readonly isRestoreConfirmationOpen =
       signal(false);
@@ -68,6 +81,14 @@ export class ContentRevisionHistory {
       return;
     }
 
+    if (!this.expectedVersion()?.trim()) {
+      window.alert(
+        'A tartalom verziója nem érhető el. ' +
+        'Töltsd újra az oldalt a visszaállítás előtt.',
+      );
+      return;
+    }
+
     this.isRestoreConfirmationOpen.set(
       true,
     );
@@ -90,13 +111,35 @@ export class ContentRevisionHistory {
 
     if (
       !revision ||
-      this.store.isRestoring()
+      this.store.isRestoring() ||
+      this.hasRestoreConflict()
     ) {
       return;
     }
 
+    // A megerősítés megnyitása óta is változhatott a form.
+    if (this.hasUnsavedChanges()) {
+      window.alert(
+        'A verzió visszaállítása előtt mentsd el ' +
+        'vagy vesd el a jelenlegi módosításokat.',
+      );
+      return;
+    }
+
+    const expectedVersion = this.expectedVersion();
+    if (!expectedVersion?.trim()) {
+      window.alert(
+        'A tartalom verziója nem érhető el. ' +
+        'Töltsd újra az oldalt a visszaállítás előtt.',
+      );
+      return;
+    }
+
     try {
-      await this.store.restore(revision.id);
+      await this.store.restore(
+        revision.id,
+        expectedVersion,
+      );
 
       this.isRestoreConfirmationOpen.set(
         false,

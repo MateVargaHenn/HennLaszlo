@@ -254,7 +254,16 @@
             class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-800"
             role="alert"
           >
-            A verzió visszaállítása nem sikerült.
+            @if (hasRestoreConflict()) {
+              A tartalom időközben megváltozott egy másik
+              szerkesztés során. A visszaállítás nem történt meg.
+              Zárd be ezt az ablakot, töltsd újra az oldalt,
+              és ellenőrizd az aktuális tartalmat.
+            }
+            @else {
+              A verzió visszaállítása nem sikerült.
+              Próbáld meg később újra.
+            }
           </p>
         }
 
@@ -271,7 +280,7 @@
           <button
             type="button"
             class="rounded-md bg-amber-700 px-4 py-2 text-sm font-medium text-white hover:bg-amber-800 disabled:cursor-wait disabled:opacity-50"
-            [disabled]="store.isRestoring()"
+            [disabled]="store.isRestoring() || hasRestoreConflict()"
             (click)="confirmRestore()"
           >
             @if (store.isRestoring()) {

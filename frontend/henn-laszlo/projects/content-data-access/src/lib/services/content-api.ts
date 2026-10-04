@@ -222,12 +222,13 @@ restoreContentRevision(
   target: ContentRevisionTarget,
   targetId: string,
   revisionId: string,
+  expectedVersion: string,
 ): Observable<void> {
   return this.http.post<void>(
     `${this.apiBaseUrl}/api/admin/` +
     `${target}/${encodeURIComponent(targetId)}/` +
     `revisions/${encodeURIComponent(revisionId)}/restore`,
-    null,
+    { expectedVersion },
   );
 }
 }
