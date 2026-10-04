@@ -53,5 +53,9 @@ internal sealed class ArticleConfiguration
 
         builder.HasIndex(article =>
             article.IsPublished);
+
+        builder.Property(article => article.Version)
+                .IsConcurrencyToken()
+                .IsRequired();
     }
 }

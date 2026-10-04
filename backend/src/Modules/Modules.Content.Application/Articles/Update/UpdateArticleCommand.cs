@@ -9,5 +9,6 @@ public sealed record UpdateArticleCommand(
     string? SummaryHu,
     string? SummaryEn,
     string ContentHu,
-    string? ContentEn)
+    string? ContentEn,
+    Guid ExpectedVersion)
     : IRequest;

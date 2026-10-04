@@ -11,4 +11,5 @@ public sealed record AdminArticleDetails(
     string? ContentEn,
     bool IsPublished,
     DateTime CreatedAtUtc,
-    DateTime UpdatedAtUtc);
+    DateTime UpdatedAtUtc,
+    Guid Version);

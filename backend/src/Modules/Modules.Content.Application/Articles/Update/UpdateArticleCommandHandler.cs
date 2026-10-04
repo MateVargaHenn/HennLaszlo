@@ -26,6 +26,14 @@ internal sealed class UpdateArticleCommandHandler(
                 "Az írás nem található.");
         }
 
+        if (article.Version != request.ExpectedVersion)
+        {
+            throw new ConflictException(
+                "Az írás időközben megváltozott. " +
+                "A módosításaid nem kerültek mentésre. " +
+                "Másold ki őket, mielőtt újratöltöd az írást.");
+        }
+
         contentRevisionRepository.Add(
             Domain.ContentRevision.Capture(
                 article));

@@ -20,7 +20,9 @@ internal static class UpdateArticleEndpoint
             .ProducesValidationProblem(
                 StatusCodes.Status400BadRequest)
             .ProducesProblem(
-                StatusCodes.Status404NotFound);
+                StatusCodes.Status404NotFound)
+            .ProducesProblem(
+                StatusCodes.Status409Conflict);
     }
 
     private static async Task<IResult> HandleAsync(
@@ -37,7 +39,8 @@ internal static class UpdateArticleEndpoint
                 request.SummaryHu,
                 request.SummaryEn,
                 request.ContentHu,
-                request.ContentEn),
+                request.ContentEn,
+                request.ExpectedVersion),
             cancellationToken);
 
         return Results.NoContent();

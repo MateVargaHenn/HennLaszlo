@@ -123,6 +123,7 @@ builder.Services
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
+builder.Services.AddExceptionHandler<ConflictExceptionHandler>();
 
 const string frontendCorsPolicy = "Frontend";
 
