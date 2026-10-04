@@ -1,5 +1,6 @@
 using MediatR;
 using Modules.Content.Application.Abstractions;
+using BuildingBlocks.Application.Exceptions;
 
 namespace Modules.Content.Application.ContentPages.Upsert;
 
@@ -34,6 +35,14 @@ internal sealed class UpsertContentPageCommandHandler(
         }
         else
         {
+            if (request.ExpectedVersion is null ||
+                contentPage.Version != request.ExpectedVersion)
+            {
+                throw new ConflictException(
+                    "A tartalmi oldal időközben megszűnt. " +
+                    "A módosításaid nem kerültek mentésre. " +
+                    "Másold ki őket, mielőtt újratöltöd az oldalt.");
+            }
             contentRevisionRepository.Add(
                 Domain.ContentRevision.Capture(
                     contentPage));

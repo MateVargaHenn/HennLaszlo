@@ -44,6 +44,9 @@ public sealed class ContentPage
     public DateTime UpdatedAtUtc { get; private set; } =
         DateTime.UtcNow;
 
+    public Guid Version { get; private set; } =
+        Guid.NewGuid();
+
     public static ContentPage Create(
         string key,
         string titleHu,
@@ -77,18 +80,21 @@ public sealed class ContentPage
         ContentHu = contentHu.Trim();
         ContentEn = NormalizeOptionalText(contentEn);
         UpdatedAtUtc = DateTime.UtcNow;
+        Version = Guid.NewGuid();
     }
 
     public void Publish()
     {
         IsPublished = true;
         UpdatedAtUtc = DateTime.UtcNow;
+        Version = Guid.NewGuid();
     }
 
     public void Unpublish()
     {
         IsPublished = false;
         UpdatedAtUtc = DateTime.UtcNow;
+        Version = Guid.NewGuid();
     }
 
     private static string NormalizeKey(

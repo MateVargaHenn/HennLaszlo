@@ -18,7 +18,9 @@ internal static class UpsertContentPageEndpoint
             .WithTags("Content")
             .Produces<UpsertContentPageResponse>(
                 StatusCodes.Status200OK)
-            .ProducesValidationProblem();
+            .ProducesValidationProblem()
+            .ProducesProblem(
+                StatusCodes.Status409Conflict);
     }
 
     private static async Task<IResult> HandleAsync(
@@ -33,7 +35,8 @@ internal static class UpsertContentPageEndpoint
                 request.TitleHu,
                 request.TitleEn,
                 request.ContentHu,
-                request.ContentEn),
+                request.ContentEn,
+                Guid.NewGuid()),
             cancellationToken);
 
         return Results.Ok(

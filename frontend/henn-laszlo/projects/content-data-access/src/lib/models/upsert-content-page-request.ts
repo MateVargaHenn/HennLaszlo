@@ -3,4 +3,5 @@ export interface UpsertContentPageRequest {
   readonly titleEn: string | null;
   readonly contentHu: string;
   readonly contentEn: string | null;
+  readonly expectedVersion: string | null;
 }

@@ -243,7 +243,19 @@
               class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
               role="alert"
             >
-              A módosítások mentése sikertelen.
+              @if (hasVersionConflict()) {
+                A tartalmi oldal időközben megváltozott
+                egy másik szerkesztés során.
+                A mentés nem sikerült,
+                a beírt szöveged itt megmaradt.
+                Másold ki a módosításaidat,
+                mielőtt újratöltöd az oldalt.
+              }
+              @else {
+                A módosítások mentése sikertelen.
+                A beírt szöveged itt megmaradt.
+                Próbáld meg később újra.
+              }
             </p>
           }
         </div>

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
 } from '@angular/core';
@@ -39,6 +40,10 @@ import {
   ContentRevisionHistory,
 } from '../../components/content-revision-history/content-revision-history';
 
+import {
+  HttpErrorResponse,
+} from '@angular/common/http';
+
 @Component({
   selector: 'app-admin-edit-content-page',
   imports: [
@@ -66,6 +71,16 @@ export class AdminEditContentPage
 
   protected readonly store =
     inject(AdminContentPageDetailsStore);
+
+  protected readonly hasVersionConflict =
+  computed(() => {
+    const error = this.store.saveError();
+
+    return (
+      error instanceof HttpErrorResponse &&
+      error.status === 409
+    );
+  });
 
   protected override readonly form = new FormGroup({
     titleHu: new FormControl('', {
@@ -107,6 +122,8 @@ export class AdminEditContentPage
   private loadedRevisionTargetId:
     string | null = null;
 
+  private loadedVersion: string | undefined;
+
   constructor() {
     super();
     const key =
@@ -122,9 +139,11 @@ export class AdminEditContentPage
     effect(() => {
       const contentPage = this.store.contentPage();
 
-      if (!contentPage) {
-        return;
-      }
+    if (!contentPage || this.form.dirty) {
+      return;
+    }
+
+    this.loadedVersion = contentPage.version;
 
       if (
         this.loadedRevisionTargetId !==
@@ -166,6 +185,18 @@ export class AdminEditContentPage
       return;
     }
 
+    const expectedVersion = this.loadedVersion;
+
+    if (!expectedVersion) {
+      window.alert(
+        'A tartalmi oldal verziója nem érhető el. ' +
+        'Másold ki a módosításaidat, ' +
+        'majd töltsd újra az oldalt.',
+      );
+
+      return;
+    }
+
     const value = this.form.getRawValue();
 
     try {
@@ -178,6 +209,7 @@ export class AdminEditContentPage
         contentEn: this.normalizeOptionalText(
           value.contentEn,
         ),
+        expectedVersion,
       });
 
       this.listStore.reload();

@@ -33,6 +33,7 @@ internal sealed class GetAdminContentPageByKeyQueryHandler(
             contentPage.ContentHu,
             contentPage.ContentEn,
             contentPage.IsPublished,
-            contentPage.UpdatedAtUtc);
+            contentPage.UpdatedAtUtc,
+            contentPage.Version);
     }
 }
