@@ -168,7 +168,7 @@
 .medistation {
   position: relative;
   isolation: isolate;
-  height: clamp(30rem, 56.25vw, 45rem);
+  height: 100vh;
   overflow: hidden;
   background: #0c0a09;
   color: #fafaf9;
