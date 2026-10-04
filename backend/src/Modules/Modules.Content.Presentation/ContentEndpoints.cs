@@ -1,3 +1,4 @@
+using Modules.Content.Presentation.ContentFiles.Get;
 using Microsoft.AspNetCore.Routing;
 using Modules.Content.Presentation.ContentPages.Upsert;
 using Modules.Content.Presentation.ContentPages.GetAdminByKey;
@@ -32,6 +33,7 @@ public static class ContentEndpoints
         endpoints.MapGetPublishedArticles();
         endpoints.MapGetPublishedArticleBySlug();
         endpoints.MapGetPublicWebsiteSettings();
+        endpoints.MapGetContentFile();
 
         return endpoints;
     }

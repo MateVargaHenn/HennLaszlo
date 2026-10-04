@@ -36,7 +36,7 @@ internal static class UpsertContentPageEndpoint
                 request.TitleEn,
                 request.ContentHu,
                 request.ContentEn,
-                Guid.NewGuid()),
+                request.ExpectedVersion),
             cancellationToken);
 
         return Results.Ok(

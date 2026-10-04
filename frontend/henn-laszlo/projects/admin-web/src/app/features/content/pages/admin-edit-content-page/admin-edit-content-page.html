@@ -44,7 +44,7 @@
     @else if (store.contentPage(); as contentPage) {
       <app-content-revision-history
         class="mb-6 block"
-        [hasUnsavedChanges]="form.dirty"
+        [hasUnsavedChanges]="hasUnsavedChanges()"
         [expectedVersion]="loadedVersion"
         (restored)="handleRevisionRestored()"
       />
@@ -53,6 +53,17 @@
         [formGroup]="form"
         (ngSubmit)="save()"
       >
+        @if (fileUploads.isUploading()) {
+          <p class="m-6 rounded-lg bg-blue-50 p-4 text-sm text-blue-900" role="status">
+            Fájl feltöltése… A mentés a feltöltés után lesz elérhető.
+          </p>
+        }
+        @if (fileUploads.error(); as uploadError) {
+          <p class="m-6 rounded-lg bg-red-50 p-4 text-sm text-red-800" role="alert">
+            {{ uploadError }}
+          </p>
+        }
+
         <div
           class="flex flex-wrap items-center justify-between gap-4 border-b border-stone-200 px-6 py-5"
         >
@@ -274,7 +285,7 @@
           <button
             type="submit"
             class="rounded-lg bg-stone-950 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800 disabled:cursor-wait disabled:opacity-50"
-            [disabled]="store.isSaving()"
+            [disabled]="store.isSaving() || fileUploads.isUploading()"
           >
             {{
               store.isSaving()

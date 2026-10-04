@@ -47,9 +47,7 @@ import {
 import {
   environment,
 } from '../../../../../environments/environment';
-import {
-  richTextEditorConfig,
-} from '../../config/rich-text-editor-config';
+import { ContentFileUpload } from '../../services/content-file-upload';
 import {
   ContentEditorBase,
 } from '../../../../core/editor/content-editor-base';
@@ -77,6 +75,7 @@ interface ArticleDraftValue {
     ContentRevisionHistory,
   ],
   providers: [
+    ContentFileUpload,
     ContentRevisionsStore,
   ],
   templateUrl: './article-editor.html',
@@ -180,8 +179,10 @@ export class ArticleEditor
   protected readonly tinyMceApiKey =
     environment.tinyMceApiKey;
 
+  protected readonly fileUploads = inject(ContentFileUpload);
+
   protected readonly editorConfig =
-    richTextEditorConfig;
+    this.fileUploads.createEditorConfig();
 
   private readonly destroyRef =
     inject(DestroyRef);
@@ -269,17 +270,29 @@ export class ArticleEditor
     });
   }
 
+  public override hasUnsavedChanges(): boolean {
+    return super.hasUnsavedChanges() || this.fileUploads.isUploading();
+  }
+
   protected async save(): Promise<void> {
     this.form.markAllAsTouched();
 
     if (
       this.form.invalid ||
+      this.fileUploads.isUploading() ||
       this.store.isSaving()
     ) {
       return;
     }
 
     const value = this.form.getRawValue();
+
+    if (!this.fileUploads.canSave([
+      value.contentHu,
+      value.contentEn ?? '',
+    ])) {
+      return;
+    }
 
     const commonRequest:
       Omit<UpdateArticleRequest, 'expectedVersion'> = {
@@ -366,6 +379,7 @@ export class ArticleEditor
   protected async publish(): Promise<void> {
     if (
       !this.articleId ||
+      this.fileUploads.isUploading() ||
       this.store.isSaving()
     ) {
       return;
@@ -391,6 +405,7 @@ export class ArticleEditor
   protected async unpublish(): Promise<void> {
     if (
       !this.articleId ||
+      this.fileUploads.isUploading() ||
       this.store.isSaving()
     ) {
       return;
@@ -423,6 +438,7 @@ export class ArticleEditor
   protected requestDeleteArticle(): void {
     if (
       !this.articleId ||
+      this.fileUploads.isUploading() ||
       this.store.isSaving()
     ) {
       return;
@@ -449,6 +465,7 @@ export class ArticleEditor
     Promise<void> {
     if (
       !this.articleId ||
+      this.fileUploads.isUploading() ||
       this.store.isSaving()
     ) {
       return;
