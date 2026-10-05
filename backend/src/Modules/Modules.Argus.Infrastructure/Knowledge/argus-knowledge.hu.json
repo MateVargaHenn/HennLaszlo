@@ -221,7 +221,7 @@
     },
     {
       "id": "identity",
-      "answer": "Henn László András festőművész és grafikus, Galyasi Miklós nívódíjas alkotó.",
+      "answer": "Henn László András szegedi festőművész és grafikus, az SZTE-JGYPK Rajz tanszék tudományos munkatérsa volt.",
       "sourceTitle": "Bemutatkozás",
       "sourcePath": "/bemutatkozas",
       "questions": [
@@ -234,7 +234,8 @@
         "Henn László András",
         "festőművész",
         "grafikus",
-        "alkotó"
+        "alkotó",
+        "tudományos munkatárs"
       ]
     },
     {
@@ -301,7 +302,7 @@
     },
     {
       "id": "first-exhibition",
-      "answer": "Henn László András első önálló kiállítása 1987-ben volt.",
+      "answer": "Henn László András első önálló kiállítása 1982-ben volt, A Bálint Sándor Művelődési Házban (In Memoriam Hajas Tibor).",
       "sourceTitle": "Kiállítások",
       "sourcePath": "/kiallitasok",
       "questions": [
@@ -314,7 +315,7 @@
         "első kiállítás",
         "önálló kiállítás",
         "kiállítás",
-        "1987"
+        "1982"
       ]
     },
     {
@@ -395,6 +396,177 @@
         "Hol található a műhelye?",
         "Hol nézhetem meg a műveit?"
       ]
-    }
+    },
+    {
+    "id": "purchase-inquiry",
+    "answer": "Egy alkotás megvásárlásáról, elérhetőségéről és áráról közvetlenül Henn László Andrásnál érdeklődhet a {{email}} e-mail-címen. Levelében érdemes megadnia a kiválasztott mű címét.",
+    "sourceTitle": "Kapcsolat",
+    "sourcePath": "/kapcsolat",
+    "questions": [
+      "Hogyan vásárolhatok festményt Henn László Andrástól?",
+      "Megvásárolhatók a képei?",
+      "Eladó ez a festmény?",
+      "Mennyibe kerül egy festménye?",
+      "Hol érdeklődhetek egy kép áráról?",
+      "Szeretnék megvenni egy alkotást."
+    ],
+    "keywords": [
+      "vásárlás",
+      "megvásárolható",
+      "megvenni",
+      "eladó",
+      "festmény ára",
+      "kép ára",
+      "mennyibe kerül"
+    ],
+    "concepts": [
+      "festmény vásárlása",
+      "alkotás megvásárlása",
+      "vásárlási érdeklődés"
+    ],
+    "relatedEntityIds": [
+      "henn-laszlo-andras"
+    ],
+    "negativeExamples": [
+      "Hol nézhetem meg a műveit?",
+      "Milyen díjat kapott?",
+      "Milyen stílusban fest?"
+    ]
+  },
+  {
+    "id": "exhibitions",
+    "answer": "Henn László András önálló és csoportos kiállításairól a Kiállítások oldalon tájékozódhat, ahol a helyszínek és az évszámok is megtalálhatók.",
+    "sourceTitle": "Kiállítások",
+    "sourcePath": "/kiallitasok",
+    "questions": [
+      "Hol állított már ki Henn László András?",
+      "Milyen kiállításai voltak?",
+      "Hol találom a kiállításainak listáját?",
+      "Milyen csoportos kiállításokon vett részt?",
+      "Hol rendezett önálló kiállításokat?"
+    ],
+    "keywords": [
+      "kiállításai",
+      "kiállítások",
+      "kiállítások listája",
+      "csoportos kiállítás",
+      "önálló kiállítások",
+      "kiállítási helyszínek"
+    ],
+    "concepts": [
+      "korábbi kiállítások",
+      "kiállításokon való részvétel",
+      "kiállítások áttekintése"
+    ],
+    "relatedEntityIds": [
+      "henn-laszlo-andras"
+    ],
+    "negativeExamples": [
+      "Mikor volt az első önálló kiállítása?",
+      "Van most látogatható kiállítása?",
+      "Mikor lesz a következő kiállítása?",
+      "Milyen díjat kapott egy kiállításon?"
+    ]
+  },
+  {
+    "id": "galyasi-award",
+    "answer": "Henn László András 2023-ban, a 69. Vásárhelyi Őszi Tárlaton kapta meg a Galyasi Miklós nívódíjat.",
+    "sourceTitle": "Tagságok és díjak",
+    "sourcePath": "/tagsagok-es-dijak",
+    "questions": [
+      "Mikor kapta meg a Galyasi Miklós nívódíjat?",
+      "Melyik évben lett Galyasi Miklós nívódíjas?",
+      "Hol kapta a Galyasi Miklós nívódíjat?",
+      "Milyen díjat kapott a 69. Vásárhelyi Őszi Tárlaton?",
+      "Milyen elismerést kapott 2023-ban?",
+      "Galyasi Miklós nívódíjas Henn László András?"
+    ],
+    "keywords": [
+      "Galyasi Miklós nívódíj",
+      "Galyasi Miklós nívódíjas",
+      "69. Vásárhelyi Őszi Tárlat",
+      "2023"
+    ],
+    "concepts": [
+      "Galyasi nívódíj elnyerése",
+      "nívódíj éve",
+      "2023-as elismerés"
+    ],
+    "relatedEntityIds": [
+      "henn-laszlo-andras",
+      "galyasi-miklos"
+    ],
+    "negativeExamples": [
+      "Ki volt Galyasi Miklós?",
+      "Milyen díjakat kapott összesen?",
+      "Mikor kapta az UNICA Arany Diplomát?"
+    ]
+  },
+  {
+    "id": "memberships",
+    "answer": "Henn László András művészeti szervezeti tagságairól a Tagságok és díjak oldalon talál részletes tájékoztatást.",
+    "sourceTitle": "Tagságok és díjak",
+    "sourcePath": "/tagsagok-es-dijak",
+    "questions": [
+      "Milyen művészeti szervezetek tagja Henn László András?",
+      "Mely művészeti egyesületeknek a tagja?",
+      "Milyen szakmai szervezetekhez tartozik?",
+      "Hol olvashatok a művészeti tagságairól?",
+      "Tagja valamilyen művészeti szervezetnek?"
+    ],
+    "keywords": [
+      "tagság",
+      "tagságok",
+      "szervezeti tagság",
+      "művészeti szervezet",
+      "művészeti egyesület",
+      "szakmai szervezet"
+    ],
+    "concepts": [
+      "művészeti szervezeti tagságok",
+      "szakmai közösségekhez tartozás"
+    ],
+    "relatedEntityIds": [
+      "henn-laszlo-andras"
+    ],
+    "negativeExamples": [
+      "Milyen díjakat kapott?",
+      "Kik voltak a mesterei?",
+      "Milyen iskolába járt?"
+    ]
+  },
+  {
+    "id": "writings",
+    "answer": "A Henn László Andrásról és művészetéről szóló szövegeket az Írások oldalon olvashatja.",
+    "sourceTitle": "Írások",
+    "sourcePath": "/irasok",
+    "questions": [
+      "Hol olvashatok Henn László András művészetéről?",
+      "Vannak róla szóló írások?",
+      "Hol találok szövegeket a festészetéről?",
+      "Mit írtak Henn László András alkotásairól?",
+      "Hol olvashatok a műveinek értelmezéséről?"
+    ],
+    "keywords": [
+      "írások",
+      "róla szóló írások",
+      "művészetéről szóló szövegek",
+      "művek értelmezése",
+      "mit írtak róla"
+    ],
+    "concepts": [
+      "művészetről szóló írások",
+      "alkotásokról szóló szövegek",
+      "művek értelmezésének olvasása"
+    ],
+    "relatedEntityIds": [
+      "henn-laszlo-andras"
+    ],
+    "negativeExamples": [
+      "Ki Henn László András?",
+      "Hol nézhetem meg a festményeit?",
+      "Hogyan írhatok neki e-mailt?"
+    ]
+  }
   ]
 }

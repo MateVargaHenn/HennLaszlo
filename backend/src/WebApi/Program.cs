@@ -1,33 +1,35 @@
-using Microsoft.AspNetCore.HttpOverrides;
 using System.Net;
 using System.Net.Sockets;
-using WebApi.ExceptionHandling;
-using Modules.Artwork.Infrastructure;
-using Modules.Artwork.Application;
-using Modules.Artwork.Presentation;
-using Modules.FileStorage.Infrastructure;
-using Modules.FileStorage.Application;
-using Modules.FileStorage.Presentation;
-using Modules.Invitation.Infrastructure;
-using Modules.Invitation.Application;
-using Modules.Invitation.Presentation;
-using Modules.Video.Infrastructure;
-using Modules.Video.Application;
-using Modules.Video.Presentation;
-using Modules.Content.Infrastructure;
-using Modules.Content.Application;
-using Modules.Content.Presentation;
+using BuildingBlocks.Application;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
+using Modules.Argus.Application.Abstractions;
 using Modules.Argus.Infrastructure;
 using Modules.Argus.Presentation;
-using BuildingBlocks.Application;
-using WebApi.Authentication;
-using Microsoft.EntityFrameworkCore;
+using Modules.Artwork.Application;
+using Modules.Artwork.Infrastructure;
 using Modules.Artwork.Infrastructure.Database;
-using Modules.FileStorage.Infrastructure.Database;
-using Modules.Invitation.Infrastructure.Database;
-using Modules.Video.Infrastructure.Database;
+using Modules.Artwork.Presentation;
+using Modules.Content.Application;
+using Modules.Content.Infrastructure;
 using Modules.Content.Infrastructure.Database;
+using Modules.Content.Presentation;
+using Modules.FileStorage.Application;
+using Modules.FileStorage.Infrastructure;
+using Modules.FileStorage.Infrastructure.Database;
+using Modules.FileStorage.Presentation;
+using Modules.Invitation.Application;
+using Modules.Invitation.Infrastructure;
+using Modules.Invitation.Infrastructure.Database;
+using Modules.Invitation.Presentation;
+using Modules.Video.Application;
+using Modules.Video.Infrastructure;
+using Modules.Video.Infrastructure.Database;
+using Modules.Video.Presentation;
 using Serilog;
+using WebApi.Argus;
+using WebApi.Authentication;
+using WebApi.ExceptionHandling;
 
 if (args.Contains(
         "--hash-admin-password",
@@ -145,6 +147,10 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod();
         });
 });
+
+builder.Services.AddScoped<
+    IArgusAnswerRenderer,
+    ArgusAnswerRenderer>();
 
 var app = builder.Build();
 

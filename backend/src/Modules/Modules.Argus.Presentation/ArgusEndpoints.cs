@@ -34,6 +34,7 @@ public static class ArgusEndpoints
     private static async Task<IResult> AskAsync(
         AskArgusRequest request,
         IArgusAnswerService answerService,
+        IArgusAnswerRenderer answerRenderer,
         CancellationToken cancellationToken)
     {
         string question =
@@ -74,6 +75,10 @@ public static class ArgusEndpoints
                 question,
                 cancellationToken);
 
+        string renderedAnswer = await answerRenderer.RenderAsync(
+            answer.Answer,
+            cancellationToken);
+
         ArgusSourceResponse? source =
             answer.SourcePath is null
                 ? null
@@ -84,7 +89,7 @@ public static class ArgusEndpoints
 
         return Results.Ok(
             new AskArgusResponse(
-                answer.Answer,
+                renderedAnswer,
                 answer.Confidence,
                 answer.IsFallback,
                 source));
