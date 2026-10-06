@@ -243,4 +243,4 @@ adminEndpoints.MapAdminVideoEndpoints();
 adminEndpoints.MapAdminFileStorageEndpoints();
 adminEndpoints.MapAdminContentEndpoints();
 
-app.Run();
+await app.RunAsync();
