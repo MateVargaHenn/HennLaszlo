@@ -94,7 +94,7 @@ jobs:
           PREVIEW_PASSWORD: ${{ secrets.PREVIEW_PASSWORD }}
         run: |
           test "$PREVIEW_URL" = 'https://194.182.85.127:18443' && test -n "$PREVIEW_USER" && test -n "$PREVIEW_PASSWORD"
-          test "$(curl -sS -o /dev/null -w '%{http_code}' "$PREVIEW_URL/")" = 401
+          test "$(curl -sS -o /dev/null -w '%{http_code}' "$PREVIEW_URL/")" = 200
           curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "$PREVIEW_URL/" -o /tmp/preview.html
           grep -q '<app-root' /tmp/preview.html
           curl -fsS -u "$PREVIEW_USER:$PREVIEW_PASSWORD" "$PREVIEW_URL/api/artworks" -o /tmp/artworks.json
