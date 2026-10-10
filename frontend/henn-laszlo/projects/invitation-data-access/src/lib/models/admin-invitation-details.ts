@@ -8,4 +8,8 @@ export interface AdminInvitationDetails {
   readonly hasImage: boolean;
   readonly isPublished: boolean;
   readonly displayOrder: number;
+  readonly exhibitionStartsAt: string | null;
+  readonly exhibitionEndsAt: string | null;
+  readonly locationHu: string | null;
+  readonly locationEn: string | null;
 }

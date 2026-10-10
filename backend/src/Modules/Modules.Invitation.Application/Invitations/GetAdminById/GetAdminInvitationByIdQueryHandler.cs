@@ -34,6 +34,10 @@ internal sealed class GetAdminInvitationByIdQueryHandler(
             invitation.AltTextEn,
             invitation.ImageId.HasValue,
             invitation.IsPublished,
-            invitation.DisplayOrder);
+            invitation.DisplayOrder,
+            invitation.ExhibitionStartsAt,
+            invitation.ExhibitionEndsAt,
+            invitation.LocationHu,
+            invitation.LocationEn);
     }
 }

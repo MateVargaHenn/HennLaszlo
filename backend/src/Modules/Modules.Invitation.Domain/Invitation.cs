@@ -38,6 +38,14 @@ public sealed class Invitation
 
     public bool IsPublished { get; private set; }
 
+    public DateTimeOffset? ExhibitionStartsAt { get; private set; }
+
+    public DateTimeOffset? ExhibitionEndsAt { get; private set; }
+
+    public string? LocationHu { get; private set; }
+
+    public string? LocationEn { get; private set; }
+
     public int DisplayOrder { get; private set; }
 
     public DateTime CreatedAtUtc { get; private set; } =
@@ -63,6 +71,23 @@ public sealed class Invitation
             NormalizeOptionalText(altTextHu),
             NormalizeOptionalText(altTextEn),
             displayOrder);
+    }
+
+    public void SetExhibitionPeriod(
+    DateTimeOffset? startsAt,
+    DateTimeOffset? endsAt)
+    {
+        if (startsAt.HasValue &&
+            endsAt.HasValue &&
+            endsAt.Value < startsAt.Value)
+        {
+            throw new ArgumentException(
+                "A kiállítás vége nem lehet korábbi a kezdeténél.",
+                nameof(endsAt));
+        }
+
+        ExhibitionStartsAt = startsAt?.ToUniversalTime();
+        ExhibitionEndsAt = endsAt?.ToUniversalTime();
     }
 
     public void UpdateDetails(
@@ -152,6 +177,14 @@ public sealed class Invitation
         ValidateDisplayOrder(displayOrder);
 
         DisplayOrder = displayOrder;
+    }
+
+    public void SetLocation(
+        string? locationHu,
+        string? locationEn)
+    {
+        LocationHu = NormalizeOptionalText(locationHu);
+        LocationEn = NormalizeOptionalText(locationEn);
     }
 
     private static void ValidateDisplayOrder(int displayOrder)

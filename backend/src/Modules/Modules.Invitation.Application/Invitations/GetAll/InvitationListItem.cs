@@ -7,4 +7,8 @@ public sealed record InvitationListItem(
     int? Year,
     string? AltTextHu,
     string? AltTextEn,
-    int DisplayOrder);
+    int DisplayOrder,
+    DateTimeOffset? ExhibitionStartsAt,
+    DateTimeOffset? ExhibitionEndsAt,
+    string? LocationHu,
+    string? LocationEn);

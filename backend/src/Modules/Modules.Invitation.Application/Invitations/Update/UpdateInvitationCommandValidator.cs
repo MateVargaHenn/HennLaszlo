@@ -31,6 +31,20 @@ internal sealed class UpdateInvitationCommandValidator
         RuleFor(command => command.AltTextEn)
             .MaximumLength(500);
 
+        RuleFor(command => command.ExhibitionEndsAt)
+            .Must((command, endsAt) =>
+                !command.ExhibitionStartsAt.HasValue ||
+                !endsAt.HasValue ||
+                endsAt.Value >= command.ExhibitionStartsAt.Value)
+            .WithMessage(
+                "A kiállítás vége nem lehet korábbi a kezdeténél.");
+
+        RuleFor(command => command.LocationHu)
+            .MaximumLength(500);
+
+        RuleFor(command => command.LocationEn)
+            .MaximumLength(500);
+
         RuleFor(command => command.DisplayOrder)
             .GreaterThanOrEqualTo(0);
     }

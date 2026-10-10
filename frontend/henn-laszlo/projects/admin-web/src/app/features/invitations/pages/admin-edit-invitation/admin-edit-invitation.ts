@@ -105,6 +105,12 @@ export class AdminEditInvitation {
         submission.invitation.altTextEn,
       displayOrder:
         submission.invitation.displayOrder,
+      exhibitionStartsAt:
+        submission.invitation.exhibitionStartsAt,
+      exhibitionEndsAt:
+        submission.invitation.exhibitionEndsAt,
+      locationHu: submission.invitation.locationHu,
+      locationEn: submission.invitation.locationEn,
     };
 
     try {

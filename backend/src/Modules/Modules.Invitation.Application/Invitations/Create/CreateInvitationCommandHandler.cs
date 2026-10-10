@@ -22,6 +22,14 @@ internal sealed class CreateInvitationCommandHandler(
                 request.AltTextEn,
                 request.DisplayOrder);
 
+        invitation.SetExhibitionPeriod(
+            request.ExhibitionStartsAt,
+            request.ExhibitionEndsAt);
+
+        invitation.SetLocation(
+            request.LocationHu,
+            request.LocationEn);
+
             IReadOnlyList<Domain.Invitation>
                 orderedInvitations =
                     await invitationRepository

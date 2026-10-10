@@ -38,6 +38,14 @@ internal sealed class UpdateInvitationCommandHandler(
             request.AltTextHu,
             request.AltTextEn);
 
+        invitation.SetExhibitionPeriod(
+            request.ExhibitionStartsAt,
+            request.ExhibitionEndsAt);
+
+        invitation.SetLocation(
+            request.LocationHu,
+            request.LocationEn);
+
         DisplayOrderManager.Place(
             orderedInvitations,
             invitation,
