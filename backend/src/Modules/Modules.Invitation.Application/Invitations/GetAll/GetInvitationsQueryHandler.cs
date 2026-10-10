@@ -25,7 +25,11 @@ internal sealed class GetInvitationsQueryHandler(
                 invitation.Year,
                 invitation.AltTextHu,
                 invitation.AltTextEn,
-                invitation.DisplayOrder))
+                invitation.DisplayOrder,
+                invitation.ExhibitionStartsAt,
+                invitation.ExhibitionEndsAt,
+                invitation.LocationHu,
+                invitation.LocationEn))
             .ToList();
     }
 }

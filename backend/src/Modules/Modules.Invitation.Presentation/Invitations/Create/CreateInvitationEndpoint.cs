@@ -32,7 +32,11 @@ internal static class CreateInvitationEndpoint
             request.Year,
             request.AltTextHu,
             request.AltTextEn,
-            request.DisplayOrder);
+            request.DisplayOrder,
+            request.ExhibitionStartsAt,
+            request.ExhibitionEndsAt,
+            request.LocationHu,
+            request.LocationEn);
 
         Guid invitationId = await sender.Send(
             command,

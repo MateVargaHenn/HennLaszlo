@@ -50,6 +50,14 @@ export class InvitationForm implements OnDestroy {
         altTextHu: invitation.altTextHu,
         altTextEn: invitation.altTextEn,
         displayOrder: invitation.displayOrder,
+        exhibitionStartsAt: this.toLocalDateTime(
+          invitation.exhibitionStartsAt,
+        ),
+        exhibitionEndsAt: this.toLocalDateTime(
+          invitation.exhibitionEndsAt,
+        ),
+        locationHu: invitation.locationHu,
+        locationEn: invitation.locationEn,
       });
     });
   }
@@ -139,9 +147,31 @@ export class InvitationForm implements OnDestroy {
         Validators.min(0),
       ],
     }),
+
+    exhibitionStartsAt: new FormControl('', {
+      nonNullable: true,
+    }),
+
+    exhibitionEndsAt: new FormControl('', {
+      nonNullable: true,
+    }),
+    locationHu: new FormControl<string | null>(
+      null,
+      Validators.maxLength(500),
+    ),
+
+    locationEn: new FormControl<string | null>(
+      null,
+      Validators.maxLength(500),
+    ),
   });
 
+  protected readonly exhibitionPeriodError =
+  signal<string | null>(null);
+
   protected onSubmit(): void {
+    this.exhibitionPeriodError.set(null);
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -149,16 +179,51 @@ export class InvitationForm implements OnDestroy {
 
     const value = this.form.getRawValue();
 
+    const startsAt = value.exhibitionStartsAt
+      ? new Date(value.exhibitionStartsAt).getTime()
+      : null;
+
+    const endsAt = value.exhibitionEndsAt
+      ? new Date(value.exhibitionEndsAt).getTime()
+      : null;
+
+    if (
+      (startsAt !== null && !Number.isFinite(startsAt)) ||
+      (endsAt !== null && !Number.isFinite(endsAt))
+    ) {
+      this.exhibitionPeriodError.set(
+        'Érvényes dátumot és időpontot adj meg.',
+      );
+      return;
+    }
+
+    if (
+      startsAt !== null &&
+      endsAt !== null &&
+      endsAt < startsAt
+    ) {
+      this.exhibitionPeriodError.set(
+        'A kiállítás vége nem lehet korábbi a kezdeténél.',
+      );
+      return;
+    }
+
     this.submitted.emit({
       invitation: {
         titleHu: value.titleHu.trim(),
         titleEn: this.normalizeText(value.titleEn),
         year: value.year,
-        altTextHu:
-          this.normalizeText(value.altTextHu),
-        altTextEn:
-          this.normalizeText(value.altTextEn),
+        altTextHu: this.normalizeText(value.altTextHu),
+        altTextEn: this.normalizeText(value.altTextEn),
         displayOrder: value.displayOrder,
+        exhibitionStartsAt: this.toUtcDateTime(
+          value.exhibitionStartsAt,
+        ),
+        exhibitionEndsAt: this.toUtcDateTime(
+          value.exhibitionEndsAt,
+        ),
+        locationHu: this.normalizeText(value.locationHu),
+        locationEn: this.normalizeText(value.locationEn),
       },
       imageFile: this.imageFile(),
     });
@@ -263,5 +328,27 @@ export class InvitationForm implements OnDestroy {
     return normalizedValue
       ? normalizedValue
       : null;
+  }
+
+  private toLocalDateTime(value: string | null): string {
+    if (!value) {
+      return '';
+    }
+
+    const date = new Date(value);
+    const pad = (part: number) =>
+      part.toString().padStart(2, '0');
+
+    return (
+      `${date.getFullYear()}-` +
+      `${pad(date.getMonth() + 1)}-` +
+      `${pad(date.getDate())}T` +
+      `${pad(date.getHours())}:` +
+      `${pad(date.getMinutes())}`
+    );
+  }
+
+  private toUtcDateTime(value: string): string | null {
+    return value ? new Date(value).toISOString() : null;
   }
 }

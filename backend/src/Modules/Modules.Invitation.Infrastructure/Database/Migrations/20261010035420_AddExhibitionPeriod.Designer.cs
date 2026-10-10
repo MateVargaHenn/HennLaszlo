@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Modules.Invitation.Infrastructure.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Modules.Invitation.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(InvitationDbContext))]
-    partial class InvitationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261010035420_AddExhibitionPeriod")]
+    partial class AddExhibitionPeriod
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,14 +56,6 @@ namespace Modules.Invitation.Infrastructure.Database.Migrations
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("LocationEn")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("LocationHu")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("TitleEn")
                         .HasMaxLength(250)

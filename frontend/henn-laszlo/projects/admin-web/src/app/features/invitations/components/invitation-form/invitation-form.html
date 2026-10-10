@@ -148,7 +148,7 @@
               <span class="text-sm font-medium text-stone-800">
                 Angol cím
                 <span class="font-normal text-stone-400">
-                  – opcionális
+                  (opcionális)
                 </span>
               </span>
 
@@ -212,13 +212,86 @@
 
         <fieldset>
           <legend class="mb-4 text-sm font-semibold text-stone-900">
+            Helyszín
+          </legend>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-sm font-medium text-stone-800">
+                Helyszín (magyarul) (opcionális)
+              </span>
+
+              <input
+                type="text"
+                maxlength="500"
+                formControlName="locationHu"
+                placeholder="Galéria neve, város, cím"
+                class="mt-2 block w-full rounded-lg border border-stone-300 bg-white px-4 py-3 outline-none focus:border-stone-900 focus:ring-1 focus:ring-stone-900"
+              />
+            </label>
+
+            <label class="block">
+              <span class="text-sm font-medium text-stone-800">
+                Helyszín (angolul) (opcionális)
+              </span>
+
+              <input
+                type="text"
+                maxlength="500"
+                formControlName="locationEn"
+                class="mt-2 block w-full rounded-lg border border-stone-300 bg-white px-4 py-3 outline-none focus:border-stone-900 focus:ring-1 focus:ring-stone-900"
+              />
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="mb-4 text-sm font-semibold text-stone-900">
+            Kiállítás időszaka
+          </legend>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-sm font-medium text-stone-800">
+                Kiállítás kezdete
+              </span>
+
+              <input
+                type="datetime-local"
+                formControlName="exhibitionStartsAt"
+                class="mt-2 block w-full rounded-lg border border-stone-300 bg-white px-4 py-3 outline-none focus:border-stone-900 focus:ring-1 focus:ring-stone-900"
+              />
+            </label>
+
+            <label class="block">
+              <span class="text-sm font-medium text-stone-800">
+                Megtekinthető eddig
+              </span>
+
+              <input
+                type="datetime-local"
+                formControlName="exhibitionEndsAt"
+                class="mt-2 block w-full rounded-lg border border-stone-300 bg-white px-4 py-3 outline-none focus:border-stone-900 focus:ring-1 focus:ring-stone-900"
+              />
+            </label>
+          </div>
+
+          @if (exhibitionPeriodError(); as error) {
+            <p role="alert" class="mt-3 text-sm text-red-700">
+              {{ error }}
+            </p>
+          }
+        </fieldset>
+
+        <fieldset>
+          <legend class="mb-4 text-sm font-semibold text-stone-900">
             Akadálymentes képleírás
           </legend>
 
           <div class="grid gap-5">
             <label class="block">
               <span class="text-sm font-medium text-stone-800">
-                Magyar képleírás
+                Képleírás (magyarul) (opcionális)
               </span>
 
               <textarea
@@ -231,7 +304,7 @@
 
             <label class="block">
               <span class="text-sm font-medium text-stone-800">
-                Angol képleírás
+                Képleírás (angolul) (opcionális)
               </span>
 
               <textarea

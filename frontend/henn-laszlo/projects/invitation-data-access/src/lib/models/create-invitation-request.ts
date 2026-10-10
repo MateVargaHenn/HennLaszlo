@@ -5,4 +5,8 @@ export interface CreateInvitationRequest {
   readonly altTextHu: string | null;
   readonly altTextEn: string | null;
   readonly displayOrder: number;
+  readonly exhibitionStartsAt: string | null;
+  readonly exhibitionEndsAt: string | null;
+  readonly locationHu: string | null;
+  readonly locationEn: string | null;
 }

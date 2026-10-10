@@ -6,4 +6,8 @@ public sealed record UpdateInvitationRequest(
     int? Year,
     string? AltTextHu,
     string? AltTextEn,
-    int DisplayOrder);
+    int DisplayOrder,
+    DateTimeOffset? ExhibitionStartsAt = null,
+    DateTimeOffset? ExhibitionEndsAt = null,
+    string? LocationHu = null,
+    string? LocationEn = null);

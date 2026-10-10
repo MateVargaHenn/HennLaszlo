@@ -9,4 +9,8 @@ public sealed record AdminInvitationDetails(
     string? AltTextEn,
     bool HasImage,
     bool IsPublished,
-    int DisplayOrder);
+    int DisplayOrder,
+    DateTimeOffset? ExhibitionStartsAt,
+    DateTimeOffset? ExhibitionEndsAt,
+    string? LocationHu,
+    string? LocationEn);

@@ -36,7 +36,11 @@ internal static class UpdateInvitationEndpoint
                 request.Year,
                 request.AltTextHu,
                 request.AltTextEn,
-                request.DisplayOrder),
+                request.DisplayOrder,
+                request.ExhibitionStartsAt,
+                request.ExhibitionEndsAt,
+                request.LocationHu,
+                request.LocationEn),
             cancellationToken);
 
         return Results.NoContent();

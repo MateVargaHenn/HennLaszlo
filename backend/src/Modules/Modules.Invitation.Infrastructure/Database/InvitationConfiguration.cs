@@ -37,6 +37,18 @@ internal sealed class InvitationConfiguration
         builder.Property(invitation => invitation.CreatedAtUtc)
             .IsRequired();
 
+        builder.Property(invitation => invitation.ExhibitionStartsAt)
+            .IsRequired(false);
+
+        builder.Property(invitation => invitation.ExhibitionEndsAt)
+            .IsRequired(false);
+
+        builder.Property(invitation => invitation.LocationHu)
+            .HasMaxLength(500);
+
+        builder.Property(invitation => invitation.LocationEn)
+            .HasMaxLength(500);
+
         builder.HasIndex(invitation => new
         {
             invitation.IsPublished,

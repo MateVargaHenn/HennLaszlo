@@ -567,6 +567,72 @@
       "Hol nézhetem meg a festményeit?",
       "Hogyan írhatok neki e-mailt?"
     ]
-  }
+  },
+  {
+  "id": "current-exhibition",
+  "answer": "{{current_exhibition}}",
+  "sourceTitle": null,
+  "sourcePath": null,
+  "questions": [
+    "Hol láthatók most Henn László András képei?",
+    "Melyik kiállítása látogatható jelenleg?",
+    "Van most kiállítása?",
+    "Hol lehet most megtekinteni az alkotásait?",
+    "Meddig tekinthető meg a jelenlegi kiállítása?",
+    "Meddig látogatható a kiállítás?",
+    "Mikor zárul az aktuális kiállítása?"
+  ],
+  "keywords": [
+    "aktuális kiállítás",
+    "jelenlegi kiállítás",
+    "most látogatható",
+    "meddig tekinthető meg",
+    "meddig látogatható",
+    "kiállítás vége"
+  ],
+  "concepts": [
+    "jelenleg látogatható kiállítás",
+    "aktuális kiállítás zárása"
+  ],
+  "relatedEntityIds": [
+    "henn-laszlo-andras"
+  ],
+  "negativeExamples": [
+    "Mikor lesz a következő kiállítása?",
+    "Hol állított már ki?",
+    "Mikor volt az első kiállítása?"
+  ]
+},
+{
+  "id": "next-exhibition",
+  "answer": "{{next_exhibition}}",
+  "sourceTitle": null,
+  "sourcePath": null,
+  "questions": [
+    "Mikor lesz Henn László András következő kiállítása?",
+    "Hol lesz a következő kiállítása?",
+    "Mikor kezdődik a következő kiállítás?",
+    "Milyen kiállítása lesz legközelebb?",
+    "Meddig lesz látogatható a következő kiállítása?"
+  ],
+  "keywords": [
+    "következő kiállítás",
+    "közelgő kiállítás",
+    "legközelebbi kiállítás",
+    "kiállítás kezdete"
+  ],
+  "concepts": [
+    "következő meghirdetett kiállítás",
+    "jövőbeli kiállítás időpontja"
+  ],
+  "relatedEntityIds": [
+    "henn-laszlo-andras"
+  ],
+  "negativeExamples": [
+    "Hol láthatók most a képei?",
+    "Meddig látogatható a jelenlegi kiállítása?",
+    "Milyen kiállításai voltak?"
+  ]
+}
   ]
 }

@@ -6,4 +6,6 @@ export interface InvitationListItem {
   readonly altTextHu: string | null;
   readonly altTextEn: string | null;
   readonly displayOrder: number;
+  readonly exhibitionStartsAt: string | null;
+  readonly exhibitionEndsAt: string | null;
 }
